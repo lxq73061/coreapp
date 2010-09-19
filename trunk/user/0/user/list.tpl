@@ -5,10 +5,8 @@
 </head>
 <body>
 
-<ul>
-<li><a href="?do=browse">用户列表</a></li>
-<li><a href="?do=append">添加用户</a></li>
-</ul>
+○<a href="?do=browse">用户列表</a>&nbsp;
+○<a href="?do=append">添加用户</a><br>
 
 <form>
 <input type="hidden" name="do" value="browse">

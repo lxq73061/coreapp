@@ -2,7 +2,7 @@
 /**
  * 用户模块
  * 
- * @version 1.0
+ * @version 1.0.1
  * @author Z <602000@gmail.com>
  */
 
