@@ -5,10 +5,8 @@
 </head>
 <body>
 
-<ul>
-<li><a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户列表</a></li>
-<li><a href="?do=append">添加用户</a></li>
-</ul>
+○<a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户列表</a>&nbsp;
+○<a href="?do=append">添加用户</a><br>
 
 
 <form method="post" action="?do=<?php echo $_GET['do']; ?>&user_id=<?php echo $_GET['user_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
