@@ -2,7 +2,7 @@
 /**
  * 用户模块
  * 
- * @version 1.0.1
+ * @version 1.1.0
  * @author Z <602000@gmail.com>
  */
 
@@ -267,6 +267,23 @@ class user extends core {
 
 		// 删除数据
 		$user->delete ();
+		header ('Location: ?'.$_GET['query']);
+	}
+	
+	/**
+	 * 群除用户
+	 */
+	final static public function group_remove() {
+
+		// 获取数据
+		if(! isset($_POST['user_id']) || !is_array($_POST['user_id'])){
+			$error = '该用户不存在';
+			self::view (__CLASS__ . '/error.tpl', compact ('error'));
+			return;
+		}
+
+		// 删除数据
+		self::deletes(null,null,array('user_id'=>$_POST['user_id']),null,__CLASS__);
 		header ('Location: ?'.$_GET['query']);
 	}
 	
