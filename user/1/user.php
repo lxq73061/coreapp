@@ -2,7 +2,7 @@
 /**
  * 用户模块
  * 
- * @version 1.1.0
+ * @version 1.1.1
  * @author Z <602000@gmail.com>
  */
 
@@ -32,6 +32,7 @@ class user extends core {
 		$get = array(
 			'username' => isset ($_GET ['username']) ? $_GET ['username'] : '',
 			'grade'  => isset ($_GET ['grade']) ? $_GET ['grade'] : '',
+			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
 		);
 		if (get_magic_quotes_gpc()) {
@@ -46,8 +47,23 @@ class user extends core {
 		if (strlen($get['grade'])>0){
 			$where ['grade'] = (int)$get['grade'];
 		}
+		switch ($get['order']) {
+			case 'user_id':
+				$other = array('ORDER BY user_id');
+				break;
+			case 'username':
+				$other = array('ORDER BY username');
+				break;
+			case 'username2':
+				$other = array('ORDER BY username DESC');
+				break;
+			default:
+				$other = array('ORDER BY user_id DESC');
+				break;
+		}
 		$page = array('page'=>$get['page'],'size'=>10);
-		$users = self::selects (null, null, $where, array('ORDER BY user_id DESC','page'=>&$page), __CLASS__);
+		$other ['page'] = &$page;
+		$users = self::selects (null, null, $where, $other, __CLASS__);
 
 		// 页面显示
 		foreach (array('username') as $value) {
