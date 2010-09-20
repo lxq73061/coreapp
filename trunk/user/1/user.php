@@ -271,7 +271,7 @@ class user extends core {
 	}
 	
 	/**
-	 * 群除用户
+	 * 群删用户
 	 */
 	final static public function group_remove() {
 
