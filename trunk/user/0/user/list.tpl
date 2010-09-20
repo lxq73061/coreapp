@@ -17,6 +17,12 @@
 	<option value="2" <?php if($get['grade'] === '2') echo 'selected'; ?>>管理员</option>
 	<option value="3" <?php if($get['grade'] === '3') echo 'selected'; ?>>普通用户</option>
 </select>
+排序：<select name="order">
+	<option value=""></option>
+	<option value="user_id" <?php if($get['order'] === 'user_id') echo 'selected'; ?>>用户ID↑</option>
+	<option value="username" <?php if($get['order'] === 'username') echo 'selected'; ?>>用户名↑</option>
+	<option value="username2" <?php if($get['order'] === 'username2') echo 'selected'; ?>>用户名↓</option>
+</select>
 <input type="submit" value="查询">
 </form>
 
