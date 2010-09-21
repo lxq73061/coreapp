@@ -1,0 +1,27 @@
+user模块需求说明
+  - 用户列表
+    - 查找功能
+    - 排序功能
+    - 分页功能
+    - 群删功能
+    - 详细
+    - 修改
+      - 各种验证
+      - 用户名重复验证
+    - 删除
+  - 添加用户
+    - 各种验证
+    - 用户名重复验证
+
+user模块分析文档
+  - action
+    - index 默认首页
+    - browse 用户列表
+    - detail 用户详细
+    - append 添加用户
+    - modify 修改用户
+    - remove 删除用户
+    - group_remove 群删用户
+  - 方法
+    - get_grade
+    - get_gender
