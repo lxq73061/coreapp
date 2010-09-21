@@ -2,7 +2,7 @@
 /**
  * 用户模块
  * 
- * @version 1.1.1
+ * @version 1.2.0
  * @author Z <602000@gmail.com>
  */
 
@@ -124,6 +124,11 @@ class user extends core {
 				|| preg_match ('/^_|_$/', $post ['username']) === 1 //且下划线不能作为起始和结尾字符
 			) {
 				$error ['username'] = '请正确填写用户名';
+			} else {
+				$count = self::selects('COUNT(*)', null, array('username'=>$post ['username']), null, array('column|table=user'=>'COUNT(*)'));
+				if ($count > 0) {
+					$error ['username'] = '用户名重复，请换一个用户名';
+				}
 			}
 			if (strlen ($post ['password']) < 4 || strlen ($post ['password']) > 16 //4-16个字符
 				|| preg_match ('/^[\x21-\x9e]+$/',$post ['password']) === 0 //，英文字母、数字、下划线、半角符号
@@ -216,6 +221,11 @@ class user extends core {
 				|| preg_match ('/^_|_$/', $post ['username']) === 1 //且下划线不能作为起始和结尾字符
 			) {
 				$error ['username'] = '请正确填写用户名';
+			} else {
+				$count = self::selects('COUNT(*)', null, array('username'=>$post ['username'],'user_id<>?'=>$user->user_id), null, array('column|table=user'=>'COUNT(*)'));
+				if ($count > 0) {
+					$error ['username'] = '用户名重复，请换一个用户名';
+				}
 			}
 			if (strlen ($post ['password']) > 0
 				&& (strlen ($post ['password']) < 4 || strlen ($post ['password']) > 16 //4-16个字符
