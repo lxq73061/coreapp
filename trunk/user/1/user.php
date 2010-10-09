@@ -2,7 +2,7 @@
 /**
  * 用户模块
  * 
- * @version 1.2.0
+ * @version 1.2.1
  * @author Z <602000@gmail.com>
  */
 
@@ -114,7 +114,7 @@ class user extends core {
 		}
 
 		// 表单处理
-		while ($_SERVER ['REQUEST_METHOD'] === 'POST') {
+		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
 
 			// 数据验证
 			$length = (strlen ($post ['username']) + mb_strlen ($post ['username'], 'UTF-8')) /2;
@@ -195,7 +195,7 @@ class user extends core {
 		$post = get_object_vars ($user);
 
 		// 表单处理
-		while ($_SERVER ['REQUEST_METHOD'] === 'POST') {
+		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
 
 			// 数据消毒
 			$post = array(
