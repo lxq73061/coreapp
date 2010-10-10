@@ -1,0 +1,46 @@
+前端模块需求说明
+  - 登录
+    - 用户名密码验证码图片
+    - 进行相应的验证
+  - 退出
+  - 在线
+    - 访问范围内的模块会验证在线信息
+    - 在动作和模板中能取到在线信息
+
+
+
+
+前端模块分析文档
+  - action
+    - index 默认页
+    - login 登录和登录登出处理
+    - logout 退出
+    - authcode 显示和验证注册码
+  - 方法
+    - main 入口函数(继承)
+    - init 配置文件(继承)
+    - online 在线函数，返回在线信息
+    - online 在线函数，返回在线信息
+
+
+
+前端模块使用说明
+  - 该模块默认会自动载入配置目录下的front/config.php配置。
+    - 'front_action' => '', //前端模块的动作参数，默认同framework_action
+    - 'front_online' => '', //在线用户的全局变量名，默认不使用
+    - 'front_class' => '', //待验证模块的类名，默认是使用核心类
+    - 'front_table' => '', //待验证模块的表名，默认是加上前缀的类名(类名为空除外)
+    - 'front_fuzzy' => '', //用户名密码验证的模糊提示
+    - 'front_username' => '', //单一的用户名，默认不使用
+    - 'front_password' => '', //单一的密码
+    - 'front_redirect' => '', //表单无跳转参数时登录后的默认跳转地址
+  - core/config.php里配置的改动（）
+    - 'framework_enable' => 'final', //推荐使用final，可以简单屏蔽main、online等方法
+    - 'framework_function' => 'front::main', //使用非front.php入口方式时需要设置此项
+  - 前端模块修改说明
+    - 视图全局变量未启用，可自行修改
+    - 密码加密处理未启用，可自行修改
+    - 用户表中用户名密码建议使用username和password字段名，可减少修改量
+  - 其他模块使用前端模块的方法
+    - $online = front::online (); //获得在线信息，不在线得为null
+    - front::login ($_SERVER ['REQUEST_URI']); //显示登录页面
