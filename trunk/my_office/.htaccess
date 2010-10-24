@@ -1,0 +1,7 @@
+Options +FollowSymLinks
+RewriteEngine on 
+RewriteBase /
+#ErrorDocument 404 /404.shtml
+
+Order allow,deny
+Allow from all
