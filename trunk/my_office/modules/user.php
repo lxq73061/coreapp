@@ -341,5 +341,5 @@ class user extends core {
 /**
  * 执行(execute)
  */
-user::stub () and user::main ();
+//user::stub () and user::main ();
 ?>

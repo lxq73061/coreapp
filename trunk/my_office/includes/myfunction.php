@@ -86,5 +86,98 @@ function pecho_trace($traces,$level=0){
 	return $str;
 	
 }
+/**
+ * 想尽办法获取在线IP
+ * @return <type>
+ */
 
+function get_onlineip() {
+    if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+        $onlineip = getenv('HTTP_CLIENT_IP');
+    } elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+        $onlineip = getenv('HTTP_X_FORWARDED_FOR');
+    } elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+        $onlineip = getenv('REMOTE_ADDR');
+    } elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        $onlineip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $onlineip;
+}
+function cache_delete($file,$path = '') {
+    if(!$path) $path = CACHE_PATH;
+    $cachefile = $path.$file;
+    return @unlink($cachefile);
+	}
+
+/**
+ * 缓存读取
+ */
+function cache_read($file, $path = '', $iscachevar = 0) {
+    if(!$path) $path = CACHE_PATH;
+    $cachefile = $path.$file;
+    if($iscachevar) {
+        global $TEMP;
+        $key = 'cache_'.substr($file, 0, -4);
+        return isset($TEMP[$key]) ? $TEMP[$key] : $TEMP[$key] = @include $cachefile;
+    }
+    return @include $cachefile;
+}
+/*缓存文件*/
+function cache_write($file, $array, $path = '') {
+//echo '使用cache';
+    if(!is_array($array)) return false;
+    $array = "<?php\nreturn ".var_export($array, true).";\n?>";
+    $cachefile = chk_dir($path ? $path : CACHE_PATH).$file;
+    $strlen = file_put_contents($cachefile, $array);
+    //echo $cachefile;
+
+    chmod($cachefile, 0777);
+    return $strlen;
+}
+
+/*是否存在缓存文件，过期时间默认20秒*/
+function cache_isset($file,$expired_time=20, $path = '',$isdel=true) {
+    if(!$path) $path = CACHE_PATH;
+    $cachefile = $path.$file;
+    //1260763476 - 1260761474
+    //echo time() .' - '.@filectime($cachefile) ;
+    if (time() - @filectime($cachefile) < $expired_time) {
+        return true;  //未过期
+    }else {
+        if($isdel==true)@unlink($cachefile) ;
+        return false;
+    }
+
+}
+
+//检查一个目录,如果不存在就建立
+function chk_dir($dir) {
+    if(!is_dir($dir)) {
+        //@mkdir($dir,0777);
+        directory($dir);
+    }
+    return $dir;
+}
+function directory($dir) {
+
+    return is_dir($dir) or (Directory(dirname($dir)) and mkdir($dir, 0777));
+
+} 
+/*得到精确时间*/
+function getmicrotime() {
+    list($usec, $sec) = explode(" ",microtime());
+    return ((float)$usec + (float)$sec);
+} 
+function get_use_time($min=false) {
+    global $time_start;
+    $time_end = getmicrotime();
+    $times = $time_end - $time_start;
+    $times = sprintf('%.5f',$times);
+    if($min==false) {
+        $use_time =  "用时:". $times ."秒";
+    }else {
+        $use_time = $times;
+    }
+    return $use_time;
+}
 ?>
