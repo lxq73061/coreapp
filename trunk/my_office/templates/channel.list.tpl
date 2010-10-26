@@ -1,10 +1,5 @@
-<html>
-<head>
-<title>分类首页</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<?php include('header.tpl')?>
 
-</head>
-<body>
 ○<a href="?go=channel&do=browse">分类列表</a>
 ○<a href="?go=channel&do=append">添加分类</a>	
 

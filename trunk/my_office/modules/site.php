@@ -1,6 +1,6 @@
 <?php
 /**
- * 文章模块
+ * 网址模块
  * 
  * @version 1.2.1
  * @author Z <602000@gmail.com>
@@ -14,7 +14,7 @@ class_exists('core') or require_once 'core.php';
 /**
  * 定义(define)
  */
-class doc extends core {
+class site extends core {
 	
 	/**
 	 * 默认动作
@@ -24,7 +24,7 @@ class doc extends core {
 	}
 	
 	/**
-	 * 文章列表
+	 * 网址列表
 	 */
 	final static public function browse() {
 
@@ -48,8 +48,8 @@ class doc extends core {
 			$where ['typeid'] = (int)$get['typeid'];
 		}
 		switch ($get['order']) {
-			case 'doc_id':
-				$other = array('ORDER BY doc_id');
+			case 'site_id':
+				$other = array('ORDER BY site_id');
 				break;
 			case 'title':
 				$other = array('ORDER BY title');
@@ -58,42 +58,42 @@ class doc extends core {
 				$other = array('ORDER BY title DESC');
 				break;
 			default:
-				$other = array('ORDER BY doc_id DESC');
+				$other = array('ORDER BY site_id DESC');
 				break;
 		}
 		$page = array('page'=>$get['page'],'size'=>10);
 		$other ['page'] = &$page;
-		$docs = self::selects (null, null, $where, $other, __CLASS__);
+		$sites = self::selects (null, null, $where, $other, __CLASS__);
 
 		// 页面显示
 		foreach (array('title') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('docs','get','page','query'));
+		self::view (__CLASS__ . '.list.tpl', compact ('sites','get','page','query'));
 	}
 	
 	/**
-	 * 文章详细
+	 * 网址详细
 	 */
 	final static public function detail() {
 
 		// 获取数据
-		$doc = new self;
-		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
-		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
-			$error = '该文章不存在';
+		$site = new self;
+		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
+		if(! is_numeric($site->site_id) || ! $site->select()) {
+			$error = '该网址不存在';
 			self::view (__CLASS__ . '.error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc'));
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('site'));
 	}
 	
 	/**
-	 * 添加文章
+	 * 添加网址
 	 */
 	final static public function append() {
 		$error = array ();
@@ -103,14 +103,12 @@ class doc extends core {
 		// 数据消毒
 		$post = array(
 			'title' => isset ($_POST ['title']) ? $_POST ['title'] : '',
-			'copyfrom' => isset ($_POST ['copyfrom']) ? $_POST ['copyfrom'] : '',
-			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',
-			'keyword' => isset ($_POST ['keyword']) ? $_POST ['keyword'] : '',
-			'keyword_auto' => isset ($_POST ['keyword_auto']) ? $_POST ['keyword_auto'] : '',
+			'url' => isset ($_POST ['url']) ? $_POST ['url'] : '',
+			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',		
 			'content' => isset ($_POST ['content']) ? $_POST ['content'] : '',
 			'user_id' => $online->user_id,
 			'create_date'=>date('Y-m-d',$time),
-			'create_time'=>date('H:i:s',$time),		
+			'create_time'=>date('H:i:s',$time),	
 			'update_date'=>date('Y-m-d',$time),
 			'update_time'=>date('H:i:s',$time),		
 			
@@ -128,28 +126,22 @@ class doc extends core {
 			$length = (strlen ($post ['title']) + mb_strlen ($post ['title'], 'UTF-8')) /2;
 			if ($length < 3 || $length > 200 //3-200个字符
 			) {
-				$error ['title'] = '文章名至少3个字符,最多200个字符';
+				$error ['title'] = '网站名至少3个字符,最多200个字符';
 			} else {
-				$count = self::selects('COUNT(*)', null, array('title'=>$post ['title']), null, array('column|table=doc'=>'COUNT(*)'));
+				$count = self::selects('COUNT(*)', null, array('title'=>$post ['title']), null, array('column|table=site'=>'COUNT(*)'));
 				if ($count > 0) {
-					$error ['title'] = '文章名重复，请换一个文章名';
+					$error ['title'] = '网站名重复，请检查是否重复记录';
 				}
+			}
+			$count = self::selects('COUNT(*)', null, array('url'=>$post ['url']), null, array('column|table=site'=>'COUNT(*)'));
+			if ($count > 0) {
+				$error ['url'] = 'URL重复，请检查是否重复记录';
 			}
 
 			if ($post ['typeid'] === 0 ) {
-				$error ['typeid'] = '请选择文章分类';
+				$error ['typeid'] = '请选择分类';
 			}
-			//if (strlen ($post['keyword']) === 0) {
-			//	$error ['keyword'] = '请填写姓名';
-			//}
-			if (preg_match ('/^[1-2]$/i',$post ['keyword_auto']) === 0 ) {
-				$error ['keyword_auto'] = '请选择关键词是否自动提取';
-			}else{
-				if($post ['keyword_auto']==1){
-					
-				}
-				unset($post ['keyword_auto']);
-			}
+	
 			//$length = (strlen ($post ['content']) + mb_strlen ($post ['content'], 'UTF-8')) /2;
 			//if ($length > 100) {
 			//	$error ['content'] = '备注最多只能填写100个字符';
@@ -159,37 +151,38 @@ class doc extends core {
 			}
 
 			// 数据入库
-			$doc = new self;
-			$doc ->doc_id = null;
-			$doc ->struct ($post);
-			$doc->insert ();		
-			header ('Location: ?go=doc&do=browse');
+			$site = new self;
+			$site ->site_id = null;
+			$site ->struct ($post);
+			$site->insert ();
+				
+			header ('Location: ?go=site&do=browse');
 			return;
 
 		}
 
 		// 页面显示
-		foreach (array('title','copyfrom','typeid','keyword','keyword_auto','content') as $value) {
+		foreach (array('title','url','typeid','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
 		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
-	 * 修改文章
+	 * 修改网址
 	 */
 	final static public function modify() {
 		$error = array ();
 
 		// 获取数据
-		$doc = new self;
-		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
-		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
-			$error = '该文章不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+		$site = new self;
+		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
+		if(! is_numeric($site->site_id) || ! $site->select()) {
+			$error = '该网址不存在';
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
-		$post = get_object_vars ($doc);
+		$post = get_object_vars ($site);
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
@@ -198,11 +191,10 @@ class doc extends core {
 			$time = time();
 			$post = array(
 			'title' => isset ($_POST ['title']) ? $_POST ['title'] : '',
-			'copyfrom' => isset ($_POST ['copyfrom']) ? $_POST ['copyfrom'] : '',
-			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',
-			'keyword' => isset ($_POST ['keyword']) ? $_POST ['keyword'] : '',
-			'keyword_auto' => isset ($_POST ['keyword_auto']) ? $_POST ['keyword_auto'] : '',
+			'url' => isset ($_POST ['url']) ? $_POST ['url'] : '',
 			'content' => isset ($_POST ['content']) ? $_POST ['content'] : '',
+			
+			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',		
 			'update_date'=>date('Y-m-d',$time),
 			'update_time'=>date('H:i:s',$time),		
 			);
@@ -214,27 +206,29 @@ class doc extends core {
 			$length = (strlen ($post ['title']) + mb_strlen ($post ['title'], 'UTF-8')) /2;
 			if ($length < 3 || $length > 200 //3-200个字符
 			) {
-				$error ['title'] = '文章名至少3个字符,最多200个字符';
+				$error ['title'] = '网站名至少3个字符,最多200个字符';
+			}else{
+				$count = self::selects('COUNT(*)', null, array('title'=>$post ['title'],'typeid'=>$post ['typeid'],'site_id<>?'=>$site->site_id), null, array('column|table=site'=>'COUNT(*)'));
+				if ($count > 0) {
+					$error ['title'] = '网站名重复';
+				}
+				
+				
+			}
+			$count = self::selects('COUNT(*)', null, array('url'=>$post ['url'],'site_id<>?'=>$site->site_id), null, array('column|table=site'=>'COUNT(*)'));
+			if ($count > 0) {
+				$error ['url'] = '网址重复';
 			}
 			if ($post ['typeid'] === 0 ) {
-				$error ['typeid'] = '请选择文章分类';
+				$error ['typeid'] = '请选择网址分类';
 			}
-			if (preg_match ('/^[1-2]$/i',$post ['keyword_auto']) === 0 ) {
-				$error ['keyword_auto'] = '请选择关键词是否自动提取';
-			}else{
-				if($post ['keyword_auto']==1){
-					
-				}
-				unset($post ['keyword_auto']);
-			}			
+	
 			if (! empty ($error)) {
 				break;
 			}
 
-			// 数据入库
-
-			$doc->struct ($post);
-			$doc->update ();
+			$site->struct ($post);
+			$site->update ();
 			header ('Location: ?'.$_GET['query']);
 			return;
 
@@ -248,43 +242,43 @@ class doc extends core {
 	}
 	
 	/**
-	 * 删除文章
+	 * 删除网址
 	 */
 	final static public function remove() {
 
 		// 获取数据
-		$doc = new self;
-		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
-		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
-			$error = '该文章不存在';
+		$site = new self;
+		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
+		if(! is_numeric($site->site_id) || ! $site->select()) {
+			$error = '该网址不存在';
 			self::view (__CLASS__ . '.error.tpl', compact ('error'));
 			return;
 		}
 
 		// 删除数据
-		$doc->delete ();
+		$site->delete ();
 		header ('Location: ?'.$_GET['query']);
 	}
 	
 	/**
-	 * 群删文章
+	 * 群删网址
 	 */
 	final static public function group_remove() {
 
 		// 获取数据
-		if(! isset($_POST['doc_id']) || !is_array($_POST['doc_id'])){
-			$error = '该文章不存在';
+		if(! isset($_POST['site_id']) || !is_array($_POST['site_id'])){
+			$error = '该网址不存在';
 			self::view (__CLASS__ . '.error.tpl', compact ('error'));
 			return;
 		}
 
 		// 删除数据
-		self::deletes(null,null,array('doc_id'=>$_POST['doc_id']),null,__CLASS__);
+		self::deletes(null,null,array('site_id'=>$_POST['site_id']),null,__CLASS__);
 		header ('Location: ?'.$_GET['query']);
 	}
 	
 	/**
-	 * 返回文章分类名称
+	 * 返回网址分类名称
 	 */
 	public function get_typeid() {
 		$array = channel::get_channel();
