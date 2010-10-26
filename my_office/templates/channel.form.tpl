@@ -1,9 +1,4 @@
-<html>
-<head>
-<title><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加分类' : '修改分类'; ?></title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
+<?php include('header.tpl')?>
 ○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类列表</a>&nbsp;
 ○<a href="?go=channel&do=append">添加分类</a><br>
 

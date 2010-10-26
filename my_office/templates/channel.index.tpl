@@ -1,9 +1,4 @@
-<html>
-<head>
-<title>分类首页</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
+<?php include('header.tpl')?>
 
 <ul>
 <li><a href="?go=channel&do=browse">分类列表</a></li>

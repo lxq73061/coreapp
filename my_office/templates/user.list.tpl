@@ -1,9 +1,4 @@
-<html>
-<head>
-<title>用户例表</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
+<?php include('header.tpl')?>
 
 ○<a href="?go=user&do=browse">用户列表</a>&nbsp;
 ○<a href="?go=user&do=append">添加用户</a><br>

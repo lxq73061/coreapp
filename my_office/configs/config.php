@@ -13,8 +13,8 @@ return array (
   'connect_charset' => 'UTF8',
   'extension_path' => '@includes',
   'extension_enable' => 'myfunction',
-  'debug_enable'=>true,
-  'sql_format' => true,
+//  'debug_enable'=>true,
+//  'sql_format' => true,
  // 'debug_file' => 'debug.sql',
   
   'front_action' => '', //前端模块的动作参数，默认同framework_action         

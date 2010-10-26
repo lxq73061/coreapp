@@ -1,9 +1,5 @@
-<html>
-<head>
-<title><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加用户' : '修改用户'; ?></title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
+<?php include('header.tpl')?>
+
 
 ○<a href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户列表</a>&nbsp;
 ○<a href="?go=user&do=append">添加用户</a><br>

@@ -1,9 +1,4 @@
-<html>
-<head>
-<title>文章首页</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
+<?php include('header.tpl')?>
 
 <ul>
 <li><a href="?go=doc&do=browse">文章列表</a></li>

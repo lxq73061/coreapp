@@ -1,29 +1,3 @@
-<?php include('header.tpl')?>
-
-○<a href="?go=doc&do=browse">文章列表</a>&nbsp;
-○<a href="?go=doc&do=append">添加文章</a><br>
-
-<form>
-<input type="hidden" name="go" value="doc">
-<input type="hidden" name="do" value="browse">
-文章名：<input type="text" name="title" value="<?php echo $get['title']?>">
-&nbsp;
-分类：
-<select name="typeid">
-	<option value=""></option>
-	<option value="1" <?php if($get['typeid'] === '1') echo 'selected'; ?>>超级管理员</option>
-	<option value="2" <?php if($get['typeid'] === '2') echo 'selected'; ?>>管理员</option>
-	<option value="3" <?php if($get['typeid'] === '3') echo 'selected'; ?>>普通文章</option>
-</select>
-排序：<select name="order">
-	<option value=""></option>
-	<option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>文章ID↑</option>
-	<option value="docname" <?php if($get['order'] === 'docname') echo 'selected'; ?>>文章名↑</option>
-	<option value="docname2" <?php if($get['order'] === 'docname2') echo 'selected'; ?>>文章名↓</option>
-</select>
-<input type="submit" value="查询">
-</form>
-<?php $ids = 'doc_id[]';?>
 
 <form method="post" action="?go=doc&do=group_remove&query=<?php echo urlencode($query) ?>">
 <table border="1">
@@ -118,5 +92,3 @@ function remove_selected(t){
 </form>
 <?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
 <?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>
-</body>
-</html>

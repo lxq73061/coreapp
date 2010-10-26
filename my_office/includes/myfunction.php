@@ -180,4 +180,30 @@ function get_use_time($min=false) {
     }
     return $use_time;
 }
+
+function get_title($get){
+	if(isset($get['go'])){
+		switch($get['go']){
+			case 'user':$title='用户';break;
+			case 'doc':$title='文章';break;
+			case 'channel':$title='分类';break;
+			default:
+			
+		}
+	}
+	if(isset($get['do'])){
+		switch($get['do']){
+			case 'append':$title.='添加';break;
+			case 'modify':$title.='修改';break;
+			case 'browse':$title.='列表';break;
+			case 'detail':$title.='详细';break;
+			case 'index':$title.='首页';break;
+			
+			default:
+			
+		}
+	}
+	
+	return $title;
+}
 ?>
