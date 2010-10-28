@@ -71,7 +71,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -147,7 +147,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($channel);
@@ -207,7 +207,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -216,13 +216,13 @@ class channel extends core {
 		
 		if ($count > 0) {
 			$error = '分类下还有数据不能删除';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}else{
 			$count = self::selects('COUNT(*)', null, array('parent_id'=>$channel->channel_id), null, array('column|table=channel'=>'COUNT(*)'));
 			if ($count > 0) {
 				$error = '分类下还有分类不能删除';
-				self::view (__CLASS__ . '.error.tpl', compact ('error'));
+				self::view ( 'error.tpl', compact ('error'));
 				return;
 			}
 		}
@@ -241,7 +241,7 @@ class channel extends core {
 //		// 获取数据
 //		if(! isset($_POST['channel_id']) || !is_array($_POST['channel_id'])){
 //			$error = '该分类不存在';
-//			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+//			self::view ( 'error.tpl', compact ('error'));
 //			return;
 //		}
 //

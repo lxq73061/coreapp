@@ -17,8 +17,8 @@ return array (
 //  'sql_format' => true,
  // 'debug_file' => 'debug.sql',
   
-  'front_action' => '', //前端模块的动作参数，默认同framework_action         
- 'front_online' => '', //在线用户的全局变量名，默认不使用                   
+ 'front_action' => '', //前端模块的动作参数，默认同framework_action         
+ 'front_online' => 'online', //在线用户的全局变量名，默认不使用                   
  'front_class' => 'user', //待验证模块的类名，默认是使用核心类                  
  'front_table' => 'user', //待验证模块的表名，默认是加上前缀的类名(类名为空除外)
  'front_fuzzy' => '', //用户名密码验证的模糊提示                            
