@@ -64,6 +64,7 @@ function pecho_trace($traces,$level=0){
 		$file = basename($fullpath);
 		//$trace['args'][0] = str_replace($domain,'',$trace['args'][0]);
 		$trace['args'][0] = '<a target="_blank" title="'.$fullpath.'" href="file:///'.str_replace(':',':',$path).'">'.str_replace(array($domain,'\\'),array('','/'),$path).'</a>/<a target="_blank" title="'.$fullpath.'"  href="file:///'.str_replace(':',':',$fullpath).'">'.$file.'</a>';
+
 		
 		$str .= '<ul>';
 		$str .= '<li>';
@@ -72,6 +73,26 @@ function pecho_trace($traces,$level=0){
 		$str .=  '</li>';
 		$str .=  '</ul>';
 	}else{
+		
+		foreach($trace['args'] as $k=>&$v){
+			if(is_array($v)){//如果参数是数组情况.
+				 $v=var_export($v,true) ;
+				//$v=str_replace("\n",'',$v);
+				//$v=str_replace("  ",' ',$v);				
+				if(strstr($_SERVER['HTTP_USER_AGENT'],'Firefox')){
+					
+					$v2=str_replace("\n",'\\n',$v);
+					$v2=str_replace("'","\\'",$v2);					
+					$v='<a href="javascript:alert(\''.$v2.'\')" title="'.$v.'">Array</a>';
+				}else{
+					$v=str_replace("\n",'&#10;',$v);
+					$v='<a href="javascript:" title="'.$v.'">Array</a>';
+					
+				}
+				
+			}
+		}
+	//	pecho($trace['args']);
 		$str .= '<ul>';
 		$str .= '<li>';
 		$str .= 'Line:'. $trace['line'].' <font color="blue" >PHP::'.$trace['function']. '</font><font color="blue">(</font>'. implode(',',$trace['args']) .'<font color="blue">)</font> ';

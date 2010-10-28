@@ -83,7 +83,7 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -189,7 +189,7 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($user);
@@ -287,7 +287,7 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -304,7 +304,7 @@ class user extends core {
 		// 获取数据
 		if(! isset($_POST['user_id']) || !is_array($_POST['user_id'])){
 			$error = '该用户不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 

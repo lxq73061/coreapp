@@ -83,7 +83,7 @@ class site extends core {
 		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
 		if(! is_numeric($site->site_id) || ! $site->select()) {
 			$error = '该网址不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -251,7 +251,7 @@ class site extends core {
 		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
 		if(! is_numeric($site->site_id) || ! $site->select()) {
 			$error = '该网址不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -268,7 +268,7 @@ class site extends core {
 		// 获取数据
 		if(! isset($_POST['site_id']) || !is_array($_POST['site_id'])){
 			$error = '该网址不存在';
-			self::view (__CLASS__ . '.error.tpl', compact ('error'));
+			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
 
