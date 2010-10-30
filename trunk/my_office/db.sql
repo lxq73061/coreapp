@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2010 年 10 月 26 日 15:32
+-- 生成日期: 2010 年 10 月 28 日 08:36
 -- 服务器版本: 5.1.37
 -- PHP 版本: 5.3.0
 
@@ -38,6 +38,36 @@ INSERT INTO `channel` (`channel_id`, `parent_id`, `component`, `name`, `sort`, `
 (1, 0, '', 'abcde', 0, 1, ',00001'),
 (2, 1, '', 'ddd', 0, 1, ',00001,00002'),
 (3, 0, '', 'cccc', 0, 1, ',00003');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `diary`
+--
+
+CREATE TABLE IF NOT EXISTS `diary` (
+  `diary_id` int(4) NOT NULL AUTO_INCREMENT,
+  `typeid` int(4) NOT NULL DEFAULT '0',
+  `title` varchar(80) CHARACTER SET utf8 NOT NULL,
+  `content` text CHARACTER SET utf8 NOT NULL,
+  `user_id` int(4) NOT NULL DEFAULT '0',
+  `create_date` date DEFAULT NULL COMMENT '创建日期',
+  `create_time` time DEFAULT NULL COMMENT '创建时间',
+  `update_date` date DEFAULT NULL COMMENT '修改日期',
+  `update_time` time DEFAULT NULL COMMENT '修改时间',
+  `mood` varchar(10) CHARACTER SET utf8 NOT NULL COMMENT '心情',
+  `weather` varchar(10) CHARACTER SET utf8 NOT NULL COMMENT '天气',
+  `diary_date` date NOT NULL,
+  PRIMARY KEY (`diary_id`),
+  KEY `typeid` (`typeid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- 转存表中的数据 `diary`
+--
+
+INSERT INTO `diary` (`diary_id`, `typeid`, `title`, `content`, `user_id`, `create_date`, `create_time`, `update_date`, `update_time`, `mood`, `weather`, `diary_date`) VALUES
+(9, 3, ' 百度ss', 'ss', 1, '2010-10-28', '04:40:06', '2010-10-28', '04:40:41', 'i', 'ii', '2000-00-00');
 
 -- --------------------------------------------------------
 
@@ -92,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `site` (
 --
 
 INSERT INTO `site` (`site_id`, `typeid`, `title`, `content`, `user_id`, `create_date`, `create_time`, `update_date`, `update_time`, `url`) VALUES
-(1, 1, '百度ss', 'ddddddddddddd', 1, '2010-10-26', '15:06:36', '2010-10-26', '15:28:03', 'http://www.baid.com/'),
+(1, 1, '百度ssl', 'ddddddddddddd', 1, '2010-10-26', '15:06:36', '2010-10-26', '15:47:25', 'http://www.baid.com/2'),
 (2, 1, '百度ss', '百度搜索ss', 1, '2010-10-26', '15:11:56', '2010-10-26', '15:30:40', 'http://www.baid.com/');
 
 -- --------------------------------------------------------
