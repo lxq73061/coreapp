@@ -17,7 +17,7 @@ function pecho($s,$f='print_r') {
 		//array_shift($traces);
 		$trace = array_shift($traces);
 		$trace['file'] = str_replace(SITE_ROOT,'',$trace['file']);
-		$str .= $trace['file'].':'. $trace['line']."</div>\r\n";
+		$str .= $trace['file'].':'. $trace['line']."\r\n";
 	}	  	
 	$str .="</DIV>";
 
@@ -227,4 +227,103 @@ function get_title($get){
 	
 	return $title;
 }
+/**
+ * 获得当前的域名
+ *
+ * @return  string
+ */
+function get_domain()
+{
+    /* 协议 */
+    $protocol = (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+
+    /* 域名或IP地址 */
+    if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+    {
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+    }
+    elseif (isset($_SERVER['HTTP_HOST']))
+    {
+        $host = $_SERVER['HTTP_HOST'];
+    }
+    else
+    {
+        /* 端口 */
+        if (isset($_SERVER['SERVER_PORT']))
+        {
+            $port = ':' . $_SERVER['SERVER_PORT'];
+
+            if ((':80' == $port && 'http://' == $protocol) || (':443' == $port && 'https://' == $protocol))
+            {
+                $port = '';
+            }
+        }
+        else
+        {
+            $port = '';
+        }
+
+        if (isset($_SERVER['SERVER_NAME']))
+        {
+            $host = $_SERVER['SERVER_NAME'] . $port;
+        }
+        elseif (isset($_SERVER['SERVER_ADDR']))
+        {
+            $host = $_SERVER['SERVER_ADDR'] . $port;
+        }
+    }
+
+    return $protocol . $host;
+}
+
+/**
+ * 获得网站的URL地址
+ *
+ * @return  string
+ */
+function site_url()
+{
+    return get_domain() . substr(PHP_SELF, 0, strrpos(PHP_SELF, '/'));
+}
+
+/**
+ * 验证输入的邮件地址是否合法
+ *
+ * @param   string      $email      需要验证的邮件地址
+ *
+ * @return bool
+ */
+function is_email($user_email)
+{
+    $chars = "/^([a-z0-9+_]|\\-|\\.)+@(([a-z0-9_]|\\-)+\\.)+[a-z]{2,5}\$/i";
+    if (strpos($user_email, '@') !== false && strpos($user_email, '.') !== false)
+    {
+        if (preg_match($chars, $user_email))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ * 检查是否为一个合法的时间格式
+ *
+ * @param   string  $time
+ * @return  void
+ */
+function is_time($time)
+{
+    $pattern = '/[\d]{4}-[\d]{1,2}-[\d]{1,2}\s[\d]{1,2}:[\d]{1,2}:[\d]{1,2}/';
+
+    return preg_match($pattern, $time);
+}
+
 ?>
