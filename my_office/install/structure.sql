@@ -98,3 +98,29 @@ CREATE TABLE `ecm_user` (
   `remark` text COMMENT '备注',
   PRIMARY KEY (`user_id`)
 ) ENGINE=MyISAM ;
+
+-- --------------------------------------------------------
+
+-- 
+-- 表的结构 `ecm_address`
+-- 
+
+DROP TABLE IF EXISTS `ecm_address`;
+CREATE TABLE `ecm_address` (
+  `address_id` int(4) NOT NULL auto_increment,
+  `typeid` int(4) NOT NULL default '0',
+  `name` varchar(80) NOT NULL,
+  `email` varchar(80) NOT NULL,
+  `qq` varchar(80) NOT NULL,
+  `msn` varchar(80) NOT NULL,
+  `mobile` varchar(80) NOT NULL,
+  `office_phone` varchar(80) NOT NULL,
+  `home_phone` varchar(80) NOT NULL,
+  `remarks` varchar(80) NOT NULL,
+  `create_date` date default NULL COMMENT '创建日期',
+  `create_time` time default NULL COMMENT '创建时间',
+  `update_date` date default NULL COMMENT '修改日期',
+  `update_time` time default NULL COMMENT '修改时间',
+  PRIMARY KEY  (`address_id`),
+  KEY `typeid` (`typeid`)
+) ENGINE=MyISAM ;
