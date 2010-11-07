@@ -9,7 +9,7 @@
 <fieldset>
 <legend>详细</legend>
 
-名称：<?php echo htmlspecialchars($address->nane); ?><br>
+名称：<?php echo htmlspecialchars($address->name); ?><br>
 	<br>
 手机：<?php echo htmlspecialchars($address->mobile); ?><br>
 	<br>   
