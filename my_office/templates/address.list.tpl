@@ -55,7 +55,12 @@
 	<td>&nbsp;</td>
 	<td>&nbsp;<a href="?go=address&do=detail&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
 	&nbsp;<?php if($address->address_id<0): ?>修改<? else: ?><a href="?go=address&do=modify&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
-	&nbsp;<?php if($address->address_id<0): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该通讯名吗？'))location='?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
+    
+	<!--&nbsp;<?php if($address->address_id<0): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该通讯名吗？'))location='?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?>-->
+    
+    &nbsp;<?php if($address->address_id<0): ?>删除<? else: ?><a href="?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>" onclick="return  confirm('您确定要删除该日志吗？')">删除</a><?php endif; ?></td>
+	</tr>
+    </td>
 	</tr>
 
 <?php endforeach ?>
