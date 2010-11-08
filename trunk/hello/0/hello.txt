@@ -1,0 +1,67 @@
+1. 入门演示模块使用说明
+1.1 这是新手学习入门CoreMVC的一个简单的演示模块。
+1.2 首先将模块中的hello.php和hello目录放到web可访问的目录上，其中hello.php是模块文件，hello目录里存放的是模板文件或配置文件。
+1.3 由于hello模块不包含CoreMVC框架文件，所以要手动将CoreMVC核心文件core.php放到hello.php的同级目录里。
+1.4 这个时候通过浏览器访问hello.php会发现找不到该页，不要担心CoreMVC默认模块只可引用不可访问的，就如同不能访问core.php一样。
+通过配置文件可打开访问开关，创建core目录并且在core目录上创建config.php配置文件，内容如下：
+<<core/config.php>>
+<?php
+return array (
+	'framework_enable' => true,
+);
+?>
+我们来看，现在一共有五个文件
+core.php
+core/config.php
+hello.php
+hello/index.tpl
+hello/world.tpl
+1.5 现在通过浏览器访问web的hello.php即可。
+
+2. 入门演示模块需求分析
+2.1 访问首页即访问hello.php，显示两个链接，分别指向world动作和coremvc动作。
+2.2 访问hello.php?do=world时，直接显示hello world!。演示视图函数及传递参数的方法。
+2.3 访问hello.php?do=coremvc时，连接数据库，从数据集中显示hello CoreMVC。演示数据库函数及使用对象的方法。
+CoreMVC默认的数据库服务器是localhost，默认的用户名是root，默认的密码为空，默认的数据库是test。
+可以通过修改配置文件来定义数据库服务器参数，如：
+<<core/config.php>>
+<?php
+return array (
+	'framework_enable' => true,
+	'connect_server' => 'localhost',
+	'connect_username' => 'root',
+	'connect_password' => '',
+	'connect_dbname' => 'test',
+	'connect_charset' => 'utf8',
+);
+?>
+
+3. 入门演示模块要点回顾
+3.1 CoreMVC将项目分割成各个关联程度较低重用程度较高的模块，比如这里的hello模块。
+3.2 模块单独不能使用，需要CoreMVC框架的支持。可以认为CoreMVC核心文件core.php是各个模块的粘合剂，而配置文件core/config.php是各个模块的启动器。
+3.3 模块一般由一个模块程序和若干个模板文件或配置文件组成。模块程序名和模板所在的目录名一致，如这里的
+hello.php
+hello/index.tpl
+hello/world.tpl
+3.4 模块程序名和模块类名一致，导入、定义、执行这几步要清晰，如这里的hello.php
+<?php
+/**
+ * 导入(import)
+ */
+class_exists ('core') or require_once 'core.php';
+
+/**
+ * 定义(define)
+ */
+class hello extends core {
+
+	......
+
+}
+
+/**
+ * 执行(execute)
+ */
+hello::stub () and hello::main ();
+?>
+3.5 初学入门建议使用多入口的模式，将来可以通过配置文件改成单入口模式。
