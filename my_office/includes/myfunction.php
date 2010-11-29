@@ -325,5 +325,15 @@ function is_time($time)
 
     return preg_match($pattern, $time);
 }
-
+function set_select($v1,$v2){
+	//pecho($v1.'=='.$v2.' && '.(strlen($v1)).'=='.(strlen($v2)));
+	if($v1==$v2 && strlen($v1)==strlen($v2)){
+		return 'selected="selected"';
+	}
+}
+function set_radio($v1,$v2){
+	if($v1==$v2){
+		return 'checked';
+	}
+}
 ?>
