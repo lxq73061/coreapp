@@ -1,0 +1,105 @@
+/* CSS Document */
+
+body {
+background-color:#ECF4F7;
+background-repeat:repeat-x;
+font-family:Verdana,"宋体";
+padding-top:10px;
+font-size:12px;
+}
+input.input{
+	width:80%;
+}
+#nav .left{	float:left;}
+#nav .right{	float:right;}
+
+/*#index dl{
+width:48%;
+min-height:225px;
+float:left;
+background:#f9f9f9;
+margin:5px;
+}*/
+#channel dl dt{
+height:25px;
+background:#f0f0f0;
+line-height:25px;
+padding:0px 10px 0px 10px;
+}
+#channel dl dt strong{
+float:left
+}
+#channel dl dt span{
+float:right
+}
+#channel dl dd{
+line-height:20px;
+padding:0px;
+margin-left:10px;
+}
+#channel dl dd a{
+	/*display:block;*/
+	height:20px;
+	overflow:hidden;
+	float:left;
+	
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+#channel dl dd span{
+width:20%;
+float:left;
+}
+#channel dl dd em{
+ font-style: normal;
+}
+
+.doc dd a{
+	width:75%;
+	padding-left:20px;
+	background-image: url(../images/tree/e.gif);
+	
+}
+.sites dd a{
+	width:80%;
+	padding-left:20px;
+	background-image: url(tree/e1.gif);
+ 
+
+}
+.adds dd a{
+width:18%;
+padding-left:20px;
+background-image: url(tree/usergroupicon.gif);
+}
+.diary dd a{
+width:75%;
+padding-left:20px;
+background-image: url(tree/b.gif);
+}
+
+
+
+.doc_title {
+color:#0066CC;
+display:block;
+width:250px;
+}
+.doc_content {
+background:none repeat scroll 0 0 #F9F9F9;
+border:10px solid #EFEFEF;
+line-height:20px;
+padding:35px;
+}
+.doc_content h1 {
+background:none repeat scroll 0 0 transparent;
+border:medium none;
+font-size:30px;
+margin:35px auto;
+text-align:center;
+}
+.doc_content_box {
+border:1px solid #CCCCCC;
+padding:5px;
+margin:50px 50px;
+}
