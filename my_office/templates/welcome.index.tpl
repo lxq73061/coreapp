@@ -1,20 +1,20 @@
-<html>
-<head>
-<title>Welcome</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-</head>
-<body>
-○<a href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户</a>&nbsp;
-○<a href="?go=doc&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">文章</a>&nbsp;
-○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类</a>&nbsp; 
-○<a href="?go=diary&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">日记</a>&nbsp; 
-○<a href="?go=site&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">网址</a>&nbsp;
-○<a href="?go=address&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">通讯录</a>&nbsp;
-○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本</a>&nbsp;
-<!--○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本2</a>&nbsp;
---><!--○<a href="?go=books&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本3</a>&nbsp;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML><HEAD><TITLE>我的网站</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<!--whole frame start-->
+<!--<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
 -->
-○<a href="?go=user&do=logout">退出</a><br>
-Welcome <?php echo $online->username?>!
-</body>
-</html>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script> 
+<!--<script type="text/javascript" src="js/function.js"></script>
+-->
+<META content="MSHTML 6.00.2900.3199" name=GENERATOR></HEAD>
+<FRAMESET border=0 frameSpacing=0 rows=65,* frameBorder=NO cols=*>
+	<FRAME border=0 name=topFrame frameSpacing=0 src="./?go=welcome&do=top" frameBorder=0 noResize scrolling=no>
+<FRAMESET id=info_show_frame border=0 frameSpacing=0 rows=* frameBorder=NO cols=196,12,*>
+
+	<FRAME name=leftFrame src="./?go=channel&do=tree" scrolling=yes>
+	<FRAME name=midFrame src="./?go=welcome&do=middle" frameBorder=0 noResize scrolling=no>
+	<FRAME name=frmView id=frmView src="./?go=welcome&do=right"></FRAMESET>
+</FRAMESET>
+<noframes></noframes>
+</HTML>

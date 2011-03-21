@@ -6,20 +6,13 @@
 <form>
 <input type="hidden" name="go" value="doc">
 <input type="hidden" name="do" value="browse">
-文章名：<input type="text" name="title" value="<?php echo $get['title']?>">
+关键词：<input type="text" name="keyword" value="<?php echo $get['keyword']?>">
 &nbsp;
-分类：
-<select name="typeid">
-	<option value=""></option>
-	<option value="1" <?php if($get['typeid'] === '1') echo 'selected'; ?>>超级管理员</option>
-	<option value="2" <?php if($get['typeid'] === '2') echo 'selected'; ?>>管理员</option>
-	<option value="3" <?php if($get['typeid'] === '3') echo 'selected'; ?>>普通文章</option>
-</select>
+
 排序：<select name="order">
-	<option value=""></option>
-	<option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>文章ID↑</option>
-	<option value="docname" <?php if($get['order'] === 'docname') echo 'selected'; ?>>文章名↑</option>
-	<option value="docname2" <?php if($get['order'] === 'docname2') echo 'selected'; ?>>文章名↓</option>
+	<option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>创建日期↑</option>
+	<option value="date" <?php if($get['order'] === 'date') echo 'selected'; ?>>修改日期↑</option>
+	<option value="hit" <?php if($get['order'] === 'hit') echo 'selected'; ?>>访问次数↑</option>
 </select>
 <input type="submit" value="查询">
 </form>
@@ -43,8 +36,8 @@
 	<td>&nbsp;<?php echo $doc->create_date; ?>&nbsp;<?php echo $doc->create_time; ?></td>
 	<td>&nbsp;<?php echo $doc->update_date; ?>&nbsp;<?php echo $doc->update_time; ?></td>
 	<td>&nbsp;<a href="?go=doc&do=detail&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
-	&nbsp;<?php if($doc->doc_id<3): ?>修改<? else: ?><a href="?go=doc&do=modify&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
-	&nbsp;<?php if($doc->doc_id<3): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该文章吗？'))location='?go=doc&do=remove&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
+	&nbsp;<?php if(!$doc->doc_id): ?>修改<? else: ?><a href="?go=doc&do=modify&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
+	&nbsp;<?php if(!$doc->doc_id): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该文章吗？'))location='?go=doc&do=remove&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
 	</tr>
 <?php endforeach ?>
 </tbody>
