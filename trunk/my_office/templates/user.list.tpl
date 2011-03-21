@@ -28,6 +28,7 @@
 	<tr><th>&nbsp;</th><th>ID</th><th>用户名</th><th>等级</th><th>姓名</th><th>性别</th><th>操作</th></tr>
 </thead>
 <tbody>
+<?php if(count($users)): ?>
 <?php foreach($users as $user): ?>
 	<tr>
 	<td><?php if($user->user_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="user_id[]" value="<?php echo $user->user_id; ?>"><?php endif; ?></td>
@@ -41,6 +42,17 @@
 	&nbsp;<?php if($user->user_id<3): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该用户吗？'))location='?go=user&do=remove&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
 	</tr>
 <?php endforeach ?>
+<?php else: ?>
+	<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	</tr>
+<?php endif ?>
 </tbody>
 <tfoot>
 	<tr><td colspan="7">&nbsp;<input type="button" value="全选" onClick="select_all(this)">

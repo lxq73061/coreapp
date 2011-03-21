@@ -4,19 +4,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <title><?php echo get_title($_GET); ?></title>
+<link rel="stylesheet" type="text/css" href="templates/css/css.css">
+
 </head>
 
 <body>
-○<a href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户</a>&nbsp;
+<!--○<a href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户</a>&nbsp;
 ○<a href="?go=doc&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">文章</a>&nbsp;
 ○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类</a>&nbsp; 
 ○<a href="?go=diary&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">日记</a>&nbsp; 
 ○<a href="?go=site&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">网址</a>&nbsp; 
 ○<a href="?go=address&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">通讯录</a>&nbsp;
-<!--○<a href="?go=test&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本</a>&nbsp;
--->
 ○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本</a>&nbsp;
-<!--○<a href="?go=books&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本3</a>&nbsp;
--->
+
 ○<a href="?go=user&do=logout">退出</a><br>
 <hr />
+-->

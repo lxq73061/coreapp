@@ -1,6 +1,6 @@
 <?php include('header.tpl')?>
-○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类列表</a>&nbsp;
-○<a href="?go=channel&do=append">添加分类</a><br>
+<!--○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类列表</a>&nbsp;
+○<a href="?go=channel&do=append">添加分类</a><br>-->
 
 <form method="post" action="?go=channel&do=<?php echo $_GET['do']; ?>&channel_id=<?php echo $_GET['channel_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
 <fieldset>
