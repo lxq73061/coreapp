@@ -22,7 +22,18 @@ class welcome extends core {
 	final static public function index() {
 		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
-
+	final static public function top() {
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+	}
+	final static public function left() {
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+	}
+	final static public function right() {
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+	}
+	final static public function middle() {
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+	}
 	
 }
 
