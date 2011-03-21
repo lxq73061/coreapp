@@ -65,7 +65,14 @@ class channel extends core {
 	 * 分类详细
 	 */
 	final static public function detail() {
-
+		// 数据消毒
+		$get = array(
+			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
+		);
+		if (get_magic_quotes_gpc()) {
+			$get = array_map ('stripslashes', $get);
+		}
+		
 		// 获取数据
 		$channel = new self;
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
@@ -74,9 +81,30 @@ class channel extends core {
 			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
+		
+		$online = front::online();
+		// 获取数据
+		$where = array();
+		
+		if (strlen($get['typeid'])>0){
+			$where ['typeid'] = (int)$get['typeid'];
+		}
+		$other = array('ORDER BY sort');
+		
+		$page = array('page'=>$get['page'],'size'=>100);
+		$other ['page'] = &$page;
+		//$channels = self::selects (null, null, $where, $other, __CLASS__);
+		$path = ','.str_pad($channel->channel_id,5,'0',STR_PAD_LEFT);
+		$tablepre = self::init('prefix_search');
+		$sql = "SELECT a.*,b.name  FROM {$tablepre}doc as a LEFT JOIN {$tablepre}channel as b  on a.typeid = b.channel_id  
+		WHERE a.user_id='$online->user_id' AND  b.channel_id IN(
+			SELECT channel_id FROM {$tablepre}channel WHERE path like'%$path%'
+		)";
+		
+		$docs = self::selects($sql,null,true,$other);
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('user'));
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page'));
 	}
 	
 	/**
@@ -185,6 +213,8 @@ class channel extends core {
 			
 			$channel->struct ($post);
 			$channel->update ();
+			self::update_path($channel->channel_id);
+			exit();
 			header ('Location: ?'.$_GET['query']);
 			return;
 
@@ -232,7 +262,16 @@ class channel extends core {
 		$channel->delete ();
 		header ('Location: ?'.$_GET['query']);
 	}
-	
+	final static public function tree() {
+		$online = front::online();
+		$channels = self::get_channel();
+		$docs = self::selects('doc_id,typeid,title,create_date,create_time,update_date,update_time,hit', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,doc_id DESC'),array('doc_id','assoc|table=doc'=>null));
+		$sites = self::selects('site_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,site_id DESC'),array('site_id','assoc|table=site'=>null));
+		$adds = self::selects('add_id,typeid,who', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,add_id DESC'),array('add_id','assoc|table=add'=>null));
+		$diarys = self::selects('diary_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,diary_id DESC'),array('diary_id','assoc|table=diary'=>null));
+
+		self::view ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'));
+	}
 	/**
 	 * 群删分类
 	 */
@@ -276,7 +315,7 @@ function get_channel_table($m,$id)
 	foreach($class_arr as $k=>$v){
 		if($v['parent_id']==$id){
 		$str .= "<tr>\n";
-		$str .= "	  <td>".$n."|--<a href=\"?go=channel&do=modify&amp;channel_id=".$v[$class_id]."\">".$v[$name]."</a></td>\n";
+		$str .= "	  <td>".$n."|--<a href=\"?go=channel&do=detail&amp;channel_id=".$v[$class_id]."\">".$v[$name]."</a></td>\n";
 		$str .= "	  <td><div align=\"center\">".$v[$sort]."</div></td>\n";
 		$str .= "	  <td><div align=\"center\"><a href=\"?go=channel&do=modify&amp;channel_id=".$v[$class_id]."\">修改</a>";
 		$str .= " <a href=\"?go=channel&do=remove&amp;channel_id=".$v[$class_id]."&query=go=channel\">删除</a>";
@@ -319,14 +358,19 @@ function get_channel_select($m,$id,$index)
 		function update_path($id){
 						
 		$id=intval($id);
-		$sql = "SELECT channel_id,parent_id,path FROM channel WHERE channel_id = (SELECT parent_id FROM channel WHERE channel_id=$id) ";
-		$channel = self::selects($sql,null,true,array('ORDER BY sort ASC,channel_id DESC'),array('assoc'=>null));
+		
+		$parent_id = self::selects('parent_id', null, array('channel_id'=>$id),array(),array('column'=>'parent_id'));
+		//$channel = self::selects('parent_id', null, array('channel_id'=>$id),array(),array('column|table=channel'=>1));
 
+
+		//$sql = "SELECT channel_id,parent_id,path FROM channel WHERE channel_id = (SELECT parent_id FROM channel WHERE channel_id=$id) ";
+		//$channel = self::selects($sql,null,true,array('ORDER BY sort ASC,channel_id DESC'),array('assoc'=>null));
+        $channel = self::selects('channel_id,parent_id,path', null, array('channel_id'=>$parent_id),array(),array('assoc'=>null));
 
 		if($channel['path']){//有上级，并且上级设置了path					
 			$path  = $channel['path'].','. str_pad($id,5,'0',STR_PAD_LEFT);
-		}elseif($ppath['id']){//上级分类有，但没有设置path时
-			 self::update_path($channel['id']);
+		}elseif($channel['channel_id']){//上级分类有，但没有设置path时
+			 self::update_path($channel['channel_id']);
 			 self::update_path($id);
 			 return;
 		}else{
@@ -343,19 +387,33 @@ function get_channel_select($m,$id,$index)
 		if(!$pid){
 			return;
 		}
-		$sql = "SELECT * FROM channel WHERE channel_id = ".$pid;
-		$pinfo = self::selects($sql,null,true,null,array('assoc'=>null));
-		//$pinfo = $db->fetch_first($sql);
-		$path = preg_replace('/[0]+/is','',$pinfo['path']);
+		//$sql = "SELECT * FROM channel WHERE channel_id = ".$pid;
+		//$pinfo = self::selects($sql,null,true,null,array('assoc'=>null));
+		$pinfo = self::selects(null, null, array('channel_id'=>$pid),array(),array('assoc'=>null));
+	
+		
+		//$path = preg_replace('/[0]+/is','',$pinfo['path']);//当前id也在path里。
+		$path = $pinfo['path'];
 		$path = trim($path,',');
 		if(!$path){
 			self::update_path($pid);
 			return self::get_nav($pid);
 		}
-		$sql = "SELECT * FROM channel WHERE channel_id IN($path)";
-		$pinfos = self::selects($sql,null,true,null,array(null,'assoc'=>null));
+		$paths = explode(',',$path);
+		$paths = array_map('intval',$paths);
+		//pecho($pid);
+		//pecho($paths);
+	
+		//if($path[count($path)]!=$pid)$path.=','.$pid;
+		//$sql = "SELECT * FROM channel WHERE channel_id IN($path)";
+		//$pinfos = self::selects($sql,null,true,null,array(null,'assoc'=>null));
+		$pinfos = self::selects(null, null, array('channel_id'=>explode(',',$path)),array(),array(null,'assoc'=>null));
+
 		foreach($pinfos as $k=>$v){
-			$nav .= '<a href="view_channel.php?id='.$v['id'].'">'.$v['name'].'</a>&gt;&gt;';
+			if($v['channel_id']!=$pid)
+			$nav .= '<a href="?go=channel&do=detail&channel_id='.$v['channel_id'].'">'.$v['name'].'</a>&raquo;';
+			else
+			$nav .= '<strong>'.$v['name'].'</strong>';
 		}
 		return $nav;
 	}

@@ -30,7 +30,7 @@ class doc extends core {
 
 		// 数据消毒
 		$get = array(
-			'title' => isset ($_GET ['title']) ? $_GET ['title'] : '',
+			'keyword' => isset ($_GET ['keyword']) ? $_GET ['keyword'] : '',
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
@@ -41,22 +41,34 @@ class doc extends core {
 
 		// 获取数据
 		$where = array();
-		if (strlen($get['title'])>0){
-			$where ['title LIKE ?'] = '%'.$get['title'].'%';
+		if (strlen($get['keyword'])>0){
+			$where []=array(
+			'title LIKE ?' => '%'.$get['keyword'].'%',
+			'content LIKE ?' => '%'.$get['keyword'].'%',
+			'keyword LIKE ?' => '%'.$get['keyword'].'%',
+			'copyfrom LIKE ?' => '%'.$get['keyword'].'%');
 		}
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
 		}
+	
 		switch ($get['order']) {
 			case 'doc_id':
 				$other = array('ORDER BY doc_id');
 				break;
-			case 'title':
-				$other = array('ORDER BY title');
+			case 'date':
+				$other = array('ORDER BY update_date');
 				break;
-			case 'title2':
-				$other = array('ORDER BY title DESC');
+			case 'date2':
+				$other = array('ORDER BY update_date DESC');
 				break;
+			case 'hit':
+				$other = array('ORDER BY hit');
+				break;
+			case 'hit2':
+				$other = array('ORDER BY hit DESC');
+				break;
+				
 			default:
 				$other = array('ORDER BY doc_id DESC');
 				break;
@@ -86,8 +98,8 @@ class doc extends core {
 			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
-		
-
+		$doc->hit++;//访问次数
+		$doc->update ();
 		// 页面显示
 		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc'));
 	}
@@ -142,14 +154,12 @@ class doc extends core {
 			//if (strlen ($post['keyword']) === 0) {
 			//	$error ['keyword'] = '请填写姓名';
 			//}
-			if (preg_match ('/^[1-2]$/i',$post ['keyword_auto']) === 0 ) {
-				$error ['keyword_auto'] = '请选择关键词是否自动提取';
-			}else{
-				if($post ['keyword_auto']==1){
-					
-				}
-				unset($post ['keyword_auto']);
+
+			if($post['keyword_auto']==1){
+				$post['keyword'] = self::get_keywords(strip_tags($post['title'].$post['content']));
 			}
+			unset($post ['keyword_auto']);
+			
 			//$length = (strlen ($post ['content']) + mb_strlen ($post ['content'], 'UTF-8')) /2;
 			//if ($length > 100) {
 			//	$error ['content'] = '备注最多只能填写100个字符';
@@ -163,7 +173,8 @@ class doc extends core {
 			$doc ->doc_id = null;
 			$doc ->struct ($post);
 			$doc->insert ();		
-			header ('Location: ?go=doc&do=browse');
+			//header ('Location: ?go=doc&do=browse');
+			header ('Location: ?go=doc&do=modify&doc_id='.$doc->doc_id);
 			return;
 
 		}
@@ -219,14 +230,12 @@ class doc extends core {
 			if ($post ['typeid'] === 0 ) {
 				$error ['typeid'] = '请选择文章分类';
 			}
-			if (preg_match ('/^[1-2]$/i',$post ['keyword_auto']) === 0 ) {
-				$error ['keyword_auto'] = '请选择关键词是否自动提取';
-			}else{
-				if($post ['keyword_auto']==1){
+
+			if($post['keyword_auto']==1){
+				$post['keyword'] = self::get_keywords(strip_tags($post['title'].$post['content']));
+			}
+			unset($post ['keyword_auto']);
 					
-				}
-				unset($post ['keyword_auto']);
-			}			
 			if (! empty ($error)) {
 				break;
 			}
@@ -236,11 +245,12 @@ class doc extends core {
 			$doc->struct ($post);
 			$doc->update ();
 			header ('Location: ?'.$_GET['query']);
+			//header ('Location: ?go=doc&do=modify&doc_id='.$doc->doc_id);
 			return;
 
 		}
 
-		// 页面显示
+		// 页面显示s
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
@@ -283,6 +293,23 @@ class doc extends core {
 		header ('Location: ?'.$_GET['query']);
 	}
 	
+	final static public function get_keywords($contents){
+		$rows = strip_tags($contents);
+		$arr = array(' ',' ',"\s", "\r\n", "\n", "\r", "\t", ">", "\"", "\"");
+		$qc_rows = str_replace($arr, '', $rows);
+		if(strlen($qc_rows)>2400){
+		$qc_rows = substr($qc_rows, '0', '2400');
+		}
+		$contents = urlencode($contents);
+		//pecho(("http://keyword.discuz.com/related_kw.html?title=$contents&ics=gbk&ocs=gbk"));
+		$data = @implode('', file("http://keyword.discuz.com/related_kw.html?title=$contents&ics=gbk&ocs=gbk"));
+		preg_match_all("/<kw>(.*)A\[(.*)\]\](.*)><\/kw>/",$data, $out, PREG_SET_ORDER);
+		for($i=0;$i<5;$i++){
+			$key=$key.$out[$i][2];
+			if($out[$i][2])$key=$key.",";
+		} 
+		return $key; 
+	}
 	/**
 	 * 返回文章分类名称
 	 */
