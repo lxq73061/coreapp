@@ -340,7 +340,7 @@ class installd extends core {
         /* 安装初始数据 TODO 暂时不完整 */
         $sqls = get_sql(version_data('initdata.sql'));
         //$password = md5($admin_pass);//不加密密码
-		 $password = $admin_pass;
+		 $password = md5($admin_name.md5($admin_pass));
        // $sqls[] = "INSERT INTO `ecm_member`(user_name, email, password, reg_time) VALUES('{$admin_name}', '{$admin_email}', '{$password}', " . gmtime() . ")";
 		$sqls[] = "INSERT INTO `ecm_user` (`username`, `password`, `grade`, `name`, `gender`, `mobile`, `email`, `url`, `remark`) VALUES
 ('{$admin_name}', '{$password}', 1, NULL, NULL, NULL, '{$admin_email}', NULL, NULL)";
