@@ -126,6 +126,7 @@ class doc extends core {
 			'keyword_auto' => isset ($_POST ['keyword_auto']) ? $_POST ['keyword_auto'] : '',
 			'content' => isset ($_POST ['content']) ? $_POST ['content'] : '',
 			'user_id' => $online->user_id,
+			'hit' => 0,
 			'create_date'=>date('Y-m-d',$time),
 			'create_time'=>date('H:i:s',$time),		
 			'update_date'=>date('Y-m-d',$time),
