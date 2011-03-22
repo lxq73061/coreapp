@@ -69,7 +69,7 @@ text-align:right;
 显示：
 <input name="limit" type="text" value="20" size="2">
 
-条
+条/页
 <select name="order">
 <option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>创建日期↑</option>
 <option value="date" <?php if($get['order'] === 'date') echo 'selected'; ?>>修改日期↑</option>
@@ -86,8 +86,8 @@ text-align:right;
                                                                                         <tr><!--
                                                                                             <td class="textButton" onclick="javascript:history.go(-1);" align="middle" width="55" height="22"><a href="#"><img src="templates/images/undo.gif" alt="{lang back_off}" width="32" height="32" border="0" /></a></td>
                                                                                             <td class="textButton" onclick="javascript:history.go(1);" align="middle" width="55" height="22"><a href="#"><img src="templates/images/redo.gif" alt="{lang go_ahead}" width="32" height="32" border="0" /></a></td>-->
-                                                                                            <td class="textButton"  onclick="top.frmView.location.reload();top.leftFrame.location.reload();" align="middle" width="55" height="22"><a href="#"><img src="templates/images/reload.gif" alt="{lang refresh}" width="32" height="32" border="0" /></a></td>
-                                                                                            <td align="middle" width="55" height="22"><a href="?go=user&do=logout" target="_top"><img src="templates/templates/images/exit.gif" alt="{lang exit}" width="32" height="32" border="0" /></a></td>
+                                                                                            <td class="textButton"  onclick="top.frmView.location.reload();top.leftFrame.location.reload();" align="middle" width="55" height="22"><a href="#"><img src="templates/images/reload.gif" alt="刷新" width="32" height="32" border="0" /></a></td>
+                                                                                            <td align="middle" width="55" height="22"><a href="?go=user&do=logout" target="_top"><img src="templates/templates/images/exit.gif" alt="退出" width="32" height="32" border="0" /></a></td>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                 </table></td>

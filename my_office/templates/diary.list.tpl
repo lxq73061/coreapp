@@ -21,9 +21,12 @@
 </select>
 <input type="submit" value="查询">
 </form>
-
+<?php $ids = 'diary_id[]';?>
+<script language="javascript">
+var ids = '<?=$ids?>';
+</script>
 <form method="post" action="?go=diary&do=group_remove&query=<?php echo urlencode($query) ?>">
-<table border="1">
+<table border="0" cellpadding="5">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th>
 	  <th>日期</th>
@@ -36,7 +39,7 @@
 <?php if($diarys):?>
 <?php foreach($diarys as $diary): ?>
 	<tr>
-	<td><?php if($diary->diary_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="diary_id[]" value="<?php echo $diary->diary_id; ?>"><?php endif; ?></td>
+	<td><?php if($diary->diary_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $diary->diary_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $diary->diary_id; ?></td>
 	<td>&nbsp;<?php echo $diary->diary_date; ?></td>
 	<td><?php echo $diary->title; ?></td>

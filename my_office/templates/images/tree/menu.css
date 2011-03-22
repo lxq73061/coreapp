@@ -1,0 +1,174 @@
+/* CSS Document */
+body{
+	font-size:12px;
+	margin:0;
+	SCROLLBAR-FACE-COLOR: #5b84c4; 
+	SCROLLBAR-HIGHLIGHT-COLOR: #d2def2; 
+	SCROLLBAR-3DLIGHT-COLOR: #d2def2; 
+	SCROLLBAR-ARROW-COLOR: #fff; 
+	SCROLLBAR-TRACK-COLOR: #d2def2; 
+	SCROLLBAR-DARKSHADOW-COLOR: #d2def2;
+}
+a.YEMATree_A {
+	font-size: 9pt;
+	text-decoration: none;
+	width:100%;
+	height:17px;
+	overflow:hidden;
+
+}
+a.YEMATree_A:link {
+	color: #000000;
+}
+a.YEMATree_A:visited {
+	color: #000000;
+}
+a.YEMATree_A:hover {
+	color: #FF0000;
+}
+a.YEMATree_A:active {
+	color: #000000;
+}
+
+.YEMATreeHead {
+	font-size:15px;
+	font-weight:bold;
+}
+
+.YEMATree_Case {
+}
+
+.YEMATreeNodeCaption, .YEMATreeNodeCaptionOver {
+	margin:0px 0px 0px 1px;
+	height:15px;
+	padding:1px 2px 0px 2px;
+	width:100%;
+	overflow:hidden;
+/*		white-space:nowrap;*/
+	
+}
+.YEMATreeNodeCaption {
+	border:1px solid #FFFFFF;
+	background-color: #FFFFFF;
+}
+
+.YEMATreeNodeCaptionOver {
+	background-color: #EEEEEE;
+	border:1px solid #999999;
+}
+
+.YEMATreeNode, .YEMATreeNodeOpen, .YEMATreeNodeEnd, .YEMATreeNodeEndOpen, .YEMATreeLeaf, .YEMATreeLeafEnd {
+	background-repeat: no-repeat;
+	padding:0px 0px 0px 18px;
+	font-size: 9pt;
+	cursor: hand;
+	height: 18px;
+	white-space:nowrap;
+}
+
+.YEMATreeNode, .YEMATreeNodeOpen, .YEMATreeNodeEnd, .YEMATreeNodeEndOpen {
+	left: 16px;
+}
+
+.YEMATreeNode {
+	background-image: url('folder1.gif');
+}
+
+.YEMATreeNodeOpen {
+	background-image: url('folder2.gif');
+}
+
+.YEMATreeNodeEnd {
+	background-image: url('folder3.gif');
+}
+
+.YEMATreeNodeEndOpen {
+	background-image: url('folder4.gif');
+}
+
+.YEMATreeLeaf {
+	background-image: url('file1.gif');
+}
+
+.YEMATreeLeafEnd {
+	background-image: url('file.gif');
+}
+
+.YEMATreeLine, .YEMATreeLineEnd {
+	padding: 0px 0px 0px 20px;
+	font-size: 9pt;
+}
+
+.YEMATreeLine {
+	background-image: url('list.gif');
+	background-repeat: repeat-y;
+}
+
+.YEMATreeLineEnd {
+}
+/*************ÓÒ¼ü²Ëµ¥*************/
+#rightmenu{   
+	position:absolute; 
+	display:none;
+	border:1px   solid   #DDD;   
+	background:#fff;   
+}   
+#rightmenu * ul{
+	padding:1px;  
+	list-style:none;  
+	margin:0;   
+	padding:0;   
+}
+#rightmenu * li{   
+	padding:1px;
+	
+}   
+#rightmenu li   a{   
+	padding:3px;   
+	display:block;   
+	text-decoration:none;   
+	cursor:default;
+	color:#000000; 
+}   
+#rightmenu li   a:link,#menu   li   a:visited{   
+	color:black;   
+}   
+#rightmenu li   a:hover{   
+	color:white;   
+	background:#039;   
+}  
+#div_ty{ 
+    background:#eee; 
+    position:relative; 
+    left:5px; 
+    top:5px; 
+} 
+#div_ty .div_tyk{
+	position:relative;
+	left:-3px;
+	top:-3px;
+	border:1px solid #333;
+	background-color: #FAFAFA;/*	background-color: lightyellow;*/
+} 
+#div_ty .div_tyk2{ 
+    position:relative; 
+	margin:-2px auto auto -2px;
+    left:-1px; 
+    top:-1px; 
+	background:#999;
+/*    background:lightyellow; 
+    border:2px solid #999; */
+} 
+#div_ty .div_tyk3{ 
+    position:relative; 
+	margin:-2px auto auto -2px;
+    left:-1px; 
+    top:-1px; 
+	background:#ccc;
+} 
+#div_ty .div_tyc{ 
+    padding:10px; 
+    font-size:12px; 
+    line-height:1.5em; 
+} 
+/*************ÓÒ¼ü²Ëµ¥½áÊø*************/

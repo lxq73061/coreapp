@@ -8,9 +8,7 @@
 <label>分类名称：<input name="name" type="text" class="input" id="name" value="<?php echo $post['name'];?>" size="40" /></label><font color="red">*</font><?php if(isset($error['name'])): ?><font color="red"><?php echo $error['name']; ?></font><?php endif; ?><br>
 <label>所属分类：<select name="parent_id" id="parent_id">
             <option value="0">-----顶级分类-----</option>
-            <?php
-            	channel::get_channel_select(0,0,$post['parent_id']);
-			?>
+            <?=channel::get_channel_select(0,0,$post['parent_id'],$post['channel_id'])?>
           </select></label><br>
 <label>分类排序：<input name="sort" type="text" class="input" id="sort" value="<?php echo $post['sort'];?>" size="25" /></label><br>
 <label><input type="submit" value="提交"></label>

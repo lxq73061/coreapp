@@ -4,6 +4,9 @@
 <!--whole frame start-->
 <!--<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
 -->
+<script>
+if(top!=self)top.location = self.location;
+</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script> 
 <!--<script type="text/javascript" src="js/function.js"></script>
 -->

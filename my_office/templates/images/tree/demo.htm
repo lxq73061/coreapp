@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Menu</title>
+<link href="menu.css" rel="stylesheet" type="text/css" />
+<script src="menu.js" type="text/javascript"></script>
+</head>
+
+<body>
+<script language="javascript" type="text/javascript">
+	var tree1 = new YEMATree("tree1", "./", "usericon.gif", "YEMATree 2.1.0", "", "");
+	tree1.addnode(1, 0, "tom", "powericon.gif", "", "http://www.tom.com/", "frmView");
+	tree1.addnode(2, 0, "outher", "", "", "", "frmView");
+		tree1.addnode(8, 2, "sohu", "", "", "http://www.sohu.com/", "frmView");
+		tree1.addnode(9, 2, "google", "", "", "http://www.google.com/", "frmView");
+		tree1.addnode(44, 2, "sina", "", "", "http://www.sina.com/", "frmView");
+	tree1.addnode(3, 0, "news", "", "", "http://www.xinhuanet.com/", "frmView");
+	tree1.addnode(4, 0, "web技术论坛", "", "", "http://www.web-bbs.com/", "frmView");
+		tree1.addnode(33, 4, "作者blog", "", "", "http://www.yemaol.com/", "frmView");
+		tree1.addnode(32, 4, "作者blog", "", "", "http://www.yemaol.com/", "frmView");
+		tree1.addnode(31, 4, "作者blog", "", "", "http://www.yemaol.com/", "frmView");
+	tree1.write();
+</script>
+<input type="button" value="OpenAll" onclick="tree1.openall()" />
+<br />
+<input type="button" value="CloseAll" onclick="tree1.closeall()" />
+</body>
+</html>
