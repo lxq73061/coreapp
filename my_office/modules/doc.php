@@ -105,7 +105,8 @@ class doc extends core {
 		$doc->hit++;//访问次数
 		$doc->update ();
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc'));
+		$query = $_SERVER['QUERY_STRING'];
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query'));
 	}
 	
 	/**
@@ -176,9 +177,10 @@ class doc extends core {
 			$doc = new self;
 			$doc ->doc_id = null;
 			$doc ->struct ($post);
-			$doc->insert ();		
-			//header ('Location: ?go=doc&do=browse');
+			$doc->insert ('','doc_id');
 			header ('Location: ?go=doc&do=modify&doc_id='.$doc->doc_id);
+			//header ('Location: ?go=doc&do=browse');
+			
 			return;
 
 		}
@@ -258,7 +260,10 @@ class doc extends core {
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		
+		$query = $_SERVER['QUERY_STRING'];
+			
+		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','query'));
 	}
 	
 	/**

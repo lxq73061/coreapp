@@ -6,7 +6,7 @@
 
 <div id="nav">
 	<div class="left"><?=channel::get_nav($doc->typeid)?></div>
-	<div class="right"><a href="?go=doc&do=modify&doc_id=<?=$doc->doc_id?>">[编辑]</a></div>
+	<div class="right"><a href="?go=doc&do=modify&doc_id=<?=$doc->doc_id?>&query=<?php echo urlencode($query) ?>">[编辑]</a></div>
 </div>
 <div class="doc_content_box">
     <div class="doc_content">
