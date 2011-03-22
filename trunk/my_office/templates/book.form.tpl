@@ -26,11 +26,11 @@
                 </select>
                 或输入
                 <input name="item_txt2" type="text" id="item_txt2" value="" size="8" /></label>
-	<?php if(isset($error['item_txt'])): ?><font color="red"><?php echo $error['item_txt']; ?></font><?php endif; ?><br>
+	<?php if(isset($error['item_txt'])): ?><?php echo $error['item_txt']; ?><?php endif; ?><br>
     
     
 <label>备注： <input type="text" name="remark" value="<?php echo $post['remark']; ?>"></label>
-<?php if(isset($error['remark'])): ?><font color="red"><?php echo $error['remark']; ?></font><?php endif; ?><br>
+<?php if(isset($error['remark'])): ?><?php echo $error['remark']; ?><?php endif; ?><br>
 <label>分类：
 <select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
@@ -38,7 +38,7 @@
             	channel::get_channel_select(0,0,$post['typeid']);
 			?>
           </select>
-	<?php if(isset($error['typeid'])): ?><font color="red"><?php echo $error['typeid']; ?></font><?php endif; ?></label><br>
+	<?php if(isset($error['typeid'])): ?><?php echo $error['typeid']; ?><?php endif; ?></label><br>
 
 <label>货币： 
   <select name="ccy" id="ccy">
