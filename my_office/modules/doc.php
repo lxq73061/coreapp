@@ -34,6 +34,7 @@ class doc extends core {
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
+			'limit'  => isset ($_GET ['limit']) ? $_GET ['limit'] : '10',
 		);
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
@@ -73,7 +74,7 @@ class doc extends core {
 				$other = array('ORDER BY doc_id DESC');
 				break;
 		}
-		$page = array('page'=>$get['page'],'size'=>10);
+		$page = array('page'=>$get['page'],'size'=>$get['limit']);
 		$other ['page'] = &$page;
 		$docs = self::selects (null, null, $where, $other, __CLASS__);
 
@@ -82,6 +83,7 @@ class doc extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
+		
 		self::view (__CLASS__ . '.list.tpl', compact ('docs','get','page','query'));
 	}
 	
