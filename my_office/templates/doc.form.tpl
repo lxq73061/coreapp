@@ -12,10 +12,8 @@
 <label>分　类：
 <select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
-            <?php
-            	channel::get_channel_select(0,0,$post['typeid']);
-			?>
-          </select>
+          <?=channel::get_channel_select(0,0,$post['typeid'])?>
+          </select>  
 	<font color="red">*</font>
 	<?php if(isset($error['typeid'])): ?><font color="red"><?php echo $error['typeid']; ?></font><?php endif; ?></label><br>
 

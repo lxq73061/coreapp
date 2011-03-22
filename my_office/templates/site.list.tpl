@@ -41,7 +41,7 @@ var ids = '<?=$ids?>';
 	<td>&nbsp;<?php echo $site->site_id; ?></td>
 	<td>&nbsp;<?php echo $site->title; ?></td>
 	<td>&nbsp;<?php echo $site->get_typeid(); ?></td>
-	<td>&nbsp;<?php echo $site->url; ?></td>
+	<td>&nbsp;<a href="<?=$site->url?>" target="_blank"><?php echo $site->url; ?></a></td>
 	<td>&nbsp;</td>
 	<td>&nbsp;<a href="?go=site&do=detail&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
 	&nbsp;<?php if($site->site_id<0): ?>修改<? else: ?><a href="?go=site&do=modify&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 

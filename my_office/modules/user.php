@@ -41,6 +41,8 @@ class user extends core {
 
 		// 获取数据
 		$where = array();
+		$online = front::online();
+		//pecho($online);
 		if (strlen($get['username'])>0){
 			$where ['username LIKE ?'] = '%'.$get['username'].'%';
 		}
@@ -69,8 +71,9 @@ class user extends core {
 		foreach (array('username') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
+		
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('users','get','page','query'));
+		self::view (__CLASS__ . '.list.tpl', compact ('users','get','online','page','query'));
 	}
 	
 	/**
@@ -96,7 +99,8 @@ class user extends core {
 	 */
 	final static public function append() {
 		$error = array ();
-
+		$online = front::online();
+		
 		// 数据消毒
 		$post = array(
 			'username' => isset ($_POST ['username']) ? $_POST ['username'] : '',
@@ -112,11 +116,21 @@ class user extends core {
 		if (get_magic_quotes_gpc()) {
 			$post = array_map ('stripslashes', $post);
 		}
+		if($online->grade>2 ){
+			$error = '无权限';
+			self::view ( 'error.tpl', compact ('error'));
+			return;
+		}
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
 
 			// 数据验证
+			if($online->grade >  $post['grade']){
+				$error['grade'] ='等级设置错误';
+
+			}
+		
 			$length = (strlen ($post ['username']) + mb_strlen ($post ['username'], 'UTF-8')) /2;
 			if ($length < 3 || $length > 16 //3-16个字符
 				|| preg_match ('/^[a-zA-Z0-9_\x{4e00}-\x{9fa5}]+$/u',$post ['username']) === 0 //英文字母、汉字、数字、下划线
@@ -134,6 +148,8 @@ class user extends core {
 				|| preg_match ('/^[\x21-\x9e]+$/',$post ['password']) === 0 //，英文字母、数字、下划线、半角符号
 			) {
 				$error ['password'] = '请正确填写密码';
+			}else{
+				$post ['password'] = md5($post ['username'].md5($post ['password']));
 			}
 			if (preg_match ('/^[1-3]$/i',$post ['grade']) === 0 ) {
 				$error ['grade'] = '请选择级别';
@@ -183,7 +199,7 @@ class user extends core {
 	 */
 	final static public function modify() {
 		$error = array ();
-
+		$online = front::online();
 		// 获取数据
 		$user = new self;
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
@@ -192,6 +208,18 @@ class user extends core {
 			self::view ( 'error.tpl', compact ('error'));
 			return;
 		}
+		//级别:1超级管理员/2管理员/3普通用户
+		if($online->grade==3 && $user->user_id!=$online->user_id ){
+			$error = '无权限';
+			self::view ( 'error.tpl', compact ('error'));
+			return;
+		}
+		if($online->grade==2 && $user->user_id!=$online->user_id &&  $user->grade!=3 ){
+			$error = '无权限';
+			self::view ( 'error.tpl', compact ('error'));
+			return;
+		}
+		
 		$post = get_object_vars ($user);
 
 		// 表单处理
@@ -213,6 +241,10 @@ class user extends core {
 				$post = array_map ('stripslashes', $post);
 			}
 
+			if($online->grade >  $post['grade'] || ($online->user_id == $user->user_id && $online->grade != $post['grade'] )){
+				$error['grade'] ='等级设置错误';
+
+			}
 			// 数据验证
 			$length = (strlen ($post ['username']) + mb_strlen ($post ['username'], 'UTF-8')) /2;
 			if ($length < 3 || $length > 16 //3-16个字符
@@ -233,6 +265,11 @@ class user extends core {
 			)) {
 				$error ['password'] = '请正确填写密码';
 			}
+			if (strlen ($post ['password']) > 0){			
+				$post ['password'] = md5($post ['username'].md5($post ['password']));
+			
+			}
+			
 			if (preg_match ('/^[1-3]$/i',$post ['grade']) === 0 ) {
 				$error ['grade'] = '请选择级别';
 			}
@@ -274,7 +311,7 @@ class user extends core {
 		foreach (array('username','mobile','email','url','remark') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','online'));
 	}
 	
 	/**

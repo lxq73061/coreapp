@@ -208,7 +208,7 @@ class front extends core {
 				// 配置项验证
 				if ($front_fuzzy) {
 					// 同时验证
-					if ($front_username !== $post ['username'] || $front_password !== $post ['password']) {
+					if ($front_username !== $post ['username'] || $front_password !== md5($post ['username'].md5($post ['password']))) {
 						$error ['username'] = $error ['password'] = '用户名或密码不正确';
 						break;
 					}
@@ -218,14 +218,14 @@ class front extends core {
 						$error ['username'] = '用户名不存在';
 						break;
 					}
-					if ($front_password !== $post ['password']) {
+					if ($front_password !== md5($post ['username'].md5($post ['password']))) {
 						$error ['password'] = '密码不正确';
 						break;
 					}
 				}
 				$online = new $front_class;
 				$online->username = $post ['username'];
-				$online->password = $post ['password'];
+				$online->password = md5($post ['username'].md5($post ['password']));
 			} else {
 				// 数据库验证
 				if (empty ($front_table)) {
@@ -236,7 +236,7 @@ class front extends core {
 				}
 				if ($front_fuzzy) {
 					// 同时验证
-					$online = self::selects (null, $front_table, array('username'=>$post ['username'], 'password'=>$post ['password']), null, array($class_table=>$front_class));
+					$online = self::selects (null, $front_table, array('username'=>$post ['username'], 'password'=>md5($post ['username'].md5($post ['password']))), null, array($class_table=>$front_class));
 					if (empty ($online)) {
 						$error ['username'] = $error ['password'] = '用户名或密码不正确';
 						break;
@@ -248,7 +248,7 @@ class front extends core {
 						$error ['username'] = '用户名不存在';
 						break;
 					}
-					if ($online->password !== $post ['password']) {
+					if ($online->password !== md5($post ['username'].md5($post ['password']))) {
 						$error ['password'] = '密码不正确';
 						break;
 					}

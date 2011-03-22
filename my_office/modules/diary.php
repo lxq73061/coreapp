@@ -38,9 +38,10 @@ class diary extends core {
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
 		}
-
+		$online = front::online();
 		// 获取数据
 		$where = array();
+		$where['user_id'] = $online->user_id;
 		if (strlen($get['title'])>0){
 			$where ['title LIKE ?'] = '%'.$get['title'].'%';
 		}
@@ -106,7 +107,6 @@ class diary extends core {
 			'title' => isset ($_POST ['title']) ? $_POST ['title'] : '',
 			'mood' => isset ($_POST ['mood']) ? $_POST ['mood'] : '',
 			'weather' => isset ($_POST ['weather']) ? $_POST ['weather'] : '',
-			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',		
 			'content' => isset ($_POST ['content']) ? $_POST ['content'] : '',
 			'user_id' => $online->user_id,
 			'create_date'=>date('Y-m-d',$time),
@@ -131,13 +131,14 @@ class diary extends core {
 			}
 			
 			if (empty($post ['title'])) {//title=content
-				$post ['title'] = substr($post ['content'],0,15);
+				$post ['title'] = substr(strip_tags($post['content']),0,15);
+			}else{
+				$post ['title'] = strip_tags($post['title']);
 			}
-			if ($post ['typeid'] === 0 ) {//使用默认分类
-				$error ['typeid'] = '请选择分类';
+			
+			if(empty($post['title'])){
+				$error ['title'] = '标题不能为空';
 			}
-	
-
 			if (! empty ($error)) {
 				break;
 			}
@@ -186,10 +187,7 @@ class diary extends core {
 			'diary_date' => isset ($_POST ['diary_date']) ? $_POST ['diary_date'] : '',
 			'mood' => isset ($_POST ['mood']) ? $_POST ['mood'] : '',
 			'weather' => isset ($_POST ['weather']) ? $_POST ['weather'] : '',
-			
 			'content' => isset ($_POST ['content']) ? $_POST ['content'] : '',
-			
-			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',		
 			'update_date'=>date('Y-m-d',$time),
 			'update_time'=>date('H:i:s',$time),		
 			);
@@ -204,13 +202,14 @@ class diary extends core {
 			}
 			// 数据验证
 			if (empty($post ['title'])) {
-				$post ['title'] = substr($post ['content'],0,15);
+				$post ['title'] = substr(strip_tags($post['content']),0,15);
+			}else{
+				$post ['title'] = strip_tags($post['title']);
+			}
+			if(empty($post['title'])){
+				$error ['title'] = '标题不能为空';
 			}
 
-			if ($post ['typeid'] === 0 ) {
-				$error ['typeid'] = '请选择日志分类';
-			}
-	
 			if (! empty ($error)) {
 				break;
 			}

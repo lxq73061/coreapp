@@ -32,42 +32,53 @@ body {
 <div id="navigation">
   <?php
 function format_date(){}
+$tree .= "tree1.addnode(100000000, 0, \"资料\",\"\",\"\",\"#\",\"\");\n";
+$tree .= "tree1.addnode(200000000, 0, \"记事\",\"\",\"\",\"#\",\"\");\n";
+$tree .= "tree1.addnode(300000000, 0, \"网址\",\"\",\"\",\"#\",\"\");\n";
+$tree .= "tree1.addnode(400000000, 0, \"联系人\",\"\",\"\",\"#\",\"\");\n";
 
-foreach($channels as $c){
-	$c['title'] = $c['name'];
-	$orderid = $c['channel_id'];
-	$tree .= "tree1.addnode($c[channel_id], $c[parent_id], \"$c[title]\",\"\",\"\",\"./?go=channel&do=detail&channel_id=$c[channel_id]\",\"frmView\");\n";
+foreach($channels as $v){
+	$v['title'] = $v['name'];
+	$orderids[] = $v['channel_id'];
+    $v['parent_id']==0?$v['parent_id']=100000000:0;	
+	$tree .= "tree1.addnode($v[channel_id], $v[parent_id], \"$v[title]\",\"\",\"\",\"./?go=channel&do=detail&channel_id=$v[channel_id]\",\"frmView\");\n";
 };
-
-foreach($docs as $notes){
+$orderid = max($orderids);
+foreach($docs as $v){
 	$orderid++;
-    $tree .= "tree1.addnode($orderid, $notes[typeid], \"$notes[title]\",\"\",\"\",\"./?go=doc&do=detail&doc_id=$notes[doc_id]\",\"frmView\");\n";
-
-};
-
-foreach($sites as $site){
-	$orderid++;
-	$tree .= "tree1.addnode($orderid, $site[typeid], \"$site[sitename]\",\"e1.gif\",\"\",\"./?go=site&do=detail&site_id=$site[site_id]\",\"frmView\");\n";
-
-};
-
-foreach($adds as $add){
-	$orderid++;
-
-		$tree .= "tree1.addnode($orderid, $add[typeid], \"$add[who]\",\"e1.gif\",\"\",\"./?go=add&do=detail&add_id=$add[add_id]\",\"frmView\");\n";
+    $v['typeid']==0?$v['typeid']=100000000:0;
+    $tree .= "tree1.addnode($orderid, $v[typeid], \"$v[title]\",\"\",\"\",\"./?go=doc&do=detail&doc_id=$v[doc_id]\",\"frmView\");\n";
 
 };
 
-
-foreach($diarys as $blog){
+foreach($sites as $v){
 	$orderid++;
-	$title = format_date('Ymd',$blog[create_time]);
-	$content = strip_tags($blog['content']);
-	$content = preg_replace('/[\s]+/is','',$content );
-	$content = mb_strcut($content,0,30,'gb2312');
-	
+    $v['typeid']==0?$v['typeid']=300000000:0;
+	$tree .= "tree1.addnode($orderid, $v[typeid], \"$v[title]\",\"e1.gif\",\"\",\"./?go=site&do=detail&site_id=$v[site_id]\",\"frmView\");\n";
+
+};
+
+foreach($adds as $v){
+	$orderid++;
+    $v['typeid']==0?$v['typeid']=400000000:0;
+	$tree .= "tree1.addnode($orderid, $v[typeid], \"$v[name]\",\"usergroupicon.gif\",\"\",\"./?go=address&do=detail&address_id=$v[address_id]\",\"frmView\");\n";
+
+};
+
+
+foreach($diarys as $v){
+	$orderid++;
+    $title = addslashes ($v['title']);
+    $title = trim(strip_tags($title));
+    $title = preg_replace("@\s@",' ',$title);
+    $title = mb_strcut($title,0,30,'UTF-8');
+//	$title = format_date('Ymd',$blog[create_time]);
+//	$content = strip_tags($blog['content']);
+//	$content = preg_replace('/[\s]+/is','',$content );
+//	$content = mb_strcut($content,0,30,'gb2312');
+	$v['typeid']==0?$v['typeid']=200000000:0;
 	$title .= ' '.$content;
-	$tree .= "tree1.addnode($orderid, 5, \"$title\",\"b.gif\",\"\",\"./?go=diary&do=detail&diary_id=$blog[diary_id]\",\"frmView\");\n";
+	$tree .= "tree1.addnode($orderid, $v[typeid], \"$title\",\"b.gif\",\"\",\"./?go=diary&do=detail&diary_id=$v[diary_id]\",\"frmView\");\n";
 
 };
 ?>
@@ -138,61 +149,61 @@ function addw(a){
 </div>
 <script   language="javascript">   
   <!--   
-var menu   =  document.getElementById("rightmenu");  
-var menu_a =  menu.getElementsByTagName('a');
-document.oncontextmenu   =   function(e){
-e   =   window.event   ||   e;   
-x   =   e.x   ||   e.layerX;   
-y   =   e.y   ||   e.layerY;   
-menu.style.left   =   x   +   "px";   
-menu.style.top     =   y   +   "px";
-
-menu.style.display   =   "block";   
-return   false;   
-}   
-document.onclick   =   function(){   
-  menu.style.display   =   "none"; 
- 
-} 
-document.onmousedown = function(){
-	menu_a[6].disabled='disabled';
-	menu_a[7].disabled='disabled';
-}
-var x = document.getElementById('navigation');
-if (x){
-	var aa =  x.getElementsByTagName('a');
-	if(aa) {
-	for(var i=0;i<aa.length;i++){	
-		aa[i].oncontextmenu = function(e){			
-			var s_url=this.href;
-			if (s_url.search("note") != -1){	
-				var s_type = "note";	
-			}else if(s_url.search("site") != -1){
-				var s_type = "site";	
-			}else if(s_url.search("adds") != -1){
-				var s_type = "adds";	
-			}else if(s_url.search("blog") != -1){
-				var s_type = "blog";	
-			}else if(s_url.search("channel") != -1){
-				var s_type = "channel";	
-			}else{
-				var s_type = "";	
-			}									
-			if(s_type){
-				var params=s_url.split('id=');//得到当前链接的ID
-				var s_id =params[1];
-				menu_a[6].href="admin/admin_"+s_type+".php?action=del&id="+s_id;
-				menu_a[7].href="admin/admin_"+s_type+".php?action=cname&id="+s_id;
-				menu_a[6].target="frmView";
-				menu_a[7].target="frmView";				
-				menu_a[6].disabled = '';
-				menu_a[7].disabled = '';					
-				
-			}	
-		}	
-	}
-	}	
-}
+//var menu   =  document.getElementById("rightmenu");  
+//var menu_a =  menu.getElementsByTagName('a');
+//document.oncontextmenu   =   function(e){
+//e   =   window.event   ||   e;   
+//x   =   e.x   ||   e.layerX;   
+//y   =   e.y   ||   e.layerY;   
+//menu.style.left   =   x   +   "px";   
+//menu.style.top     =   y   +   "px";
+//
+//menu.style.display   =   "block";   
+//return   false;   
+//}   
+//document.onclick   =   function(){   
+//  menu.style.display   =   "none"; 
+// 
+//} 
+//document.onmousedown = function(){
+//	menu_a[6].disabled='disabled';
+//	menu_a[7].disabled='disabled';
+//}
+//var x = document.getElementById('navigation');
+//if (x){
+//	var aa =  x.getElementsByTagName('a');
+//	if(aa) {
+//	for(var i=0;i<aa.length;i++){	
+//		aa[i].oncontextmenu = function(e){			
+//			var s_url=this.href;
+//			if (s_url.search("note") != -1){	
+//				var s_type = "note";	
+//			}else if(s_url.search("site") != -1){
+//				var s_type = "site";	
+//			}else if(s_url.search("adds") != -1){
+//				var s_type = "adds";	
+//			}else if(s_url.search("blog") != -1){
+//				var s_type = "blog";	
+//			}else if(s_url.search("channel") != -1){
+//				var s_type = "channel";	
+//			}else{
+//				var s_type = "";	
+//			}									
+//			if(s_type){
+//				var params=s_url.split('id=');//得到当前链接的ID
+//				var s_id =params[1];
+//				menu_a[6].href="admin/admin_"+s_type+".php?action=del&id="+s_id;
+//				menu_a[7].href="admin/admin_"+s_type+".php?action=cname&id="+s_id;
+//				menu_a[6].target="frmView";
+//				menu_a[7].target="frmView";				
+//				menu_a[6].disabled = '';
+//				menu_a[7].disabled = '';					
+//				
+//			}	
+//		}	
+//	}
+//	}	
+//}
   //-->   
   </script>
 </body>

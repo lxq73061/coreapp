@@ -41,7 +41,7 @@ var ids = '<?=$ids?>';
 	<tr>
 	<td><?php if($diary->diary_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $diary->diary_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $diary->diary_id; ?></td>
-	<td>&nbsp;<?php echo $diary->diary_date; ?></td>
+	<td>&nbsp;<?php echo $diary->create_date; ?></td>
 	<td><?php echo $diary->title; ?></td>
 	<td>&nbsp;<?php echo $diary->get_typeid(); ?></td>
 	<td>&nbsp;<?php echo $diary->mood; ?></td>
@@ -63,66 +63,6 @@ var ids = '<?=$ids?>';
 	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
 </thead>
 </table>
-<script language="javascript">
-function select_all(t){
-	if(typeof t.form["diary_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["diary_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = true;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = true;
-	}
-	return true;
-}
-function reverse_all(t){
-	if(typeof t.form["diary_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["diary_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = ! arr.checked;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = ! arr[i].checked;
-	}
-	return true;
-}
-function remove_selected(t){
-	if(typeof t.form["diary_id[]"] == "undefined"){
-		alert("请选中要操作的日志后再点删除");
-		return false;
-	}
-	var arr = t.form["diary_id[]"];
-	if(typeof arr.length == "undefined"){
-		if(!arr.checked){
-			alert("请选中要操作的日志后再点删除");
-			return false;
-		}
-	}else{
-		ret = false;
-		for(i=0;i<arr.length;i++){
-			if(arr[i].checked){
-				ret = true;
-				break;
-			}
-		}
-		if(!ret){
-			alert("请选中要操作的日志后再点删除");
-			return false;
-		}
-	}
-	if(!confirm("您确定删除这些选中的日志吗")){
-		return false;
-	}
-	t.form.submit();
-	return true;
-}
-</script>
 </form>
 <?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
 <?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>
