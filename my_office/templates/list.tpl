@@ -10,15 +10,15 @@
 <tbody>
 <?php foreach($docs as $doc): ?>
 	<tr>
-	<td><?php if($doc->doc_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name=<?php echo $ids ?> value="<?php echo $doc->doc_id; ?>"><?php endif; ?></td>
+	<td><?php if($doc->doc_id<0): ?>&nbsp;<? else: ?><input type="checkbox" name=<?php echo $ids ?> value="<?php echo $doc->doc_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $doc->doc_id; ?></td>
 	<td>&nbsp;<?php echo $doc->title; ?></td>
 	<td>&nbsp;<?php echo $doc->get_typeid(); ?></td>
 	<td>&nbsp;<?php echo $doc->create_date; ?>&nbsp;<?php echo $doc->create_time; ?></td>
 	<td>&nbsp;<?php echo $doc->update_date; ?>&nbsp;<?php echo $doc->update_time; ?></td>
 	<td>&nbsp;<a href="?go=doc&do=detail&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
-	&nbsp;<?php if($doc->doc_id<3): ?>修改<? else: ?><a href="?go=doc&do=modify&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
-	&nbsp;<?php if($doc->doc_id<3): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该文章吗？'))location='?go=doc&do=remove&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
+	&nbsp;<?php if($doc->doc_id<0): ?>修改<? else: ?><a href="?go=doc&do=modify&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
+	&nbsp;<?php if($doc->doc_id<0): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该文章吗？'))location='?go=doc&do=remove&doc_id=<?php echo $doc->doc_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
 	</tr>
 <?php endforeach ?>
 </tbody>

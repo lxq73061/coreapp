@@ -41,8 +41,8 @@ var ids = '<?=$ids?>';
 	<td>&nbsp;<?php echo $user->name; ?></td>
 	<td>&nbsp;<?php echo $user->get_gender(); ?></td>
 	<td>&nbsp;<a href="?go=user&do=detail&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
-	&nbsp;<?php if( $online->user_id==$user->user_id || ($online->grade==2 && $user->grade==3)): ?><a href="?go=user&do=modify&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><? else: ?>修改<?php endif; ?> | 
-	&nbsp;<?php if($online->grade!=1 || $online->user_id==$user->user_id ): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该用户吗？'))location='?go=user&do=remove&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?></td>
+	&nbsp;<?php if($online->grade==1 || $online->user_id==$user->user_id || ($online->grade==2 && $user->grade==3)): ?><a href="?go=user&do=modify&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><? else: ?>修改<?php endif; ?> | 
+	&nbsp;<?php if($online->grade==1 && $online->user_id!=$user->user_id ): ?><a href="javascript:if(confirm('您确定要删除该用户吗？'))location='?go=user&do=remove&user_id=<?php echo $user->user_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><? else: ?>删除<?php endif; ?></td>
 	</tr>
 <?php endforeach ?>
 <?php else: ?>
