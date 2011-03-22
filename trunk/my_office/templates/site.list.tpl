@@ -21,9 +21,12 @@
 </select>
 <input type="submit" value="查询">
 </form>
-
+<?php $ids = 'site_id[]';?>
+<script language="javascript">
+var ids = '<?=$ids?>';
+</script>
 <form method="post" action="?go=site&do=group_remove&query=<?php echo urlencode($query) ?>">
-<table border="1">
+<table border="0" cellpadding="5">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th>
 	  <th>网站名</th>
@@ -34,7 +37,7 @@
 <?php if($sites):?>
 <?php foreach($sites as $site): ?>
 	<tr>
-	<td><?php if($site->site_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="site_id[]" value="<?php echo $site->site_id; ?>"><?php endif; ?></td>
+	<td><?php if($site->site_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $site->site_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $site->site_id; ?></td>
 	<td>&nbsp;<?php echo $site->title; ?></td>
 	<td>&nbsp;<?php echo $site->get_typeid(); ?></td>
@@ -43,7 +46,7 @@
 	<td>&nbsp;<a href="?go=site&do=detail&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
 	&nbsp;<?php if($site->site_id<0): ?>修改<? else: ?><a href="?go=site&do=modify&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>">修改</a><?php endif; ?> | 
 	<!--&nbsp;<?php if($site->site_id<0): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该网址吗？'))location='?go=site&do=remove&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?>-->
-    &nbsp;<?php if($site->site_id<0): ?>删除<? else: ?><a href="?go=site&do=remove&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>" onclick="return  confirm('您确定要删除该日志吗？')">删除</a><?php endif; ?></td></td>
+    &nbsp;<?php if($site->site_id<0): ?>删除<? else: ?><a href="?go=site&do=remove&site_id=<?php echo $site->site_id; ?>&query=<?php echo urlencode($query) ?>" onclick="return  confirm('您确定要删除该日志吗？')">删除</a><?php endif; ?></td>
 	</tr>
 
 <?php endforeach ?>
@@ -58,66 +61,6 @@
 	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
 </thead>
 </table>
-<script language="javascript">
-function select_all(t){
-	if(typeof t.form["site_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["site_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = true;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = true;
-	}
-	return true;
-}
-function reverse_all(t){
-	if(typeof t.form["site_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["site_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = ! arr.checked;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = ! arr[i].checked;
-	}
-	return true;
-}
-function remove_selected(t){
-	if(typeof t.form["site_id[]"] == "undefined"){
-		alert("请选中要操作的网址后再点删除");
-		return false;
-	}
-	var arr = t.form["site_id[]"];
-	if(typeof arr.length == "undefined"){
-		if(!arr.checked){
-			alert("请选中要操作的网址后再点删除");
-			return false;
-		}
-	}else{
-		ret = false;
-		for(i=0;i<arr.length;i++){
-			if(arr[i].checked){
-				ret = true;
-				break;
-			}
-		}
-		if(!ret){
-			alert("请选中要操作的网址后再点删除");
-			return false;
-		}
-	}
-	if(!confirm("您确定删除这些选中的网址吗")){
-		return false;
-	}
-	t.form.submit();
-	return true;
-}
-</script>
 </form>
 <?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
 <?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>

@@ -21,9 +21,12 @@
 </select>
 <input type="submit" value="查询">
 </form>
-
+<?php $ids = 'user_id[]';?>
+<script language="javascript">
+var ids = '<?=$ids?>';
+</script>
 <form method="post" action="?go=user&do=group_remove&query=<?php echo urlencode($query) ?>">
-<table border="1">
+<table border="0" cellpadding="5">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th><th>用户名</th><th>等级</th><th>姓名</th><th>性别</th><th>操作</th></tr>
 </thead>
@@ -31,7 +34,7 @@
 <?php if(count($users)): ?>
 <?php foreach($users as $user): ?>
 	<tr>
-	<td><?php if($user->user_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="user_id[]" value="<?php echo $user->user_id; ?>"><?php endif; ?></td>
+	<td><?php if($user->user_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $user->user_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $user->user_id; ?></td>
 	<td>&nbsp;<?php echo $user->username; ?></td>
 	<td>&nbsp;<?php echo $user->get_grade(); ?></td>
@@ -60,66 +63,6 @@
 	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
 </thead>
 </table>
-<script language="javascript">
-function select_all(t){
-	if(typeof t.form["user_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["user_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = true;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = true;
-	}
-	return true;
-}
-function reverse_all(t){
-	if(typeof t.form["user_id[]"] == "undefined"){
-		return false;
-	}
-	var arr = t.form["user_id[]"];
-	if(typeof arr.length == "undefined"){
-		arr.checked = ! arr.checked;
-		return true;
-	}
-	for(i=0;i<arr.length;i++){
-		arr[i].checked = ! arr[i].checked;
-	}
-	return true;
-}
-function remove_selected(t){
-	if(typeof t.form["user_id[]"] == "undefined"){
-		alert("请选中要操作的用户后再点删除");
-		return false;
-	}
-	var arr = t.form["user_id[]"];
-	if(typeof arr.length == "undefined"){
-		if(!arr.checked){
-			alert("请选中要操作的用户后再点删除");
-			return false;
-		}
-	}else{
-		ret = false;
-		for(i=0;i<arr.length;i++){
-			if(arr[i].checked){
-				ret = true;
-				break;
-			}
-		}
-		if(!ret){
-			alert("请选中要操作的用户后再点删除");
-			return false;
-		}
-	}
-	if(!confirm("您确定删除这些选中的用户吗")){
-		return false;
-	}
-	t.form.submit();
-	return true;
-}
-</script>
 </form>
 <?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
 <?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>

@@ -4,7 +4,7 @@
 -->
 <div id="nav">
 	<div class="left"><?=channel::get_nav($channel->channel_id)?></div>
-	<div class="right"><a href="?go=channel&do=modify&channel_id=<?=$channel->channel_id?>">[编辑]</a></div>
+	<div class="right"><a href="?go=channel&do=modify&channel_id=<?=$channel->channel_id?>&query=<?=urlencode($query)?>">[编辑]</a></div>
 </div>
 
 <div id="channel">
