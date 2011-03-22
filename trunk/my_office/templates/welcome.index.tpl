@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN">
 <HTML><HEAD><TITLE>我的网站</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
+<link rel="shortcut icon" href="favicon.ico" />
 <!--whole frame start-->
 <!--<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
 -->
