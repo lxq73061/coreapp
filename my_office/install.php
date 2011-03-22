@@ -343,7 +343,7 @@ class installd extends core {
 		 $password = $admin_pass;
        // $sqls[] = "INSERT INTO `ecm_member`(user_name, email, password, reg_time) VALUES('{$admin_name}', '{$admin_email}', '{$password}', " . gmtime() . ")";
 		$sqls[] = "INSERT INTO `ecm_user` (`username`, `password`, `grade`, `name`, `gender`, `mobile`, `email`, `url`, `remark`) VALUES
-('{$admin_name}', '{$password}', NULL, NULL, NULL, NULL, '{$admin_email}', NULL, NULL)";
+('{$admin_name}', '{$password}', 1, NULL, NULL, NULL, '{$admin_email}', NULL, NULL)";
 
         foreach ($sqls as $sql)
         {
