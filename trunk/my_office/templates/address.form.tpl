@@ -5,7 +5,7 @@
 
 <form method="post" action="?go=<?=$_GET['go']?>&do=<?php echo $_GET['do']; ?>&address_id=<?php echo $_GET['address_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
 <fieldset>
-<legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加通讯人' : '修改通讯人'; ?></legend>
+<legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加联系人' : '修改联系人'; ?></legend>
 <label>名称： <input type="text" name="name" value="<?php echo $post['name']; ?>"></label>
 	<font color="red">*</font><?php if(isset($error['name'])): ?><font color="red"><?php echo $error['name']; ?></font><?php endif; ?><br>
 

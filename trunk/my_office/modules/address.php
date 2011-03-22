@@ -20,7 +20,8 @@ class address extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		header("Location: ./?go=".__CLASS__."&do=browse");
+		//self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -39,8 +40,8 @@ class address extends core {
 			'office_phone'  => isset ($_GET ['office_phone']) ? $_GET ['office_phone'] : '',
 			'home_phone'  => isset ($_GET ['home_phone']) ? $_GET ['home_phone'] : '',
 			'remarks'  => isset ($_GET ['remarks']) ? $_GET ['remarks'] : '',
-			/*'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
-			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',*/
+			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
+			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
 		);
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
@@ -48,6 +49,9 @@ class address extends core {
 
 		// 获取数据
 		$where = array();
+		$online = front::online();
+		$where['user_id'] = $online->user_id;
+		
 		if (strlen($get['name'])>0){
 			$where ['name LIKE ?'] = '%'.$get['name'].'%';
 		}
@@ -68,10 +72,12 @@ class address extends core {
 				$other = array('ORDER BY address_id DESC');
 				break;
 		}
-		$page = array('page'=>$get['page'],'size'=>10);
+		$page = array('page'=>$get['page'],'size'=>50);
 		$other ['page'] = &$page;
 		$addresss = self::selects (null, null, $where, $other, __CLASS__);
-
+		foreach($addresss as &$v)
+			foreach($v as &$vv)    $vv = mb_strcut($vv,0,15,'UTF-8');
+			
 		// 页面显示
 		foreach (array('name') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
@@ -120,11 +126,11 @@ class address extends core {
 			'office_phone' => isset ($_POST ['office_phone']) ? $_POST ['office_phone'] : '',
 			'home_phone' => isset ($_POST ['home_phone']) ? $_POST ['home_phone'] : '',
 			'remarks' => isset ($_POST ['remarks']) ? $_POST ['remarks'] : '',
-			/*'user_id' => $online->user_id,*/
-			'create_date'=>date('Y-m-d',$time),
-			'create_time'=>date('H:i:s',$time),	
-			'update_date'=>date('Y-m-d',$time),
-			'update_time'=>date('H:i:s',$time),		
+			'user_id' => $online->user_id,
+//			'create_date'=>date('Y-m-d',$time),
+//			'create_time'=>date('H:i:s',$time),	
+//			'update_date'=>date('Y-m-d',$time),
+//			'update_time'=>date('H:i:s',$time),		
 			
 		);
 
@@ -215,8 +221,8 @@ class address extends core {
 			'office_phone' => isset ($_POST ['office_phone']) ? $_POST ['office_phone'] : '',
 			'home_phone' => isset ($_POST ['home_phone']) ? $_POST ['home_phone'] : '',
 			'remarks' => isset ($_POST ['remarks']) ? $_POST ['remarks'] : '',	
-			'update_date'=>date('Y-m-d',$time),
-			'update_time'=>date('H:i:s',$time),		
+//			'update_date'=>date('Y-m-d',$time),
+//			'update_time'=>date('H:i:s',$time),		
 			);
 			if (get_magic_quotes_gpc()) {
 				$post = array_map ('stripslashes', $post);
@@ -239,9 +245,7 @@ class address extends core {
 			if ($count > 0) {
 				$error ['url'] = '通讯名重复';
 			}
-			if ($post ['typeid'] === 0 ) {
-				$error ['typeid'] = '请选择通讯分类';
-			}
+
 	
 			if (! empty ($error)) {
 				break;

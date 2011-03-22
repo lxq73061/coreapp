@@ -41,6 +41,9 @@ class site extends core {
 
 		// 获取数据
 		$where = array();
+		$online = front::online();
+		$where['user_id'] = $online->user_id;
+
 		if (strlen($get['title'])>0){
 			$where ['title LIKE ?'] = '%'.$get['title'].'%';
 		}

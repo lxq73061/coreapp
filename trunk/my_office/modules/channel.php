@@ -29,7 +29,7 @@ class channel extends core {
 	final static public function browse() {
 
 		// 数据消毒
-		$get = array(
+/*		$get = array(
 			'title' => isset ($_GET ['title']) ? $_GET ['title'] : '',
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
@@ -56,8 +56,9 @@ class channel extends core {
 		// 页面显示
 		foreach (array('title') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
-		}
+		}*/
 		$query = $_SERVER['QUERY_STRING'];
+	
 		self::view (__CLASS__ . '.list.tpl', compact ('channels','get','page','query'));
 	}
 	
@@ -276,9 +277,9 @@ class channel extends core {
 		$channels = self::get_channel();
 		$docs = self::selects('doc_id,typeid,title,create_date,create_time,update_date,update_time,hit', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,doc_id DESC'),array('doc_id','assoc|table=doc'=>null));
 		$sites = self::selects('site_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,site_id DESC'),array('site_id','assoc|table=site'=>null));
-		$adds = self::selects('add_id,typeid,who', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,add_id DESC'),array('add_id','assoc|table=add'=>null));
+		$adds = self::selects('address_id,typeid,name', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,address_id DESC'),array('address_id','assoc|table=address'=>null));
 		$diarys = self::selects('diary_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,diary_id DESC'),array('diary_id','assoc|table=diary'=>null));
-
+		
 		self::view ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'));
 	}
 	/**
@@ -314,7 +315,7 @@ function get_channel(){
 function get_channel_table($m,$id)
 {
 	return self::get_channel_select($m,$id,NULL,NULL,NULL,'table');
-	$parent_id ='parent_id';
+/*	$parent_id ='parent_id';
 	$name ='name';
 	$class_id='channel_id';
 	$sort='sort';
@@ -334,13 +335,13 @@ function get_channel_table($m,$id)
 		$str .=	self::get_channel_table($m+1,$v[$class_id]);
 		}		
 	}
-	return $str;
+	return $str;*/
 	
 }
 /**
 *级别,当前父ID,父ID,分类ID
 */
-function get_channel_select($m,$id,$p_id,$c_id,$pLineType,$type='option')
+function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option')
 {	
 	static $class_arr;
 	//global $class_arr;
@@ -352,7 +353,6 @@ function get_channel_select($m,$id,$p_id,$c_id,$pLineType,$type='option')
 	if(!$class_arr)$class_arr=self::get_channel();
 
 	$c_path = self::make_path($c_id);
-
 	foreach($class_arr as $k=>$v){	
 		if($v[$parent_id]==$id){
 			$childrenArray[]=$v;
@@ -402,7 +402,7 @@ function get_channel_select($m,$id,$p_id,$c_id,$pLineType,$type='option')
 				$html .= "	  <td>".$pLineType.$NodeType."<a href=\"?go=channel&do=detail&amp;channel_id=".$v[$class_id]."\">".$v[$name]."</a></td>\n";
 				$html .= "	  <td><div align=\"center\">".$v[$sort]."</div></td>\n";
 				$html .= "	  <td><div align=\"center\"><a href=\"?go=channel&do=modify&amp;channel_id=".$v[$class_id]."\">修改</a>";
-				$html .= " <a href=\"?go=channel&do=remove&amp;channel_id=".$v[$class_id]."&query=go=channel\">删除</a>";
+				$html .= " <a href=\"?go=channel&do=remove&amp;channel_id=".$v[$class_id]."&query=go=channel\" onclick=\"return  confirm('您确定要删除？')\">删除</a>";
 				$html .= "</div></td>\n";
 				$html .= "	</tr>\n";
 		

@@ -3,7 +3,7 @@
  * 安装模块
  * 
  * @version 1.2.1
- * @author Z <602000@gmail.com>
+ * @author 青剑 <lxq73061@gmail.com>
  */
 
 /**

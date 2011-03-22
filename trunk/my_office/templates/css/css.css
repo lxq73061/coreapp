@@ -103,3 +103,31 @@ border:1px solid #CCCCCC;
 padding:5px;
 margin:50px 50px;
 }
+
+
+
+.table0 {
+background-color:#D5F1F9;
+border-collapse:collapse;
+border-color:#D5F1F9;
+padding-left:5px;
+padding-right:5px;
+padding-top:3px;
+}
+.td0 td {
+white-space:nowrap;
+}
+.table0 td, .table0 th {
+border:1px solid #D5F1F9;
+}
+.right, .r {
+text-align:right;
+}
+.td2 {
+background-color:white;
+color:black;
+}
+.td2alt {
+background-color:#F2F2F2;
+color:black;
+}

@@ -2,7 +2,8 @@
 
 
 ○<a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">联系人列表</a>&nbsp;
-○<a href="?go=address&do=append">新建联系人</a></ul>
+○<a href="?go=address&do=append">新建联系人</a>
+○<a href="?go=address&do=modify&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>">修改</a>
 
 
 <form method="post">

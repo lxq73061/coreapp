@@ -42,6 +42,8 @@ class doc extends core {
 
 		// 获取数据
 		$where = array();
+		$online = front::online();
+		$where['user_id'] = $online->user_id;
 		if (strlen($get['keyword'])>0){
 			$where []=array(
 			'title LIKE ?' => '%'.$get['keyword'].'%',
