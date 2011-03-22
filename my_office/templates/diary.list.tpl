@@ -39,7 +39,7 @@ var ids = '<?=$ids?>';
 <?php if($diarys):?>
 <?php foreach($diarys as $diary): ?>
 	<tr>
-	<td><?php if($diary->diary_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $diary->diary_id; ?>"><?php endif; ?></td>
+	<td><?php if($diary->diary_id<0): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $diary->diary_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $diary->diary_id; ?></td>
 	<td>&nbsp;<?php echo $diary->create_date; ?></td>
 	<td><?php echo $diary->title; ?></td>

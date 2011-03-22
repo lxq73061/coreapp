@@ -37,7 +37,7 @@ var ids = '<?=$ids?>';
 <?php if($sites):?>
 <?php foreach($sites as $site): ?>
 	<tr>
-	<td><?php if($site->site_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $site->site_id; ?>"><?php endif; ?></td>
+	<td><?php if($site->site_id<0): ?>&nbsp;<? else: ?><input type="checkbox" name="<?=$ids?>" value="<?php echo $site->site_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?php echo $site->site_id; ?></td>
 	<td>&nbsp;<?php echo $site->title; ?></td>
 	<td>&nbsp;<?php echo $site->get_typeid(); ?></td>

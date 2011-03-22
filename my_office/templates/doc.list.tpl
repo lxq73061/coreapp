@@ -31,7 +31,7 @@ var ids = '<?=$ids?>';
 <tbody>
 <?php foreach($docs as $doc): ?>
 	<tr>
-	<td><?php if($doc->doc_id<3): ?>&nbsp;<? else: ?><input type="checkbox" name=<?=$ids ?> value="<?=$doc->doc_id; ?>"><?php endif; ?></td>
+	<td><?php if($doc->doc_id<0): ?>&nbsp;<? else: ?><input type="checkbox" name=<?=$ids ?> value="<?=$doc->doc_id; ?>"><?php endif; ?></td>
 	<td>&nbsp;<?=$doc->doc_id; ?></td>
 	<td>&nbsp;<a href="?go=doc&do=detail&doc_id=<?=$doc->doc_id; ?>&query=<?=urlencode($query) ?>"><?=$doc->title; ?></a></td>
 	<td>&nbsp;<a href="?go=channel&do=detail&channel_id=<?=$doc->typeid; ?>"><?=$doc->get_typeid(); ?></a></td>
