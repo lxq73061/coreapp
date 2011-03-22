@@ -102,9 +102,9 @@ class channel extends core {
 		)";
 		
 		$docs = self::selects($sql,null,true,$other);
-
+		$query = $_SERVER['QUERY_STRING'];
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page'));
+		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page','query'));
 	}
 	
 	/**
@@ -203,6 +203,13 @@ class channel extends core {
 				$count = self::selects('COUNT(*)', null, array('name'=>$post ['name'],'parent_id'=>$post ['parent_id'],'channel_id<>?'=>$channel->channel_id), null, array('column|table=channel'=>'COUNT(*)'));
 				if ($count > 0) {
 					$error ['name'] = '分类名重复，请换一个分类名';
+				}else{
+					$parent_path = self::selects('path',null,array('channel_id'=>$post['parent_id']),null,array('column'=>'path'));
+					if(strstr($parent_path,self::make_path($channel->channel_id))){
+						$error ['name'] = '不能指定为自己的下级';
+						
+					}
+					
 				}
 			}
 			if (! empty ($error)) {
@@ -214,8 +221,10 @@ class channel extends core {
 			$channel->struct ($post);
 			$channel->update ();
 			self::update_path($channel->channel_id);
-			exit();
+			//exit();
+			//header ('Location: ?'.$_GET['query']);
 			header ('Location: ?'.$_GET['query']);
+			
 			return;
 
 		}
@@ -294,7 +303,7 @@ class channel extends core {
 function get_channel(){
 		$online = front::online();
 		$class_arr=array();
-		$channels = self::selects('channel_id,name,parent_id,sort', null, array('user_id'=>$online->user_id),array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
+		$channels = self::selects('channel_id,name,parent_id,sort,path', null, array('user_id'=>$online->user_id),array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
 		
 		return $channels;
 }
@@ -304,6 +313,7 @@ function get_channel(){
 
 function get_channel_table($m,$id)
 {
+	return self::get_channel_select($m,$id,NULL,NULL,NULL,'table');
 	$parent_id ='parent_id';
 	$name ='name';
 	$class_id='channel_id';
@@ -327,31 +337,81 @@ function get_channel_table($m,$id)
 	return $str;
 	
 }
-
-function get_channel_select($m,$id,$index)
+/**
+*级别,当前父ID,父ID,分类ID
+*/
+function get_channel_select($m,$id,$p_id,$c_id,$pLineType,$type='option')
 {	
+	static $class_arr;
 	//global $class_arr;
 	$parent_id ='parent_id';
 	$name ='name';
 	$class_id='channel_id';
 	$sort='sort';
-	
-	$class_arr=self::get_channel();
-	$n = str_pad('',$m,'-',STR_PAD_RIGHT);
-	$n = str_replace("-","&nbsp;&nbsp;",$n);
-	foreach($class_arr as $k=>$v){
-	
+
+	if(!$class_arr)$class_arr=self::get_channel();
+
+	$c_path = self::make_path($c_id);
+
+	foreach($class_arr as $k=>$v){	
 		if($v[$parent_id]==$id){
-			if($v[$class_id]==$index){
-				echo "        <option value=\"".$v[$class_id]."\" selected=\"selected\">".$n."|--".$v[$name]."</option>\n";
-			}else{
-				echo "        <option value=\"".$v[$class_id]."\">".$n."|--".$v[$name]."</option>\n";
-			}
-			self::get_channel_select($m+1,$v[$class_id],$index);
-			
-		}
-		
+			$childrenArray[]=$v;
+		}		
 	}
+	if($type=='check') return sizeof($childrenArray);//仅判断是否有下级时用.
+	
+	if($childrenArray_length = sizeof($childrenArray))
+	foreach($childrenArray as $k=>$v){
+			$pChildrenExists = $ChildrenExists;//上一个是否有下级
+			$ChildrenExists =self::get_channel_select(NULL,$v[$class_id],NULL,NULL,NULL,'check');
+			//$ChildrenExists = NodeExists($childrenArray[$k][$class_id]);
+			if($ChildrenExists) {//有下级
+				if($k == $childrenArray_length - 1) {
+					$NodeType = "┗&nbsp;";//
+					$LineType = "&nbsp;&nbsp;";//
+				}else {
+					if($pChildrenExists)
+					$NodeType = "┝&nbsp;";
+					else
+					$NodeType = "┡&nbsp;";//
+					
+					$LineType = "┆&nbsp;";//
+				}
+			}else { //无下级
+				if($k == $childrenArray_length - 1) {
+						if($pChildrenExists)
+						$NodeType = "┕&nbsp;";
+						else
+						$NodeType = "┗&nbsp;";//YEMATreeLeaf
+				}else {
+					if($pChildrenExists)
+						$NodeType = "┢&nbsp;";
+					else
+						$NodeType = "┣&nbsp;";//YEMATreeLeafEnd
+				}
+					
+			}
+			if($type=='option'){
+				if($v[$class_id]==$p_id){
+					$html .= "        <option value=\"".$v[$class_id]."\" selected=\"selected\">".$pLineType.$NodeType.$v[$name]."</option>\n";
+				}else{
+					$html .= "        <option value=\"".$v[$class_id]."\" ".(strstr($v['path'],$c_path)?'disabled':'').">".$pLineType.$NodeType.$v[$name]."</option>\n";
+				}
+			}else{//table
+				$html .= "<tr>\n";
+				$html .= "	  <td>".$pLineType.$NodeType."<a href=\"?go=channel&do=detail&amp;channel_id=".$v[$class_id]."\">".$v[$name]."</a></td>\n";
+				$html .= "	  <td><div align=\"center\">".$v[$sort]."</div></td>\n";
+				$html .= "	  <td><div align=\"center\"><a href=\"?go=channel&do=modify&amp;channel_id=".$v[$class_id]."\">修改</a>";
+				$html .= " <a href=\"?go=channel&do=remove&amp;channel_id=".$v[$class_id]."&query=go=channel\">删除</a>";
+				$html .= "</div></td>\n";
+				$html .= "	</tr>\n";
+		
+			}
+			$ChildrenExists =self::get_channel_select($m+1,$v[$class_id],$p_id,$c_id,$pLineType.$LineType,$type);
+			$html .=$ChildrenExists;
+			
+	}
+	return $html;
 	
 }
 		//更新某个分类的path信息
@@ -416,6 +476,9 @@ function get_channel_select($m,$id,$index)
 			$nav .= '<strong>'.$v['name'].'</strong>';
 		}
 		return $nav;
+	}
+	function make_path($id){
+		return str_pad($id,5,'0',STR_PAD_LEFT);
 	}
 }
 
