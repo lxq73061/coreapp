@@ -419,13 +419,14 @@ function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option'
 						
 		$id=intval($id);
 		
-		$parent_id = self::selects('parent_id', null, array('channel_id'=>$id),array(),array('column'=>'parent_id'));
+		$parent_id = self::selects('parent_id', null, array('channel_id'=>$id),array(),array('column|table=channel'=>'parent_id'));
 		//$channel = self::selects('parent_id', null, array('channel_id'=>$id),array(),array('column|table=channel'=>1));
 
 
 		//$sql = "SELECT channel_id,parent_id,path FROM channel WHERE channel_id = (SELECT parent_id FROM channel WHERE channel_id=$id) ";
 		//$channel = self::selects($sql,null,true,array('ORDER BY sort ASC,channel_id DESC'),array('assoc'=>null));
-        $channel = self::selects('channel_id,parent_id,path', null, array('channel_id'=>$parent_id),array(),array('assoc'=>null));
+       // $channel = self::selects('channel_id,parent_id,path', null, array('channel_id'=>$parent_id),array(),array('assoc'=>null));
+		$channel = self::selects('channel_id,parent_id,path', null, array('channel_id'=>$parent_id),array(),array('assoc|table=channel'=>null));
 
 		if($channel['path']){//有上级，并且上级设置了path					
 			$path  = $channel['path'].','. str_pad($id,5,'0',STR_PAD_LEFT);
@@ -447,14 +448,18 @@ function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option'
 		if(!$pid){
 			return;
 		}
-		//$sql = "SELECT * FROM channel WHERE channel_id = ".$pid;
-		//$pinfo = self::selects($sql,null,true,null,array('assoc'=>null));
-		$pinfo = self::selects(null, null, array('channel_id'=>$pid),array(),array('assoc'=>null));
-	
-		
-		//$path = preg_replace('/[0]+/is','',$pinfo['path']);//当前id也在path里。
+
+
+
+
+		//$pinfo = self::selects(null, null, array('channel_id'=>$pid),array(),array('assoc|table=channel'=>null));
 		$path = $pinfo['path'];
-		$path = trim($path,',');
+		$channel = new channel;
+		$channel->channel_id = $pid;
+		$channel->select();	
+		
+		//$path = preg_replace('/[0]+/is','',$pinfo['path']);//当前id也在path里。		
+		$path = trim($channel->path,',');
 		if(!$path){
 			self::update_path($pid);
 			return self::get_nav($pid);
@@ -467,7 +472,7 @@ function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option'
 		//if($path[count($path)]!=$pid)$path.=','.$pid;
 		//$sql = "SELECT * FROM channel WHERE channel_id IN($path)";
 		//$pinfos = self::selects($sql,null,true,null,array(null,'assoc'=>null));
-		$pinfos = self::selects(null, null, array('channel_id'=>explode(',',$path)),array(),array(null,'assoc'=>null));
+		$pinfos = self::selects(null, null, array('channel_id'=>explode(',',$path)),array(),array(null,'assoc|table=channel'=>null));
 
 		foreach($pinfos as $k=>$v){
 			if($v['channel_id']!=$pid)
