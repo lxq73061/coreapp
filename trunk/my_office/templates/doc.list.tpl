@@ -10,9 +10,14 @@
 &nbsp;
 
 排序：<select name="order">
-	<option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>创建日期↑</option>
-	<option value="date" <?php if($get['order'] === 'date') echo 'selected'; ?>>修改日期↑</option>
-	<option value="hit" <?php if($get['order'] === 'hit') echo 'selected'; ?>>访问次数↑</option>
+<option value="doc_id" <?php if($get['order'] === 'doc_id') echo 'selected'; ?>>创建日期↑</option>
+<option value="doc_id2" <?php if($get['order'] === 'doc_id2') echo 'selected'; ?>>创建日期↓</option>
+
+<option value="date" <?php if($get['order'] === 'date') echo 'selected'; ?>>修改日期↑</option>
+<option value="date2" <?php if($get['order'] === 'date2') echo 'selected'; ?>>修改日期↓</option>
+
+<option value="hit" <?php if($get['order'] === 'hit') echo 'selected'; ?>>访问次数↑</option>
+<option value="hit2" <?php if($get['order'] === 'hit2') echo 'selected'; ?>>访问次数↓</option>
 </select>
 <input type="submit" value="查询">
 </form>

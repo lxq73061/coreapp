@@ -34,7 +34,7 @@ class doc extends core {
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
-			'limit'  => isset ($_GET ['limit']) ? $_GET ['limit'] : '10',
+			'limit'  => isset ($_GET ['limit']) ? $_GET ['limit'] : '20',
 		);
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
@@ -59,6 +59,10 @@ class doc extends core {
 			case 'doc_id':
 				$other = array('ORDER BY doc_id');
 				break;
+			case 'doc_id2':
+				$other = array('ORDER BY doc_id DESC');
+				break;
+				
 			case 'date':
 				$other = array('ORDER BY update_date');
 				break;
@@ -73,7 +77,9 @@ class doc extends core {
 				break;
 				
 			default:
+				$get['order'] ='doc_id2';
 				$other = array('ORDER BY doc_id DESC');
+				
 				break;
 		}
 		$page = array('page'=>$get['page'],'size'=>$get['limit']);
