@@ -118,9 +118,9 @@ class channel extends core {
 		// 数据消毒
 		$post = array(
 			'name' => isset ($_POST ['name']) ? $_POST ['name'] : '',
-			'parent_id' => isset ($_POST ['parent_id']) ? $_POST ['parent_id'] : '',
+			'parent_id' => isset ($_POST ['parent_id']) ? (int)$_POST ['parent_id'] : '0',
 			'component'  => isset ($_POST ['component']) ? $_POST ['component'] : '',
-			'sort' => isset ($_POST ['sort']) ? $_POST ['sort'] : '0',			
+			'sort' => isset ($_POST ['sort']) ? (int)$_POST ['sort'] : '0',			
 			'user_id' => $online->user_id,		
 		);
 
@@ -131,7 +131,7 @@ class channel extends core {
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
-
+		
 			// 数据验证
 			$length = (strlen ($post ['name']) + mb_strlen ($post ['name'], 'UTF-8')) /2;
 			if ($length ==0) {

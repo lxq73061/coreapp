@@ -127,9 +127,9 @@ class book extends core {
 			'item' => isset ($_POST ['item']) ? $_POST ['item'] : '',
 			'item_txt' => isset ($_POST ['item_txt']) ? $_POST ['item_txt'] : '',
 			'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
-			'typeid'  => isset ($_POST ['typeid']) ? $_POST ['typeid'] : '',		
+			'typeid'  => 0,		
 			'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
-			'net' => isset ($_POST ['net']) ? $_POST ['net'] : '',
+			'net' => '0',
 			'otype' => isset ($_POST ['otype']) ? $_POST ['otype'] : '',
 			'amount' => isset ($_POST ['amount']) ? $_POST ['amount'] : '',
 			'user_id' => $online->user_id,
@@ -155,7 +155,7 @@ class book extends core {
 			}else{
 			    $post['otype'] ='OUT';
 			}
-			
+			 
 
 			$reg="/(\d{4})-(\d{1,2})-(\d{1,2})/";
 			if (!empty($post ['create_date'])) {
@@ -182,7 +182,11 @@ class book extends core {
 			$book = new self;
 			$book ->book_id = null;
 			$book ->struct ($post);
-			$book->insert ();
+			$book_id = $book->insert ('','book_id');
+			if($book_id<1){
+				$error ['create_date'] = 'add fail';
+				break;
+			}
 
 			self::update_statement_net($online->user_id,0,$post['ccy']);
 			header ('Location: ?go=book&do=browse');
