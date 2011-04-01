@@ -43,7 +43,7 @@ foreach($channels as $v){
     $v['parent_id']==0?$v['parent_id']=100000000:0;	
 	$tree .= "tree1.addnode($v[channel_id], $v[parent_id], \"$v[title]\",\"\",\"\",\"./?go=channel&do=detail&channel_id=$v[channel_id]\",\"frmView\");\n";
 };
-$orderid = max($orderids);
+$orderids ? $orderid = max($orderids) : $orderid=0;
 foreach($docs as $v){
 	$orderid++;
     $v['typeid']==0?$v['typeid']=100000000:0;
