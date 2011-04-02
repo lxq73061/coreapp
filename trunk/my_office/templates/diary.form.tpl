@@ -1,12 +1,16 @@
-<?php include('header.tpl')?>
-
+<?php
+define('GET_DATE',true);
+include('header.tpl')?>
 ○<a href="?go=<?=$_GET['go']?>&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">日记列表</a>&nbsp;
 ○<a href="?go=<?=$_GET['go']?>&do=append">添加日记</a><br>
 
 <form method="post" action="?go=<?=$_GET['go']?>&do=<?php echo $_GET['do']; ?>&diary_id=<?php echo $_GET['diary_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
 <fieldset>
 <legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加日记' : '修改日记'; ?></legend>
-<label>日期： <input type="text" name="diary_date" value="<?php echo $post['diary_date']; ?>"></label>
+
+<label>日期： <input type="text" id="datepicker" readonly="readonly" name="diary_date" value="<?php echo $post['diary_date']; ?>"></label>
+<!-- 我修改 -->
+
 	<font color="red">*</font><?php if(isset($error['diary_date'])): ?><font color="red"><?php echo $error['diary_date']; ?></font><?php endif; ?><br>
 <label>标题： <input type="text" name="title" value="<?php echo $post['title']; ?>"></label>
 	<font color="red">*</font><?php if(isset($error['title'])): ?><font color="red"><?php echo $error['title']; ?></font><?php endif; ?><br>

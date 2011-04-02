@@ -1,4 +1,6 @@
-<?php include('header.tpl')?>
+<?php
+define('GET_DATE',true);
+include('header.tpl')?>
 
 ○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本列表</a>&nbsp;
 ○<a href="?go=book&do=append">添加帐本</a><br>
@@ -7,9 +9,9 @@
 <fieldset>
 <legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加帐本' : '修改帐本'; ?></legend>
 
-<label>日期: <input name="create_date" type="text" id="create_date" size="12" value="<?=$post['create_date']?>" /></label>
+<label>日期: <input name="create_date" class="datepicker_input"  type="text" id="create_date" size="12" value="<?=$post['create_date']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_date'])): ?><font color="red"><?php echo $error['create_date']; ?></font><?php endif; ?><br>
-<label>时间: <input name="create_time" type="text" id="create_time" size="12" value="<?=$post['create_time']?>" /></label>
+<label>时间: <input name="create_time" class="datepicker_input" type="text" size="12" value="<?=$post['create_time']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_time'])): ?><font color="red"><?php echo $error['create_time']; ?></font><?php endif; ?><br>
     
     

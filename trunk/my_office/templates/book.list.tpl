@@ -1,4 +1,6 @@
-<?php include('header.tpl')?>
+<?php
+define('GET_DATE',true);
+include('header.tpl')?>
 
 ○<a href="?go=book&do=browse">帐本</a>&nbsp;
 ○<a href="?go=book&do=append" rel="facebox">添加帐本<img src="templates/images/add.gif" border="0" width="16" height="16" /></a><br>
@@ -19,9 +21,9 @@
     <input type="hidden" name="do" value="browse">
     <label for="from"></label>
     起始日期：
-    <input name="from" type="text" id="from" size="10" value="<?=$get['from']?>" />
+    <input name="from" type="text" class="datepicker_input" id="datepickerFrom" size="10" value="<?=$get['from']?>" />
     终止日期：
-    <input name="to" type="text" id="to" size="10"  value="<?=$get['to']?>"/>
+    <input name="to" type="text" class="datepicker_input"  id="datepickerTo" size="10"  value="<?=$get['to']?>"/>
     &nbsp;货币：
     <select name="ccy" id="ccy">
         <option value="CNY" <?=set_select($get['ccy'],'CNY')?>>CNY</option>
