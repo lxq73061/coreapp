@@ -325,7 +325,7 @@ class qqrobot extends core {
 	}
 
 	function cn2en($content)
-	{
+	{	return self::google_translage('cn','en',$content);
 		//return file_get_contents("http://api.liqwei.com/translate/?language=zh-CN|en&content=".iconv('utf-8','gb2312',$content));
 		$msg =  file_get_contents("http://api.liqwei.com/translate/?language=zh-CN|en&content=".iconv('GBK','gb2312',$content));
 		$msg =str_replace('+',' ',$msg);
@@ -335,6 +335,7 @@ class qqrobot extends core {
 
 	function en2cn($content)
 	{
+		return self::google_translage('en','zh-CN',$content);
 		$msg = file_get_contents("http://api.liqwei.com/translate/?language=en|zh-CN&content=".iconv('GBK','gb2312',$content));
 		$msg =str_replace('+',' ',$msg);
 		return $msg;
@@ -343,6 +344,53 @@ class qqrobot extends core {
 	function translate($t1,$t2,$content)
 	{
 		return file_get_contents("http://api.liqwei.com/translate/?language={$t1}|{$t2}&content=".iconv('GBK','gb2312',$content));
+	}
+	function google_translage($code1,$code2,$content){
+		require_once(dirname(__FILE__).'/../includes/lib/GTranslate/GTranslate.php');	
+		
+		try{
+			
+			$code1 = strtolower($code1);
+			$code2 = strtolower($code2);
+			if($code1=='cn')$code1='zh-cn';
+			if($code2=='cn')$code2='zh-cn';
+			
+			
+			 
+			$language_list = parse_ini_file(dirname(__FILE__).'/../includes/lib/GTranslate/languages.ini');
+			$language_list 		= 	array_map( "strtolower", $language_list );
+			$language_list2 		= 	array_map( "strtolower", array_flip ($language_list) );//
+			
+			$language_list_v  	= 	array_map( "strtolower", array_values($language_list) );
+			$language_list_k 	= 	array_map( "strtolower", array_keys($language_list) );
+			
+			if(!isset($language_list2[$code1])){
+				return ('Error language code:'.$code1);
+			}
+			if(!isset($language_list2[$code2])){
+				return ('Error language code:'.$code2);
+			}
+			
+			
+			$fromlanguage = $language_list2[$code1];
+			$targetlanguage = $language_list2[$code2];
+			
+			//print_r($targetlanguage);
+			
+			 
+			 $gt = new Gtranslate;
+		
+			$gt->setRequestType('curl');
+			$function  = $fromlanguage.'_to_'.$targetlanguage;
+			$text = $gt->$function($content);	
+			echo $function."\r\n";
+			$text = iconv('UTF-8','GBK',$text);
+			return $text;
+			
+		
+		} catch (GTranslateException $ge){
+		   return $ge->getMessage();
+		}
 	}
 	function check($content){
 		return strlen(file_get_contents($content));
