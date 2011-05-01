@@ -25,6 +25,7 @@
 <script language="javascript">
 var ids = '<?=$ids?>';
 </script>
+<?php include('page.tpl')?>
 <form method="post" action="?go=doc&do=group_remove&query=<?=urlencode($query) ?>">
 <table border="0" cellpadding="5" cellspacing="0">
 <thead>
@@ -55,7 +56,6 @@ var ids = '<?=$ids?>';
 </table>
 
 </form>
-<?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
-<?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>
+<?php include('page.tpl')?>
 </body>
 </html>

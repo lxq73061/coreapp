@@ -6,8 +6,8 @@
 <form>
 <input type="hidden" name="go" value="address">
 <input type="hidden" name="do" value="browse">
-通讯名：
-<input type="text" name="addressname" value="<?php echo $get['addressname']?>">&nbsp;
+关键词：
+<input type="text" name="keyword" value="<?php echo $get['keyword']?>">&nbsp;
 分类：<select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
             <?php
@@ -26,6 +26,7 @@
 <script language="javascript">
 var ids = '<?=$ids?>';
 </script>
+<?php include('page.tpl')?>
 <form method="post" action="?go=address&do=group_remove&query=<?php echo urlencode($query) ?>">
     <table border="0" cellpadding="5">
     <tbody><table border="0" cellpadding="5">
@@ -98,8 +99,6 @@ var ids = '<?=$ids?>';
     </tbody>
     </table>
 </form>
-<?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
-<?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>
-
+<?php include('page.tpl')?>
 </body>
 </html>

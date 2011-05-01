@@ -36,6 +36,7 @@ include('header.tpl')?>
 <script language="javascript">
 var ids = '<?=$ids?>';
 </script>
+<?php include('page.tpl')?>
 <form method="post" action="?go=book&do=group_remove&query=<?php echo urlencode($query) ?>">
     <table cellspacing="1" cellpadding="5" border="0" class="table0 width_box">
         <thead>
@@ -117,10 +118,5 @@ var ids = '<?=$ids?>';
     <p>&nbsp;</p>
  
 </form>
-<?php if($page['page']<$page['total']): ?>
-<a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;
-<?php endif; ?>
-<?php if($page['page']>1): ?>
-<a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a>
-<?php endif; ?>
+<?php include('page.tpl')?>
 </body></html>
