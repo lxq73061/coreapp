@@ -42,6 +42,7 @@ class address extends core {
 			'remarks'  => isset ($_GET ['remarks']) ? $_GET ['remarks'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
+			'keyword'  => isset ($_GET ['keyword']) ? $_GET ['keyword'] : '',
 		);
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
@@ -52,8 +53,18 @@ class address extends core {
 		$online = front::online();
 		$where['user_id'] = $online->user_id;
 		
-		if (strlen($get['name'])>0){
-			$where ['name LIKE ?'] = '%'.$get['name'].'%';
+		if (strlen($get['keyword'])>0){
+			$where []=array(
+			'name LIKE ?' => '%'.$get['keyword'].'%',
+			'email LIKE ?' => '%'.$get['keyword'].'%',
+			'qq LIKE ?' => '%'.$get['keyword'].'%',
+			'msn LIKE ?' => '%'.$get['keyword'].'%',
+			'mobile LIKE ?' => '%'.$get['keyword'].'%',
+			'office_phone LIKE ?' => '%'.$get['keyword'].'%',
+			'home_phone LIKE ?' => '%'.$get['keyword'].'%',
+			'remarks LIKE ?' => '%'.$get['keyword'].'%',			
+			);
+			
 		}
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
