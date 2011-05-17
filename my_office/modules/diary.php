@@ -20,7 +20,8 @@ class diary extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		self::browse();
+		//front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -30,7 +31,7 @@ class diary extends core {
 
 		// 数据消毒
 		$get = array(
-			'title' => isset ($_GET ['title']) ? $_GET ['title'] : '',
+			'keyword' => isset ($_GET ['keyword']) ? $_GET ['keyword'] : '',
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
@@ -42,8 +43,10 @@ class diary extends core {
 		// 获取数据
 		$where = array();
 		$where['user_id'] = $online->user_id;
-		if (strlen($get['title'])>0){
-			$where ['title LIKE ?'] = '%'.$get['title'].'%';
+		if (strlen($get['keyword'])>0){
+			$where []=array(
+			'title LIKE ?' => '%'.$get['keyword'].'%',
+			'content LIKE ?' => '%'.$get['keyword'].'%');
 		}
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
@@ -52,11 +55,8 @@ class diary extends core {
 			case 'diary_id':
 				$other = array('ORDER BY diary_id');
 				break;
-			case 'title':
-				$other = array('ORDER BY title');
-				break;
-			case 'title2':
-				$other = array('ORDER BY title DESC');
+			case 'diary_id2':
+				$other = array('ORDER BY diary_id DESC');
 				break;
 			default:
 				$other = array('ORDER BY diary_id DESC');
@@ -65,13 +65,17 @@ class diary extends core {
 		$page = array('page'=>$get['page'],'size'=>10);
 		$other ['page'] = &$page;
 		$diarys = self::selects (null, null, $where, $other, __CLASS__);
-
+		foreach($diarys as &$v){
+			$v->title = strip_tags($v->title);
+			$v->content = strip_tags($v->content);
+			
+		}
 		// 页面显示
 		foreach (array('title') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('diarys','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('diarys','get','page','query'));
 	}
 	
 	/**
@@ -84,13 +88,13 @@ class diary extends core {
 		$diary->diary_id = isset($_GET['diary_id']) ? $_GET['diary_id'] : null;
 		if(! is_numeric($diary->diary_id) || ! $diary->select()) {
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('diary'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('diary'));
 	}
 	
 	/**
@@ -158,7 +162,7 @@ class diary extends core {
 		foreach (array('title','url','typeid','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -172,7 +176,7 @@ class diary extends core {
 		$diary->diary_id = isset($_GET['diary_id']) ? $_GET['diary_id'] : null;
 		if(! is_numeric($diary->diary_id) || ! $diary->select()) {
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($diary);
@@ -225,7 +229,7 @@ class diary extends core {
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -238,7 +242,7 @@ class diary extends core {
 		$diary->diary_id = isset($_GET['diary_id']) ? $_GET['diary_id'] : null;
 		if(! is_numeric($diary->diary_id) || ! $diary->select()) {
 			$error = '该日志不存在';
-			self::view ('error.tpl', compact ('error'));
+			front::view2 ('error.tpl', compact ('error'));
 			return;
 		}
 
@@ -255,7 +259,7 @@ class diary extends core {
 		// 获取数据
 		if(! isset($_POST['diary_id']) || !is_array($_POST['diary_id'])){
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

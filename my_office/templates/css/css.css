@@ -131,3 +131,164 @@ color:black;
 background-color:#F2F2F2;
 color:black;
 }
+#top #tabs{
+	margin-top:-10px;
+}
+#top #tabs a{
+	color:#000;
+}
+
+a.disabled {
+    border: 0 none;
+    color: #999999 !important;
+    cursor: default;
+}
+
+.arrowLft, .arrowRit, .arrowRitSm, .arrowDownLft, .arrowDownRit, .arrowUpLft, .arrowUpRit {
+	background:url(../images/common/site/arrows.png) no-repeat!important;
+}
+.arrowLft {
+	background-position:0 0!important;
+	padding:2px 0 2px 11px!important;
+}
+.arrowRit {
+	background-position:right -40px!important;
+	padding:2px 11px 2px 0!important;
+}
+.arrowRitSm {
+	background-position:right -555px!important;
+	padding:2px 11px 2px 0!important;
+}
+.arrowDownSmlRit {
+	background:url(../images/common/site/arrowsSml.png) no-repeat!important;
+}
+.arrowDownSmlRit {
+	background-position:right -36px!important;
+	padding:0 10px 0 0!important;
+}
+
+.podPurple .arrowLft, .podPurple .arrowRit {
+	color:#681646;
+}
+.podPurple .arrowLft {
+	background-position:0 -80px;
+}
+.podPurple .arrowRit {
+	background-position:right -120px!important;
+}
+.podDownload .arrowLft, .podDownload .arrowRit {
+	color:#CE5119;
+}
+.podDownload .arrowLft {
+	background-position:0 -160px;
+}
+.podDownload .arrowRit {
+	background-position:right -200px!important;
+}
+.podMyShockwave .arrowLft, .podMyShockwave .arrowRit, .tabsMyShockwave .arrowRit {
+	color:#426700;
+}
+.podMyShockwave .arrowLft {
+	background-position:0 -240px;
+}
+.podMyShockwave .arrowRit {
+	background-position:right -280px!important;
+}
+.arrowDownLft, .arrowUpLft {
+	background-position:0 -398px!important;
+	padding:0 0 0 20px!important;
+}
+.arrowUpLft {
+	background-position:0 -438px!important;
+}
+.arrowDownRit, .arrowUpRit {
+	background-position:right -398px!important;
+	padding:0 20px 0 0!important;
+}
+.arrowUpRit {
+	background-position:right -438px!important;
+}
+.arrowLft.disabled, .carousel .carousel-nav-left a.disabled {
+	background-position:left -320px!important;
+}
+.arrowRit.disabled, .carousel .carousel-nav-right a.disabled {
+	background-position:right -360px!important;
+}
+.arrowLftLrg, .arrowRitLrg {
+	background:url(../img/common/site/arrowsLrg.png) no-repeat!important;
+}
+.arrowLftLrg {
+	background-position:0 7px!important;
+	padding:10px 0 10px 22px!important;
+}
+.arrowRitLrg {
+	background-position:right -33px!important;
+	padding:10px 22px 10px 0!important;
+}
+.arrowLftLrg.disabled, #podGameTrophies .carousel .carousel-nav-left a.disabled {
+	background-position:left -73px!important;
+}
+.arrowRitLrg.disabled, #podGameTrophies .carousel .carousel-nav-right a.disabled {
+	background-position:right -113px!important;
+}
+
+
+
+.pag {
+	padding:6px 0;
+	background:#fff;
+}
+.pag span {
+	padding-left:7px;
+}
+.pag .pagLftNav, .pag .pagRitNav {
+	float:left;
+	width:12%;
+}
+.pag .pagRitNav {
+	float:right;
+	text-align:right;
+	padding:0;
+}
+.pag .pagRitNav a {
+	margin-right:7px;
+}
+.pag .pagRitNav a, .pag .pagLftNav a {
+	color:#003D7B;
+}
+.pag .pagRitNav a.arrowRit {
+	background-position:right -40px!important;
+}
+.pag .pagRitNav a.arrowRit.disabled {
+	background-position:right -360px!important;
+}
+.pag .pagNums {
+	text-align:center;
+}
+.pag .pagNums span {
+	padding:0 3px;
+}
+.pag .pagNums span a {
+	background:#fff;
+	padding:1px 4px;
+	color:#045CB6!important;
+	border:1px solid #ccc;
+}
+.pag .pagNums span a.disabled {
+	background:#666;
+	color:#fff!important;
+}
+.pag .pagNums span a.showAll {
+	background:none;
+	color:#045CB6!important;
+	padding:0;
+	border:none;
+}
+.pagBot {
+	border-top:1px solid #ccc;
+	margin-top:5px;
+}
+.pagTop {
+	/*border-bottom:1px solid #ccc;*/
+	margin-bottom:15px;
+}

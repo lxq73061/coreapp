@@ -22,7 +22,7 @@ class book extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -84,7 +84,7 @@ class book extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('books','get','page','query','total_items','totals'));//得到数组所有的变量值
+		front::view2 (__CLASS__ . '.list.tpl', compact ('books','get','page','query','total_items','totals'));//得到数组所有的变量值
 	}
 	
 	/**
@@ -97,13 +97,13 @@ class book extends core {
 		$book->book_id = isset($_GET['book_id']) ? $_GET['book_id'] : null;
 		if(! is_numeric($book->book_id) || ! $book->select()) {
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('book'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('book'));
 	}
 	
 	/**
@@ -198,7 +198,7 @@ class book extends core {
 		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
 	}
 	/**
      * 更新某个会员某个时间后所有帐目的小计
@@ -233,7 +233,7 @@ class book extends core {
 		$book->book_id = isset($_GET['book_id']) ? $_GET['book_id'] : null;
 		if(! is_numeric($book->book_id) || ! $book->select()) {
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($book);
@@ -311,7 +311,7 @@ class book extends core {
 		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount','create_date','create_time') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
 	}
 	
 	/**
@@ -324,7 +324,7 @@ class book extends core {
 		$book->book_id = isset($_GET['book_id']) ? $_GET['book_id'] : null;
 		if(! is_numeric($book->book_id) || ! $book->select()) {
 			$error = '该日志不存在';
-			self::view ('error.tpl', compact ('error'));
+			front::view2 ('error.tpl', compact ('error'));
 			return;
 		}
 
@@ -341,7 +341,7 @@ class book extends core {
 		// 获取数据
 		if(! isset($_POST['book_id']) || !is_array($_POST['book_id'])){
 			$error = '该日志不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

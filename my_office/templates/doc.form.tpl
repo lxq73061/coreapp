@@ -29,8 +29,12 @@
 	</label>
 	<br>
 <label>
+<?php if(IN_WAP){?>
+  <textarea name="content" ><?php echo $post['content']; ?></textarea>
+<?php }else{?>
   <textarea name="content" style="DISPLAY: none"><?php echo $post['content']; ?></textarea>
 <iframe id=content___Frame src="/includes/lib/fckeditor/editor/fckeditor.html?InstanceName=content&Toolbar=Default" frameborder=0 width=95% scrolling=no height=500>	</iframe>
+<?php }?>
       
   
   </label>

@@ -336,4 +336,200 @@ function set_radio($v1,$v2){
 		return 'checked';
 	}
 }
+
+/*
+函数: Pager
+作者: Sam Teng <[email=samteng@live.com]samteng@live.com[/email]>
+作用：通过记录总数，每页显示数取得offset，总页数，前一页与后一页以及分页纯数字的页数数组，不带任何链接
+返回值: 数组
+$aPageDatas['offset']        offset 
+$aPageDatas['thispage']      当前页 
+$aPageDatas['maxpage']       总页数 
+$aPageDatas['prepage']       上一页 
+$aPageDatas['nextpage']      下一页
+$aPageDatas['pagebar']       分页数组
+$aPageDatas['pregroup']      上一组页码
+$aPageDatas['nextgroup']     下一组页码
+$aPageDatas['querystring']   QUERY_STRING 
+
+参数说明:
+$intTotal     记录总数
+$intShowNum   每页显示数
+$intDistance  分页数组最大最小值与当前页的差值,当0或false的时候，不构建分页数组
+$strPageVar   分页变量名，在地址档中如abc.php?page=123，即是page，默认是'page'
+$bGetQueryString  是否读取Query String, 默认读取
+*/
+function Pager ( $intTotal , $intShowNum ,  $intDistance = 5 , $strPageVar = 'page' ,  $bGetQueryString = true ) {
+    $aPageDatas = array() ;
+    ( $intThisPage = intval( $_REQUEST[$strPageVar] ) ) > 1 ? $aPageDatas[thispage] = $intThisPage : $aPageDatas['thispage'] = $intThisPage = 1 ;
+    if ( $intTotal < 1 || $intShowNum < 1 ) {
+        $intOffset   = 0 ;
+        $aPageDatas['maxpage']  = $aPageDatas['prepage'] = $aPageDatas['nextpage'] = 1 ;
+		$aPageDatas['offset']=0;
+        return $aPageDatas ;
+    }
+    $aPageDatas['total']  =$intTotal;//总
+    $aPageDatas['show_num']  =$intShowNum;//每
+    $aPageDatas['offset']   = $intShowNum * ( $intThisPage - 1 ) ;
+    $aPageDatas['maxpage']  = ceil ( $intTotal / $intShowNum ) ;
+    $aPageDatas['prepage']  = $intThisPage < 2 ? 1 : $intThisPage - 1 ;
+    $aPageDatas['nextpage'] = $intThisPage == $aPageDatas['maxpage'] ? $aPageDatas['maxpage']  : $intThisPage + 1 ;
+    if ( $intDistance ) {
+        $arrPageBar = array() ;
+        $intSPage = ( $intThisPage - $intDistance ) < 1 ? 1 : ( $intThisPage - $intDistance ) ;
+        $intEPage = ( $intThisPage + $intDistance ) > $aPageDatas['maxpage'] ? $aPageDatas['maxpage'] : ( $intThisPage + $intDistance ) ;
+        $arrPageBar = array ( ) ;
+        for ( $i = $intSPage ; $i <= $intEPage ; $i++ ) {
+            $arrPageBar[] = $i ;
+        }
+        $aPageDatas['pagebar']   = $arrPageBar ;
+        $aPageDatas['pregroup']  = $intThisPage > ( $intDistance + 1 ) ? $intThisPage - ( $intDistance + 1 ) : 0 ;
+        $aPageDatas['nextgroup'] = $intThisPage < ( $aPageDatas['maxpage'] - 1 - $intDistance ) ? $intThisPage + $intDistance + 1 : $aPageDatas['maxpage'] ;
+    }
+    if ( $bGetQueryString ) {
+
+
+        $tmp  = explode('?',$_SERVER['REQUEST_URI']);
+        $_SERVER["QUERY_STRING"] = $tmp[1] ;
+
+
+        $strPagepattern = '/('.$strPageVar.'=\d{0,})/' ;
+        preg_match_all( $strPagepattern, $_SERVER["QUERY_STRING"] , $arrResult );
+        $strQueryString = $arrResult[1][0] ? str_replace( "&".$arrResult[1][0] , "" , $_SERVER["QUERY_STRING"] ) : $_SERVER["QUERY_STRING"];
+        $strQueryString = str_replace( $arrResult[1][0] , "" , $strQueryString ) ;
+        if ( $strQueryString ) $aPageDatas['querystring'] = $strQueryString . '&';
+    }
+    return $aPageDatas ;
+}
+
+function show_pagenav($aPageDatas) {
+
+    $querystring =$aPageDatas['querystring'];
+    $total =$aPageDatas['total'] ;
+    $firstcount = 	$aPageDatas['offset'];
+    $prepg = $aPageDatas['prepage'];
+    $nextpg = $aPageDatas['nextpage'];
+    $displaypg = $aPageDatas['show_num'] ;
+    $lastpg = $aPageDatas['maxpage'];
+    $page = $aPageDatas['thispage'];
+	 $pagebar = $aPageDatas['pagebar'];
+
+	$maxpage = $aPageDatas['maxpage'];
+//开始分页导航条代码：  
+//$total总数
+//$displaypg每 页显示条
+    //$page =$_GET['page'];
+  //  $pagenav="显示第 <B>".($total?($firstcount+1):0)."</B>-<B>".min($firstcount+$displaypg,$total)."</B> 条记录，共 $total 条记录<BR>";
+    //如果只有一页则跳出函数：
+    if($lastpg<=1) {
+        return false;
+    }
+    // $url='';
+    $url.= '?'. $querystring . "&page";
+    $url = str_replace('&&','&',$url);
+    /*  if(strstr($querystring,'?')){
+	
+  }else {  
+  	$url.="?page";  
+  }  */
+
+    
+    if($prepg && $prepg!=$page) {
+        $pagenav.="<div class=\"pagLftNav\"><a class=\"arrowLft\" href=\"$url=$prepg\">Previous</a></div>";
+    }else {
+        $pagenav.="<div class=\"pagLftNav\"><a class=\"arrowLft disabled\" href=\"#\">Previous</a></div>";
+    }
+
+	
+    if($nextpg && $nextpg!=$page) {
+        $pagenav.=" <div class=\"pagRitNav\"><a class=\"arrowRit\" href=\"$url=$nextpg\">Next</a></div> ";
+    }else {
+        $pagenav.=" <div class=\"pagRitNav\"><a class=\"arrowRit disabled\" href=\"#\">Next</a></div>";
+    }
+    //$pagenav.=" <a href=\"$url=$lastpg\">尾页</a> ";
+	
+	if(sizeof($pagebar)){
+		$pagenav.="<div class=\"pagNums\"> Page: ";
+		if(!in_array(1,$pagebar)){
+			$pagenav.=" <span><a href=\"$url=1\">1</a></span> ";
+			if(!in_array(1+1,$pagebar))$pagenav.=" ... ";
+		}
+		foreach($pagebar as $k=>$v){
+			if($v== $page)
+			$pagenav.=" <span>$v</span> ";
+			else
+			$pagenav.=" <span><a href=\"$url=$v\">$v</a></span> ";
+		}
+		
+		if(!in_array($maxpage,$pagebar)){
+			if(!in_array($maxpage-1,$pagebar))$pagenav.=" ... ";
+			$pagenav.=" <span><a href=\"$url=$maxpage\">$maxpage</a></span> ";
+		}
+		$pagenav.="</div>";
+	}
+	
+/*    //下拉跳转列表，循环列出所有页码：
+    $pagenav.="　转到第 <select name=\"topage\" size=\"1\" onchange=\"window.location='$url='+this.value\">\n";
+    for($i=1;$i<=$lastpg;$i++) {
+        if($i==$page) {
+            $pagenav.="<option value=\"$i\" selected>$i</option>\n";
+        }else {
+            $pagenav.="<option value=\"$i\">$i</option>\n";
+        }
+    }
+    $pagenav.="</select> 页，共 $lastpg 页";
+	*/
+    return $pagenav;
+}
+//检查是否wap访问
+function check_wap()
+{
+	if (strpos(strtoupper($_SERVER['HTTP_ACCEPT']),'VND.WAP.WML') > 0)
+	{
+		// Check whether the browser/gateway says it accepts WML.
+		$br = 'WML';
+	}
+	else
+	{
+		$browser=substr(trim($_SERVER['HTTP_USER_AGENT']),0,4);
+		if ($browser=='Noki' || // Nokia phones and emulators
+		$browser=='Eric' || // Ericsson WAP phones and emulators
+		$browser=='WapI' || // Ericsson WapIDE 2.0
+		$browser=='MC21' || // Ericsson MC218
+		$browser=='AUR'  || // Ericsson R320
+		$browser=='R380' || // Ericsson R380
+		$browser=='UP.B' || // UP.Browser
+		$browser=='WinW' || // WinWAP browser
+		$browser=='UPG1' || // UP.SDK 4.0
+		$browser=='upsi' || // another kind of UP.Browser ??
+		$browser=='QWAP' || // unknown QWAPPER browser
+		$browser=='Jigs' || // unknown JigSaw browser
+		$browser=='Java' || // unknown Java based browser
+		$browser=='Alca' || // unknown Alcatel-BE3 browser (UP based?)
+		$browser=='MITS' || // unknown Mitsubishi browser
+		$browser=='MOT-' || // unknown browser (UP based?)
+		$browser=='My S' ||//  unknown Ericsson devkit browser ?
+		$browser=='WAPJ' || //  Virtual WAPJAG www.wapjag.de
+		$browser=='fetc' || //  fetchpage.cgi Perl script from www.wapcab.de
+		$browser=='ALAV' || //  yet another unknown UP based browser ?
+		$browser=='Wapa' || //  another unknown browser (Web based “Wapalyzer'?)
+		$browser=='Oper') // Opera  
+		{
+		$br = 'WML';
+		}
+		else
+		{
+		$br = 'HTML';
+		}
+	}
+
+	if($br == 'WML')
+	{
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
 ?>

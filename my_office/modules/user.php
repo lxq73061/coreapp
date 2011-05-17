@@ -20,7 +20,7 @@ class user extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class user extends core {
 		}
 		
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('users','get','online','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('users','get','online','page','query'));
 	}
 	
 	/**
@@ -86,12 +86,12 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('user'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('user'));
 	}
 	
 	/**
@@ -118,7 +118,7 @@ class user extends core {
 		}
 		if($online->grade>2 ){
 			$error = '无权限';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -191,7 +191,7 @@ class user extends core {
 		foreach (array('username','mobile','email','url','remark') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -205,18 +205,18 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		//级别:1超级管理员/2管理员/3普通用户
 		if($online->grade==3 && $user->user_id!=$online->user_id ){
 			$error = '无权限';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		if($online->grade==2 && $user->user_id!=$online->user_id &&  $user->grade!=3 ){
 			$error = '无权限';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -311,7 +311,7 @@ class user extends core {
 		foreach (array('username','mobile','email','url','remark') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','online'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','online'));
 	}
 	
 	/**
@@ -324,7 +324,7 @@ class user extends core {
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -341,7 +341,7 @@ class user extends core {
 		// 获取数据
 		if(! isset($_POST['user_id']) || !is_array($_POST['user_id'])){
 			$error = '该用户不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

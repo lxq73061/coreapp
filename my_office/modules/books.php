@@ -20,7 +20,7 @@ class books extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -74,7 +74,7 @@ class books extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('bookss','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('bookss','get','page','query'));
 	}
 	
 	/**
@@ -87,13 +87,13 @@ class books extends core {
 		$books->books_id = isset($_GET['books_id']) ? $_GET['books_id'] : null;
 		if(! is_numeric($books->books_id) || ! $books->select()) {
 			$error = '该通讯名不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('books'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('books'));
 	}
 	
 	/**
@@ -175,7 +175,7 @@ class books extends core {
 		foreach (array('account','use','typeid','remarks','currency','income','expenditure','balance'/*'content'*/) as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -189,7 +189,7 @@ class books extends core {
 		$books->books_id = isset($_GET['books_id']) ? $_GET['books_id'] : null;
 		if(! is_numeric($books->books_id) || ! $books->select()) {
 			$error = '该通讯名不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($books);
@@ -252,7 +252,7 @@ class books extends core {
 		foreach (array('account','use','typeid','remarks','currency','income','expenditure','balance') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -265,7 +265,7 @@ class books extends core {
 		$books->books_id = isset($_GET['books_id']) ? $_GET['books_id'] : null;
 		if(! is_numeric($books->books_id) || ! $books->select()) {
 			$error = '该通讯不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -282,7 +282,7 @@ class books extends core {
 		// 获取数据
 		if(! isset($_POST['books_id']) || !is_array($_POST['books_id'])){
 			$error = '该通讯不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

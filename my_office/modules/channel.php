@@ -20,7 +20,7 @@ class channel extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -59,7 +59,7 @@ class channel extends core {
 		}*/
 		$query = $_SERVER['QUERY_STRING'];
 	
-		self::view (__CLASS__ . '.list.tpl', compact ('channels','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('channels','get','page','query'));
 	}
 	
 	/**
@@ -79,7 +79,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -105,7 +105,7 @@ class channel extends core {
 		$docs = self::selects($sql,null,true,$other);
 		$query = $_SERVER['QUERY_STRING'];
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page','query'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page','query'));
 	}
 	
 	/**
@@ -162,7 +162,7 @@ class channel extends core {
 		foreach (array('title','copyfrom','typeid','keyword','keyword_auto','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -176,7 +176,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($channel);
@@ -234,7 +234,7 @@ class channel extends core {
 //		foreach (array('title','mobile','email','url','content') as $value) {
 //			$post [$value] = htmlspecialchars ($post [$value]);
 //		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -247,7 +247,7 @@ class channel extends core {
 		$channel->channel_id = isset($_GET['channel_id']) ? $_GET['channel_id'] : null;
 		if(! is_numeric($channel->channel_id) || ! $channel->select()) {
 			$error = '该分类不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -256,13 +256,13 @@ class channel extends core {
 		
 		if ($count > 0) {
 			$error = '分类下还有数据不能删除';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}else{
 			$count = self::selects('COUNT(*)', null, array('parent_id'=>$channel->channel_id), null, array('column|table=channel'=>'COUNT(*)'));
 			if ($count > 0) {
 				$error = '分类下还有分类不能删除';
-				self::view ( 'error.tpl', compact ('error'));
+				front::view2 ( 'error.tpl', compact ('error'));
 				return;
 			}
 		}
@@ -280,7 +280,7 @@ class channel extends core {
 		$adds = self::selects('address_id,typeid,name', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,address_id DESC'),array('address_id','assoc|table=address'=>null));
 		$diarys = self::selects('diary_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,diary_id DESC'),array('diary_id','assoc|table=diary'=>null));
 		
-		self::view ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'));
+		front::view2 ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'));
 	}
 	/**
 	 * 群删分类
@@ -290,7 +290,7 @@ class channel extends core {
 //		// 获取数据
 //		if(! isset($_POST['channel_id']) || !is_array($_POST['channel_id'])){
 //			$error = '该分类不存在';
-//			self::view ( 'error.tpl', compact ('error'));
+//			front::view2 ( 'error.tpl', compact ('error'));
 //			return;
 //		}
 //

@@ -5,7 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="favicon.ico" />
 <title>我的网站</title>
-
+<link href="templates/css/ui.tabs.css" rel="stylesheet" type="text/css" />
+<link href="templates/css/css.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 body,td,th {
 	font-size: 12px;
@@ -54,6 +55,7 @@ text-align:right;
                         align="left" ><table width="100%">
                                                                         <tr>
                                                                             <td>
+                                                                               ○<a target="frmView"  href="?go=welcome&do=right">桌面</a>&nbsp;
    ○<a target="frmView"  href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户</a>&nbsp;
 ○<a target="frmView"  href="?go=doc&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">文章</a>&nbsp;
 ○<a target="frmView"  href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类</a>&nbsp; 
@@ -103,7 +105,10 @@ text-align:right;
 
                                                                         </tr>
                                                                         <tr>
-                                                                          <td>&nbsp;</td>
+                                                                          <td>&nbsp;
+                                                             
+                                                                          
+                                                                          </td>
 <td><div class="index_login">
 欢迎登录：<?php echo $online->username?></div>&nbsp;</td>
                                                                           <td>&nbsp;</td>
@@ -129,3 +134,4 @@ text-align:right;
     </table>
 </div>
 <div style="clear:both"></div>
+

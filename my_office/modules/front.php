@@ -32,7 +32,8 @@ class front extends core {
 			return parent::main (false);
 		}
 		$static_repeat = true;
-
+		define('IN_WAP',check_wap()); 
+			
 		// 载入配置参数
 		list ($front_action,$front_online) = self::init(array('front_action','front_online'));
 		list ($front_action2,$front_online2) = parent::init(array('front_action','front_online'));
@@ -47,7 +48,7 @@ class front extends core {
 		if ($online) {
 			// 视图全局变量
 			if ($front_online) {
-				self::view (array ($front_online=>$online));
+				front::view2 (array ($front_online=>$online));
 			}
 			return parent::main ($framework_enable, $framework_require, $framework_module, $framework_action, $framework_parameter);
 		} else {
@@ -157,7 +158,8 @@ class front extends core {
 	 */
 	final public static function login($redirect = null) {
 		$error = array();
-
+//print_r($_SERVER);
+//print_r($_POST);
 		// 数据消毒
 		$post = array(
 			'username' => isset ($_POST ['username']) ? $_POST ['username'] : '',
@@ -190,10 +192,12 @@ class front extends core {
 			if ($post ['password'] === '') {
 				$error ['password'] = '密码不能为空';
 			}
-			if ($post ['authcode'] === '') {
-				$error ['authcode'] = '验证码不能为空';
-			} elseif (! self::authcode( $post ['authcode'] ) ) {
-				$error ['authcode'] = '验证码输入不正确';
+			if(!IN_WAP){
+				if ($post ['authcode'] === '') {
+					$error ['authcode'] = '验证码不能为空';
+				} elseif (! self::authcode( $post ['authcode'] ) ) {
+					$error ['authcode'] = '验证码输入不正确';
+				}
 			}
 			if ($error !== array () ) {
 				break;
@@ -268,7 +272,7 @@ class front extends core {
 		}
 
 		// 显示模板
-		self::view ( __CLASS__ . '.' . __FUNCTION__.'.tpl', compact ( 'error', 'redirect' ) );
+		front::view2 ( __CLASS__ . '.' . __FUNCTION__.'.tpl', compact ( 'error', 'redirect' ) );
 		return false;
 	}
 
@@ -321,7 +325,52 @@ class front extends core {
 			return $authcode === $value;
 		}
 	}
-
+	public static function view2($_view_file_global = null, $_view_vars = null, $_view_type = null, $_view_show = null){
+		//$config = parent::init('config');
+		
+		if(is_string($_view_file_global) && strstr($_view_file_global,'.')){
+			
+			$str =  parent::view($_view_file_global, $_view_vars, $_view_type, false);
+			if($config['siteRewrite']==false){
+				$array = array(				
+					'@([\w\d\-]+)_([\d]+).html@isU'=>'?go=news&do=detail&news_id=$2',
+				);
+				$a1 =array_keys($array);
+				$a2 =array_values($array);	
+				if($_view_show===false) return preg_replace($a1,$a2,$str);
+				$html =  preg_replace($a1,$a2,$str);				
+			}else{
+				$array = array(
+					'@\?go=user@isU'=>'My-Account.html',
+				);
+				$a1 =array_keys($array);
+				$a2 =array_values($array);	
+				if($_view_show===false) return preg_replace($a1,$a2,$str);
+				$html =  preg_replace($a1,$a2,$str);	
+			}
+			//$html =  strip_tags($html,'<p><a><b><html><body><!DOCTYPE><div><table><tr><td><th><input><select><option>');  
+			if(IN_WAP){
+				$array = array(
+					'@<\!DOCTYPE[^>]+>@isU'=>'',
+					'@<html[^>]+>@isU'=>'<html>',
+					'@<link[^>]+>@isU'=>'',
+					'@<script[^>]*?>[^<]+?</script>@isU'=>'',
+					'@<script[^>]*?></script>@isU'=>'',
+					'@&nbsp;@isU'=>' ',
+					
+				);
+				$a1 =array_keys($array);
+				$a2 =array_values($array);				
+				$html =  preg_replace($a1,$a2,$html);
+			}
+			echo $html;
+			
+		}else{
+			return parent::view($_view_file_global, $_view_vars, $_view_type, $_view_show);
+		}
+		
+	
+	}
 }
 
 /**

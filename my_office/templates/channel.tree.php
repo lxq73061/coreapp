@@ -5,9 +5,6 @@
 <title>Menu</title>
 <link href="templates/images/tree/menu.css" rel="stylesheet" type="text/css" />
 <script src="templates/images/tree/menu.js" type="text/javascript"></script>
-<script src="includes/lib/jquery/jquery.min.js" type="text/javascript"></script><!--
-<script src="includes/lib/jquery/jquery-ui.min.js" type="text/javascript"></script>-->
-
 <style>
 body {
 	SCROLLBAR-FACE-COLOR: #5b84c4;
@@ -28,14 +25,11 @@ body {
 
 <body>
 <p>
-<?php
-
-?>
   <input type="button" value="++" onClick="tree1.openall()" title="展开全部" alt="展开全部" />
   <input type="button" value="--" onClick="tree1.closeall()" title="折叠全部"  />
   <input type="button" value="&lt;&lt;" onClick="addw('-')" />
   <input type="button" value="&gt;&gt;" onClick="addw('+')" />
-<div id="navigation"> 
+<div id="navigation">
   <?php
 function format_date(){}
 $tree .= "tree1.addnode(100000000, 0, \"资料\",\"\",\"\",\"#\",\"\");\n";
@@ -47,14 +41,14 @@ foreach($channels as $v){
 	$v['title'] = $v['name'];
 	$orderids[] = $v['channel_id'];
     $v['parent_id']==0?$v['parent_id']=100000000:0;	
-    //$v[title] = str_replace('"','',$v[title]);
+    $v[title] = str_reaplce('"','\\"',$v[title]);
 	$tree .= "tree1.addnode($v[channel_id], $v[parent_id], \"$v[title]\",\"\",\"\",\"./?go=channel&do=detail&channel_id=$v[channel_id]\",\"frmView\");\n";
 };
 $orderids ? $orderid = max($orderids) : $orderid=0;
 foreach($docs as $v){
 	$orderid++;
     $v['typeid']==0?$v['typeid']=100000000:0;
-    $v[title] = str_replace('"','',$v[title]);
+    $v[title] = str_reaplce('"','\\"',$v[title]);
     $tree .= "tree1.addnode($orderid, $v[typeid], \"$v[title]\",\"\",\"\",\"./?go=doc&do=detail&doc_id=$v[doc_id]\",\"frmView\");\n";
 
 };
@@ -62,7 +56,7 @@ foreach($docs as $v){
 foreach($sites as $v){
 	$orderid++;
     $v['typeid']==0?$v['typeid']=300000000:0;
-    $v[title] = str_replace('"','',$v[title]);
+    $v[title] = str_reaplce('"','\\"',$v[title]);
 	$tree .= "tree1.addnode($orderid, $v[typeid], \"$v[title]\",\"e1.gif\",\"\",\"./?go=site&do=detail&site_id=$v[site_id]\",\"frmView\");\n";
 
 };
@@ -70,7 +64,7 @@ foreach($sites as $v){
 foreach($adds as $v){
 	$orderid++;
     $v['typeid']==0?$v['typeid']=400000000:0;
-    $v[name] = str_replace('"','',$v[name]);
+    $v[name] = str_reaplce('"','\\"',$v[name]);
 	$tree .= "tree1.addnode($orderid, $v[typeid], \"$v[name]\",\"usergroupicon.gif\",\"\",\"./?go=address&do=detail&address_id=$v[address_id]\",\"frmView\");\n";
 
 };
@@ -79,7 +73,7 @@ foreach($adds as $v){
 foreach($diarys as $v){
 	$orderid++;
     
-    $v[title] = str_replace('"','',$v[title]);
+    $v[title] = str_reaplce('"','\\"',$v[title]);
     $title = addslashes ($v['title']);
     $title = trim(strip_tags($title));
     $title = preg_replace("@\s@",' ',$title);
@@ -97,7 +91,7 @@ foreach($diarys as $v){
   <script language="javascript" type="text/javascript">
 	var tree1 = new YEMATree("tree1", "templates/images/tree/", "usericon.gif", "My Office", "", "");
 	<?=$tree?>
-	setTimeout("write_tree();",0);
+	setTimeout("write_tree();",1);
 function write_tree()	{
 
 	document.getElementById('loading').style.display='none';
@@ -218,25 +212,5 @@ function addw(a){
 //}
   //-->   
   </script>
-  <script>
-
-  $(function(){
-	  $('a').each(function(){
-		  if($(this).attr('href').indexOf('?')!=-1){
-				$(this).click(function(){
-					var url=$(this).attr('href');
-					var title=$(this).text();
-					var type=$(this).attr('class');//YEMATree_A
-					//alert(typeof top.frmView.addNewTab);
-					var type=null;//类型(图标)
-					top.frmView.addNewTab(url,title,type)
-					return false;
-			  });
-		  }
-	  });
-	  
-	  
-  });
-   </script>
 </body>
 </html>
