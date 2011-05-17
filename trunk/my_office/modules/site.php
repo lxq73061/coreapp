@@ -20,7 +20,7 @@ class site extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class site extends core {
 
 		// 数据消毒
 		$get = array(
-			'title' => isset ($_GET ['title']) ? $_GET ['title'] : '',
+			'keyword' => isset ($_GET ['keyword']) ? $_GET ['keyword'] : '',
 			'typeid'  => isset ($_GET ['typeid']) ? $_GET ['typeid'] : '',
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
@@ -44,8 +44,12 @@ class site extends core {
 		$online = front::online();
 		$where['user_id'] = $online->user_id;
 
-		if (strlen($get['title'])>0){
-			$where ['title LIKE ?'] = '%'.$get['title'].'%';
+		if (strlen($get['keyword'])>0){
+			
+		$where []=array(
+			'title LIKE ?' => '%'.$get['keyword'].'%',
+			'content LIKE ?' => '%'.$get['keyword'].'%');
+			
 		}
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
@@ -54,11 +58,8 @@ class site extends core {
 			case 'site_id':
 				$other = array('ORDER BY site_id');
 				break;
-			case 'title':
-				$other = array('ORDER BY title');
-				break;
-			case 'title2':
-				$other = array('ORDER BY title DESC');
+			case 'site_id2':
+				$other = array('ORDER BY site_id DESC');
 				break;
 			default:
 				$other = array('ORDER BY site_id DESC');
@@ -73,7 +74,7 @@ class site extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('sites','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('sites','get','page','query'));
 	}
 	
 	/**
@@ -86,13 +87,13 @@ class site extends core {
 		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
 		if(! is_numeric($site->site_id) || ! $site->select()) {
 			$error = '该网址不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('site'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('site'));
 	}
 	
 	/**
@@ -168,7 +169,7 @@ class site extends core {
 		foreach (array('title','url','typeid','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -182,7 +183,7 @@ class site extends core {
 		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
 		if(! is_numeric($site->site_id) || ! $site->select()) {
 			$error = '该网址不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($site);
@@ -241,7 +242,7 @@ class site extends core {
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -254,7 +255,7 @@ class site extends core {
 		$site->site_id = isset($_GET['site_id']) ? $_GET['site_id'] : null;
 		if(! is_numeric($site->site_id) || ! $site->select()) {
 			$error = '该网址不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -271,7 +272,7 @@ class site extends core {
 		// 获取数据
 		if(! isset($_POST['site_id']) || !is_array($_POST['site_id'])){
 			$error = '该网址不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

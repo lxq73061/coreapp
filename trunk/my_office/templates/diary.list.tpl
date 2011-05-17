@@ -6,7 +6,7 @@
 <form>
 <input type="hidden" name="go" value="diary">
 <input type="hidden" name="do" value="browse">
-日志名：<input type="text" name="diaryname" value="<?php echo $get['diaryname']?>">&nbsp;
+关键词：<input type="text" name="keyword" value="<?php echo $get['keyword']?>">&nbsp;
 分类：<select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
             <?php
@@ -16,8 +16,8 @@
 排序：<select name="order">
 	<option value=""></option>
 	<option value="diary_id" <?php if($get['order'] === 'diary_id') echo 'selected'; ?>>日志ID↑</option>
-	<option value="title" <?php if($get['order'] === 'title') echo 'selected'; ?>>日志名↑</option>
-	<option value="title2" <?php if($get['order'] === 'title2') echo 'selected'; ?>>日志名↓</option>
+    <option value="diary_id2" <?php if($get['order'] === 'diary_id2') echo 'selected'; ?>>日志ID↓</option>
+    
 </select>
 <input type="submit" value="查询">
 </form>

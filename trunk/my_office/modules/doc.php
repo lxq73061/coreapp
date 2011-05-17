@@ -20,7 +20,7 @@ class doc extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -36,6 +36,8 @@ class doc extends core {
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
 			'limit'  => isset ($_GET ['limit']) ? $_GET ['limit'] : '20',
 		);
+		if(IN_WAP)$get['limit']=10;
+		
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
 		}
@@ -92,7 +94,7 @@ class doc extends core {
 		}
 		$query = $_SERVER['QUERY_STRING'];
 		
-		self::view (__CLASS__ . '.list.tpl', compact ('docs','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('docs','get','page','query'));
 	}
 	
 	/**
@@ -105,14 +107,14 @@ class doc extends core {
 		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
 		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
 			$error = '该文章不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$doc->hit++;//访问次数
 		$doc->update ();
 		// 页面显示
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query'));
 	}
 	
 	/**
@@ -196,7 +198,7 @@ class doc extends core {
 		foreach (array('title','copyfrom','typeid','keyword','keyword_auto','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -210,7 +212,7 @@ class doc extends core {
 		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
 		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
 			$error = '该文章不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($doc);
@@ -270,7 +272,7 @@ class doc extends core {
 		
 		$query = $_SERVER['QUERY_STRING'];
 			
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','query'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','query'));
 	}
 	
 	/**
@@ -283,7 +285,7 @@ class doc extends core {
 		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
 		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
 			$error = '该文章不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -300,7 +302,7 @@ class doc extends core {
 		// 获取数据
 		if(! isset($_POST['doc_id']) || !is_array($_POST['doc_id'])){
 			$error = '该文章不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

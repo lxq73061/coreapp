@@ -6,7 +6,7 @@
 <form>
 <input type="hidden" name="go" value="site">
 <input type="hidden" name="do" value="browse">
-网址名：<input type="text" name="sitename" value="<?php echo $get['sitename']?>">&nbsp;
+关键词：<input type="text" name="keyword" value="<?php echo $get['keyword']?>">&nbsp;
 分类：<select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
             <?php
@@ -15,9 +15,8 @@
           </select>
 排序：<select name="order">
 	<option value=""></option>
-	<option value="site_id" <?php if($get['order'] === 'site_id') echo 'selected'; ?>>网址ID↑</option>
-	<option value="title" <?php if($get['order'] === 'title') echo 'selected'; ?>>网址名↑</option>
-	<option value="title2" <?php if($get['order'] === 'title2') echo 'selected'; ?>>网址名↓</option>
+	<option value="site_id" <?php if($get['order'] === 'site_id') echo 'selected'; ?>>ID↑</option>
+	<option value="site_id2" <?php if($get['order'] === 'site_id2') echo 'selected'; ?>>ID↓</option>
 </select>
 <input type="submit" value="查询">
 </form>

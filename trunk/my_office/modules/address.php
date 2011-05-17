@@ -21,7 +21,7 @@ class address extends core {
 	 */
 	final static public function index() {
 		header("Location: ./?go=".__CLASS__."&do=browse");
-		//self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		//front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	/**
@@ -43,7 +43,9 @@ class address extends core {
 			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
 			'keyword'  => isset ($_GET ['keyword']) ? $_GET ['keyword'] : '',
+			'limit'  => isset ($_GET ['limit']) ? $_GET ['limit'] : '20',
 		);
+		if(IN_WAP)$get['limit']=10;
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
 		}
@@ -83,7 +85,7 @@ class address extends core {
 				$other = array('ORDER BY address_id DESC');
 				break;
 		}
-		$page = array('page'=>$get['page'],'size'=>50);
+		$page = array('page'=>$get['page'],'size'=>$get['limit']);
 		$other ['page'] = &$page;
 		$addresss = self::selects (null, null, $where, $other, __CLASS__);
 		foreach($addresss as &$v)
@@ -94,7 +96,7 @@ class address extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		self::view (__CLASS__ . '.list.tpl', compact ('addresss','get','page','query'));
+		front::view2 (__CLASS__ . '.list.tpl', compact ('addresss','get','page','query'));
 	}
 	
 	/**
@@ -107,13 +109,13 @@ class address extends core {
 		$address->address_id = isset($_GET['address_id']) ? $_GET['address_id'] : null;
 		if(! is_numeric($address->address_id) || ! $address->select()) {
 			$error = '该通讯名不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		
 
 		// 页面显示
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('address'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('address'));
 	}
 	
 	/**
@@ -196,7 +198,7 @@ class address extends core {
 		foreach (array('name',/*'url',*/'typeid','email','qq','msn','mobile','office_phone','home_phone','remarks'/*'content'*/) as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -210,7 +212,7 @@ class address extends core {
 		$address->address_id = isset($_GET['address_id']) ? $_GET['address_id'] : null;
 		if(! is_numeric($address->address_id) || ! $address->select()) {
 			$error = '该通讯名不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 		$post = get_object_vars ($address);
@@ -273,7 +275,7 @@ class address extends core {
 		foreach (array('name','mobile','email','typeid','qq','msn','office_phone','home_phone','remarks'/*'url','content'*/) as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		self::view (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
 	}
 	
 	/**
@@ -286,7 +288,7 @@ class address extends core {
 		$address->address_id = isset($_GET['address_id']) ? $_GET['address_id'] : null;
 		if(! is_numeric($address->address_id) || ! $address->select()) {
 			$error = '该通讯不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 
@@ -303,7 +305,7 @@ class address extends core {
 		// 获取数据
 		if(! isset($_POST['address_id']) || !is_array($_POST['address_id'])){
 			$error = '该通讯不存在';
-			self::view ( 'error.tpl', compact ('error'));
+			front::view2 ( 'error.tpl', compact ('error'));
 			return;
 		}
 

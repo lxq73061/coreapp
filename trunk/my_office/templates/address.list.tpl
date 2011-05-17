@@ -1,5 +1,25 @@
 <?php include('header.tpl')?>
 
+
+
+<?php if(IN_WAP):?>
+<a href="/">Home</a><br />
+<?php include('page.tpl')?>
+<hr />
+<?php foreach($addresss as $address): ?>
+<a href="?go=address&do=detail&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>"><?php echo $address->name; ?></a> 
+<?php 
+$contact =  $address->mobile; 
+if(!$contact) $contact = $address->office_phone; 
+if(!$contact) $contact =  $address->home_phone;
+if(!$contact) $contact =  $address->email;
+if(!$contact) $contact =  $address->qq?'QQ:'.$address->qq:'';
+ echo $contact;
+ ?>
+<br />
+<?php endforeach ?>
+
+<?php else:?>
 ○<a href="?go=address&do=browse">联系人列表</a>&nbsp;
 ○<a href="?go=address&do=append">新建联系人</a><br>
 
@@ -99,6 +119,7 @@ var ids = '<?=$ids?>';
     </tbody>
     </table>
 </form>
+<?php endif?>
 <?php include('page.tpl')?>
 </body>
 </html>

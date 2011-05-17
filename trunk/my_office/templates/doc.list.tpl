@@ -1,5 +1,15 @@
 <?php include('header.tpl')?>
 
+
+<?php if(IN_WAP):?>
+<a href="/">Home</a><br />
+<?php include('page.tpl')?>
+<hr />
+<?php foreach($docs as $doc): ?>
+<a href="?go=doc&do=detail&doc_id=<?=$doc->doc_id; ?>&query=<?=urlencode($query) ?>"><?=$doc->title; ?></a>[<a href="?go=channel&do=detail&channel_id=<?=$doc->typeid; ?>"><?=$doc->get_typeid(); ?></a>]<br />
+<?php endforeach ?>
+
+<?php else:?>
 ○<a href="?go=doc&do=browse">文章列表</a>&nbsp;
 ○<a href="?go=doc&do=append">添加文章</a><br>
 
@@ -25,6 +35,7 @@
 <script language="javascript">
 var ids = '<?=$ids?>';
 </script>
+
 <?php include('page.tpl')?>
 <form method="post" action="?go=doc&do=group_remove&query=<?=urlencode($query) ?>">
 <table border="0" cellpadding="5" cellspacing="0">
@@ -57,5 +68,7 @@ var ids = '<?=$ids?>';
 
 </form>
 <?php include('page.tpl')?>
+
+<?php endif?>
 </body>
 </html>

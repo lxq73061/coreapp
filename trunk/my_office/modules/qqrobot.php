@@ -37,7 +37,7 @@ class qqrobot extends core {
 	final static public function index() {
 		//address::browse();
 		//echo 1;return;
-		//self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		//front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 		//echo self::$help;
 		self::login();
 	}

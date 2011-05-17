@@ -20,7 +20,7 @@ class sync extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		self::view (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	
 	final static public function sql_insert() {
