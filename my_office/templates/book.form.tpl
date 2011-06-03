@@ -11,7 +11,7 @@ include('header.tpl')?>
 
 <label>日期: <input name="create_date" class="datepicker_input"  type="text" id="create_date" size="12" value="<?=$post['create_date']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_date'])): ?><font color="red"><?php echo $error['create_date']; ?></font><?php endif; ?><br>
-<label>时间: <input name="create_time" class="datepicker_input" type="text" size="12" value="<?=$post['create_time']?>" /></label>
+<label>时间: <input name="create_time" class="" type="text" size="12" value="<?=$post['create_time']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_time'])): ?><font color="red"><?php echo $error['create_time']; ?></font><?php endif; ?><br>
     
     
@@ -22,17 +22,15 @@ include('header.tpl')?>
                     <option value="4" <?=set_select($post['item'],4)?>>信用卡</option>
 	                </select></label>
 	<font color="red">*</font><?php if(isset($error['item'])): ?><font color="red"><?php echo $error['item']; ?></font><?php endif; ?><br>
-    
-    
-<label>用途： 选择
-	                <select name="item_txt" id="item_txt">
+用途： 选择
+                <select name="item_txt" id="item_txt">
                     <option value="" <?=set_select('',$post['item_txt'])?>>=不选=</option>
 	                <?php foreach( $item_txts as $k=>$v ){?>
 	                <option value="<?=$v?>" <?=set_select($v,$post['item_txt'])?>><?=$v?></option>
 	               <?php }?>
-                </select>
-                或输入
-                <input name="item_txt2" type="text" id="item_txt2" value="" size="8" /></label>
+            </select>
+            或输入
+            <input name="item_txt2" type="text" id="item_txt2" value="" size="8" />
 	<?php if(isset($error['item_txt'])): ?><?php echo $error['item_txt']; ?><?php endif; ?><br>
     
     
