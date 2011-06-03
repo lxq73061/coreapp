@@ -74,7 +74,7 @@ class qqrobot extends core {
 
 		//³õÊ¼»¯
 		//$qq = new QQClient('593795966','19830812ll');
-		$qq = new QQClient('453196649','lxqzyy2008@');
+		$qq = new QQClient('','');
 		$qq->server='tqq.tencent.com';
 		$qq->server='119.147.10.11';
 		$qq->port='8000';
