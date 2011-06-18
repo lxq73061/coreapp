@@ -30,7 +30,8 @@ class welcome extends core {
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
 	final static public function left() {
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		$tree =  channel::tree();
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl',compact('tree'));
 	}
 	final static public function right() {
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');

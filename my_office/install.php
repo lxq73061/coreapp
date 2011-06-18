@@ -387,7 +387,7 @@ save_config_file(array('autoload_enable' => true,
   'framework_enable' => true,
   'framework_module' => '[go]!(self)|welcome',
   'framework_action' => '[do]|index',
-  'template_path' => '@templates\\',
+  'template_path' => '@templates/',
   'connect_server' => $db_host, //数据库连接服务器
   'connect_username'=>$db_user,
   'connect_password'=>$db_pass,
@@ -788,7 +788,7 @@ function gmtime()
 //install::init(array('template_path' => '@install\\templates'));
 //install::stub () and install::main ();
  
-installd::init(array('template_path' => '@install\\templates' ,'extension_path' => '@includes',  'extension_enable' => 'myfunction'));
+installd::init(array('template_path' => '@install/templates' ,'extension_path' => '@includes',  'extension_enable' => 'myfunction'));
 installd::stub () and installd::main ();
 
 
