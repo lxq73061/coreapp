@@ -56,7 +56,7 @@
         <div class="btn">
             <input type="hidden" value="<?php echo $compatible?>" name="compatible" />
             <input class="button mr10" type="button" value="<?php echo $lang[prev]?>" onclick="window.history.go(-1);" />
-            <input type="submit" class="button<?php if (!$compatible){ echo 'mr10'; }?>" id="submit_button" value="<?php echo $lang[next]?>" />
+            <input type="submit" class="button <?php if (!$compatible){ echo 'mr10'; }?>" id="submit_button" value="<?php echo $lang[next]?>" />
             <?php if (!$compatible){?>
             <input type="button" class="button" value="<?php echo $lang[recheck]?>" onclick="window.location.reload();" />
             <?php }?>

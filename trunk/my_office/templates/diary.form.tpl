@@ -17,7 +17,7 @@ include('header.tpl')?>
 <label>心情： <input type="text" name="mood" value="<?php echo $post['mood']; ?>"></label><?php if(isset($error['mood'])): ?><font color="red"><?php echo $error['mood']; ?></font><?php endif; ?><br>
 <label>天气： <input type="text" name="weather" value="<?php echo $post['weather']; ?>"></label><?php if(isset($error['weather'])): ?><font color="red"><?php echo $error['weather']; ?></font><?php endif; ?><br>
    <textarea name="content" style="DISPLAY: none"><?php echo $post['content']; ?></textarea>
-<iframe id=content___Frame src="/includes/lib/fckeditor/editor/fckeditor.html?InstanceName=content&Toolbar=Default" frameborder=0 width=95% scrolling=no height=500>	</iframe>
+<iframe id=content___Frame src="./includes/lib/fckeditor/editor/fckeditor.html?InstanceName=content&Toolbar=Default" frameborder=0 width=95% scrolling=no height=500>	</iframe>
  
 	<br>
 <input type="submit" value="提交">

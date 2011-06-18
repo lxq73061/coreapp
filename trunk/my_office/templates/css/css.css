@@ -7,6 +7,43 @@ font-family:Verdana,"宋体";
 padding-top:10px;
 font-size:12px;
 }
+
+
+body#welcome_top{
+	margin: 0;
+	padding:0;
+}
+#top {
+	background:url('../images/bg_top.jpg');
+	height:45px;
+	line-height:30px;	
+}
+#top .logo{
+	width:210px;
+}
+
+#top .title {
+color:#FF9900;
+font-family:"方正大标宋简体";
+font-size:24px;
+}#top a {
+color:#FFFFFF;
+font-size:14px;
+}
+#top .logo,
+#top .menu{
+	float:left;
+	
+}
+#top .right {
+	float:rigth;
+}
+.index_login, .index_login a {
+font-family:"宋体";
+font-size:12px;
+text-align:right;
+}
+
 input.input{
 	width:80%;
 }

@@ -1,40 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Menu</title>
-<link href="templates/images/tree/menu.css" rel="stylesheet" type="text/css" />
-<script src="templates/images/tree/menu.js" type="text/javascript"></script>
-<script src="includes/lib/jquery/jquery.min.js" type="text/javascript"></script><!--
-<script src="includes/lib/jquery/jquery-ui.min.js" type="text/javascript"></script>-->
 
-<style>
-body {
-	SCROLLBAR-FACE-COLOR: #5b84c4;
-	SCROLLBAR-HIGHLIGHT-COLOR: #d2def2;
-	SCROLLBAR-3DLIGHT-COLOR: #d2def2;
-	SCROLLBAR-ARROW-COLOR: #fff;
-	SCROLLBAR-TRACK-COLOR: #d2def2;
-	SCROLLBAR-DARKSHADOW-COLOR: #d2def2;
-}
-.loading {
-	background-image:url("templates/images/loading.gif");
-	background-position:center center;
-	background-repeat:no-repeat;
-	height:200px;
-}
-</style>
-</head>
 
-<body>
-<p>
+
 <?php
 
 ?>
-  <input type="button" value="++" onClick="tree1.openall()" title="展开全部" alt="展开全部" />
-  <input type="button" value="--" onClick="tree1.closeall()" title="折叠全部"  />
-  <input type="button" value="&lt;&lt;" onClick="addw('-')" />
-  <input type="button" value="&gt;&gt;" onClick="addw('+')" />
+
 <div id="navigation"> 
   <?php
 function format_date(){}
@@ -102,6 +72,7 @@ function write_tree()	{
 
 	document.getElementById('loading').style.display='none';
 	tree1.write();
+	change_a();
 	
 }
 	
@@ -109,22 +80,9 @@ function write_tree()	{
   <div id="usetime"></div>
   <div id="loading" class="loading"></div>
 </div>
-<SCRIPT>
-function addw(a){
-/*调整左栏宽度的函数*/
-	var frame = window.parent.document.getElementById("info_show_frame");   	
-	arr=frame.cols.split(",");   
-	//for(i=0;i<arr.length;i++)alert(i+":"+arr[i]) ;  
-	var iw = parseInt(arr[0]);	
-	if(a == '+'){
-		frame.cols= iw + 10 + ",12,*";
-	}else{
-		frame.cols= iw - 10 + ",12,*";
-	}
-}
-</SCRIPT>
+
 </p>
-<div  id='rightmenu'>
+<!--<div  id='rightmenu'>
   <div id="div_ty">
     <div class="div_tyk3">
       <div class="div_tyk2">
@@ -132,7 +90,7 @@ function addw(a){
           <div class="div_tyc">
             <ul>
               <li><a   href="#">折叠/展开</a></li>
-              <!--<li style="height:1px; overflow:hidden; background:#CCCCCC; margin:0px 3px; padding:0px;" ></li>   -->
+              <li style="height:1px; overflow:hidden; background:#CCCCCC; margin:0px 3px; padding:0px;" ></li>   
               <hr>
               <li><a   href="view_1.php">刷新</a></li>
               <li><a   href="admin/admin_channel.php" target="frmView">新建目录</a></li>
@@ -158,7 +116,7 @@ function addw(a){
       </div>
     </div>
   </div>
-</div>
+</div>-->
 <script   language="javascript">   
   <!--   
 //var menu   =  document.getElementById("rightmenu");  
@@ -218,25 +176,4 @@ function addw(a){
 //}
   //-->   
   </script>
-  <script>
-
-  $(function(){
-	  $('a').each(function(){
-		  if($(this).attr('href').indexOf('?')!=-1){
-				$(this).click(function(){
-					var url=$(this).attr('href');
-					var title=$(this).text();
-					var type=$(this).attr('class');//YEMATree_A
-					//alert(typeof top.frmView.addNewTab);
-					var type=null;//类型(图标)
-					top.frmView.addNewTab(url,title,type)
-					return false;
-			  });
-		  }
-	  });
-	  
-	  
-  });
-   </script>
-</body>
-</html>
+ 

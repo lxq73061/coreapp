@@ -81,8 +81,9 @@ function removetab(obj){
 		var objString = JSON.stringify(current_tabs); //JSON 数据转化成字符串
 		$.cookie('current_tabs',objString);
 	}
-	
-	swtichtab($('#tabs ul li:last a'));
+	$('#tabs ul li a').each(function(){
+		if($(this).attr('href')) swtichtab($(this));
+	});
 }
 function showiframe(obj){	
 	//obj.height( obj.contents().height() + 40); 
@@ -90,6 +91,7 @@ function showiframe(obj){
 }
 
 function addNewTab(url,title,type){
+	if(url.indexOf('logout')!=-1)return;
 	if(type==null){
 		//./?go=address&do=detail&address_id=50
 		//根据URL判断type
@@ -115,9 +117,8 @@ function addNewTab(url,title,type){
 	
 	//如果存在,则	
 	current_sub = check_current(current_tabs,url,title);
-	
-	if(current_sub && $('#tabs ul li a#nav'+current_tabs[i][2]).size() > 0){
-			swtichtab($('#tabs ul li a#nav'+current_tabs[i][2]));
+	if(current_sub && $('#tabs ul li a#nav-'+current_tabs[i][2]).size() > 0){
+			swtichtab($('#tabs ul li a#nav-'+current_tabs[i][2]));
 			return;			
 	}
 	//if(title.length>10)title = title.substring(0,10);
@@ -137,6 +138,10 @@ function addNewTab(url,title,type){
 	
 }
 function check_current(current_tabs,url,title){
+	//alert(current_tabs);
+	
+
+	
 	for(i in current_tabs){
 		if(current_tabs[i][1]==url && current_tabs[i][0]==title)	return  current_tabs[i];		
 	}

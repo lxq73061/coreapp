@@ -280,7 +280,7 @@ class channel extends core {
 		$adds = self::selects('address_id,typeid,name', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,address_id DESC'),array('address_id','assoc|table=address'=>null));
 		$diarys = self::selects('diary_id,typeid,title,create_date,create_time,update_date,update_time', null, array('user_id'=>$online->user_id),array('ORDER BY typeid ASC,diary_id DESC'),array('diary_id','assoc|table=diary'=>null));
 		
-		front::view2 ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'));
+		return	front::view2 ( __CLASS__ . '.' .'tree.tpl', compact ('channels','docs','sites','adds','diarys'),null,false);
 	}
 	/**
 	 * 群删分类
