@@ -16,6 +16,9 @@
           </select>  
 	<font color="red">*</font>
 	<?php if(isset($error['typeid'])): ?><font color="red"><?php echo $error['typeid']; ?></font><?php endif; ?></label><br>
+    
+<label>加密：<input type="checkbox"  value="1" name="encrypt"> </label><br>    
+    
 
 <label>关键词： 
   <input type="text" class="input"  name="keyword" value="<?php echo $post['keyword']; ?>"></label>

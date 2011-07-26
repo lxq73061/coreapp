@@ -30,12 +30,12 @@
 	<font color="red">*</font>
 	<?php if(isset($error['name'])): ?><font color="red"><?php echo $error['name']; ?></font><?php endif; ?>
 	<br>
-<label>性　别：
+<label>性　别：</label>
 	<label><input type="radio" name="gender" value="1" <?php if($post['gender'] === '1') echo 'checked'; ?>>男</label>
 	<label><input type="radio" name="gender" value="2" <?php if($post['gender'] === '2') echo 'checked'; ?>>女</label>
 	<font color="red">*</font>
 	<?php if(isset($error['gender'])): ?><font color="red"><?php echo $error['gender']; ?></font><?php endif; ?>
-	</label><br>
+	<br>
 <label>手机号： <input type="text" name="mobile" value="<?php echo $post['mobile']; ?>"></label>
 	<?php if(isset($error['mobile'])): ?><font color="red"><?php echo $error['mobile']; ?></font><?php endif; ?>
 	<br>

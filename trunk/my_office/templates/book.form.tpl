@@ -9,9 +9,11 @@ include('header.tpl')?>
 <fieldset>
 <legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加帐本' : '修改帐本'; ?></legend>
 
-<label>日期: <input name="create_date" class="datepicker_input"  type="text" id="create_date" size="12" value="<?=$post['create_date']?>" /></label>
+<label>日期：
+  <input name="create_date" class="datepicker_input"  type="text" id="create_date" size="12" value="<?=$post['create_date']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_date'])): ?><font color="red"><?php echo $error['create_date']; ?></font><?php endif; ?><br>
-<label>时间: <input name="create_time" class="" type="text" size="12" value="<?=$post['create_time']?>" /></label>
+<label>时间： 
+  <input name="create_time" class="" type="text" size="12" value="<?=$post['create_time']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_time'])): ?><font color="red"><?php echo $error['create_time']; ?></font><?php endif; ?><br>
     
     
@@ -52,12 +54,10 @@ include('header.tpl')?>
 <br>
 <label> </label>
 	方式：
-	<label><input id="otype1" name="otype" value="IN" type="radio" <?=set_radio($post['otype'],'IN')?> >
-                  <label for="ccy1"> 收入</label>
-           <input id="otype2" name="otype" value="OUT"  type="radio"  <?=set_radio($post['otype'],'OUT')?> >
-                  <label for="ccy2">  支出
-	<?php if(isset($error['otype'])): ?><?php echo $error['otype']; ?></font><?php endif; ?>
- </label>
+	 <label for="otype1"><input id="otype1" name="otype" value="IN" type="radio" <?=set_radio($post['otype'],'IN')?> >收入</label>
+     <label for="otype2"> <input id="otype2" name="otype" value="OUT"  type="radio"  <?=set_radio($post['otype'],'OUT')?> >支出</label>
+      <?php if(isset($error['otype'])): ?><?php echo $error['otype']; ?></font><?php endif; ?>
+ 
 	<br>
 <input type="submit" value="提交">
 </fieldset>
