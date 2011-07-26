@@ -48,7 +48,7 @@ class front extends core {
 		if ($online) {
 			// 视图全局变量
 			if ($front_online) {
-				front::view2 (array ($front_online=>$online));
+				front::view2 (array ($front_online=>$online,'get'=>$_GET));
 			}
 			return parent::main ($framework_enable, $framework_require, $framework_module, $framework_action, $framework_parameter);
 		} else {

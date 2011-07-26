@@ -119,25 +119,24 @@ class book extends core {
 	
 		$online = front::online();
 		//item_txts
-		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array(' GROUP BY item_txt'), array('assoc|table=book'=>NULL));	
+	     $channels = self::selects('channel_', null, array('user_id'=>$online->user_id), array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
+		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array(''), array(null,'column|table=book'=>'item_txt'));	
+		//$item_txts = self::selects('item_txt', null, null, null, array(null,'column'=>'item_txt'));	
+		
 		if(!$item_txts){
 			$item_txts=array();
 		}	
-		$post = array(
-			'item' => isset ($_POST ['item']) ? $_POST ['item'] : '',
-			'item_txt' => isset ($_POST ['item_txt']) ? $_POST ['item_txt'] : '',
-			'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
-			'typeid'  => 0,		
-			'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
-			'net' => '0',
-			'otype' => isset ($_POST ['otype']) ? $_POST ['otype'] : '',
-			'amount' => isset ($_POST ['amount']) ? $_POST ['amount'] : '',
-			'user_id' => $online->user_id,
-			'create_date'=>isset ($_POST ['create_date']) ? $_POST ['create_date'] : '',
-			'create_time'=>isset ($_POST ['create_time']) ? $_POST ['create_time'] : '',
-			'update_date'=>date('Y-m-d',$time),
-			'update_time'=>date('H:i:s',$time),	
-		);
+		foreach($item_txts as $k=>$v){
+			
+			if(!empty($v)){
+				$item_txts[$k] = $v;
+			}else{
+				unset($item_txts[$k]);
+			}
+		}
+
+		
+		
 
 		if (get_magic_quotes_gpc()) {
 			$post = array_map ('stripslashes', $post);
@@ -145,17 +144,29 @@ class book extends core {
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
+			
+			$post = array(
+				'item' => isset ($_POST ['item']) ? $_POST ['item'] : '',
+				'item_txt' => isset ($_POST ['item_txt']) ? $_POST ['item_txt'] : '',
+				'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
+				'typeid'  => 0,		
+				'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
+				'net' => '0',
+				'otype' => isset ($_POST ['otype']) ? $_POST ['otype'] : 'OUT',
+				'amount' => isset ($_POST ['amount']) ? $_POST ['amount'] : '',
+				'user_id' => $online->user_id,
+				'create_date'=>isset ($_POST ['create_date']) ? $_POST ['create_date'] : '',
+				'create_time'=>isset ($_POST ['create_time']) ? $_POST ['create_time'] : '',
+				'update_date'=>date('Y-m-d',$time),
+				'update_time'=>date('H:i:s',$time),	
+			);
+			
+			
 			// 数据验证
 			if (!empty($_POST['item_txt2'])) {
 				$post['item_txt'] = $_POST['item_txt2'];
 			}
 			
-			if ($_POST['ccy2']){
-				$post['otype'] = 'IN';
-			}else{
-			    $post['otype'] ='OUT';
-			}
-			 
 
 			$reg="/(\d{4})-(\d{1,2})-(\d{1,2})/";
 			if (!empty($post ['create_date'])) {
@@ -171,7 +182,11 @@ class book extends core {
 			if (empty($post ['item'])) {//account=content
 				$post ['item'] = substr($post ['item'],0,15);
 			}
-		
+			if($post['otype']=='IN'){				
+				$post['amount']=abs($post['amount']);
+			}else{
+				$post['amount']=-abs($post['amount']);
+			}
 	
 
 			if (! empty ($error)) {
@@ -193,6 +208,9 @@ class book extends core {
 			return;
 
 		}
+		if(!$post['create_date'])$post['create_date'] = date('Y-m-d');
+		if(!$post['create_time'])$post['create_time'] = '12:00:00';//date('H:i:s');
+		if(!$post['item'])$post['item'] = 3;
 
 		// 页面显示
 		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount') as $value) {
@@ -254,7 +272,7 @@ class book extends core {
 			'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
 			
 			'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
-			'net' => isset ($_POST ['net']) ? $_POST ['net'] : '',
+			'net' => isset ($_POST ['net']) ? $_POST ['net'] : '0',
 			'otype' => isset ($_POST ['otype']) ? $_POST ['otype'] : '',
 			'amount' => isset ($_POST ['amount']) ? $_POST ['amount'] : '',
 			'user_id' => $online->user_id,
