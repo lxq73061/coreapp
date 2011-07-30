@@ -590,5 +590,17 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
     }
 
 }
-
+/**
+* 生成option
+**/
+function make_option($t_lists,$t_id){
+			foreach($t_lists as $id=>$name){
+				if($t_id==$id){
+					$t_list .= "        <option value=\"".$id."\" selected=\"selected\">".$name."</option>\n";
+				}else{
+					$t_list .= "        <option value=\"".$id."\" >".$name."</option>\n";
+				}
+			}
+			return $t_list;
+		}
 ?>

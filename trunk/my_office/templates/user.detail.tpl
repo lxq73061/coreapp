@@ -28,6 +28,6 @@
 	<br>
 </fieldset>
 </form>
-
+ <?=related::get('user',$user->user_id)?>
 </body>
 </html>
