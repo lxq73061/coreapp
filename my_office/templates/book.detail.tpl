@@ -30,6 +30,6 @@
 金	额：<?php echo htmlspecialchars($book->net); ?><br>
 </fieldset>
 </form>
-
+ <?=related::get('book',$book->book_id)?>
 </body>
 </html>

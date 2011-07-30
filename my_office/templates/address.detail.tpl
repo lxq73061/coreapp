@@ -34,6 +34,6 @@ msn：<?php echo htmlspecialchars($address->msn); ?><br>
 	<br>-->
 </fieldset>
 </form>
-
+ <?=related::get('address',$address->address_id)?>
 </body>
 </html>

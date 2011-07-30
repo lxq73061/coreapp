@@ -16,6 +16,7 @@
 		 <?php  } ?>
 		 </dl>
  </div>
+  <?=related::get('channel',$channel->channel_id)?>
  共<?=$page['count']?>条，共<?=$page['total']?>页
 <?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
 <?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>

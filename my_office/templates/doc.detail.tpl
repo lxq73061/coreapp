@@ -18,10 +18,10 @@
         <h4 class="create_time">创建日期：<?=$doc->create_date;  ?> <?=$doc->create_time;  ?></h4>   
         <h4 class="update_time">最后更新：<?=$doc->update_date;  ?> <?=$doc->update_time;  ?></h4>   
         <h4 class="update_time">访问次数：<?=$doc->hit;  ?></h4>   
-        
+       
     </div>
 </div>
 
-
+ <?=related::get('doc',$doc->doc_id)?>
 </body>
 </html>

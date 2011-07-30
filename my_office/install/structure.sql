@@ -160,3 +160,20 @@ CREATE TABLE `ecm_book` (
   PRIMARY KEY (`book_id`),
   KEY `typeid` (`typeid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ecm_related`
+--
+
+DROP TABLE IF EXISTS `ecm_related`;
+CREATE TABLE IF NOT EXISTS `ecm_related` (
+  `related_id` int(11) NOT NULL AUTO_INCREMENT,
+  `s_type` enum('address','book','channel','diary','doc','site','user') NOT NULL,
+  `t_type` enum('address','book','channel','diary','doc','site','user') NOT NULL,
+  `s_id` int(11) NOT NULL,
+  `t_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`related_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

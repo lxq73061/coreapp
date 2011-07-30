@@ -22,6 +22,6 @@
 	<br>
 </fieldset>
 </form>
-
+ <?=related::get('diary',$diary->diary_id)?>
 </body>
 </html>

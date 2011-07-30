@@ -101,14 +101,21 @@ class doc extends core {
 	 * 文章详细
 	 */
 	final static public function detail() {
-
+		$online = front::online();
+	
 		// 获取数据
 		$doc = new self;
 		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
+		
 		if(! is_numeric($doc->doc_id) || ! $doc->select()) {
 			$error = '该文章不存在';
 			front::view2 ( 'error.tpl', compact ('error'));
 			return;
+		}
+		if($doc->user_id != $online->user_id){
+			$error = '该文章你没有权限查看';
+			front::view2 ( 'error.tpl', compact ('error'));
+			return;			
 		}
 		$doc->hit++;//访问次数
 		$doc->update ();
@@ -205,6 +212,7 @@ class doc extends core {
 	 * 修改文章
 	 */
 	final static public function modify() {
+		$online = front::online();
 		$error = array ();
 
 		// 获取数据
@@ -214,6 +222,11 @@ class doc extends core {
 			$error = '该文章不存在';
 			front::view2 ( 'error.tpl', compact ('error'));
 			return;
+		}
+		if($doc->user_id != $online->user_id){
+			$error = '该文章你没有权限查看';
+			front::view2 ( 'error.tpl', compact ('error'));
+			return;			
 		}
 		$post = get_object_vars ($doc);
 

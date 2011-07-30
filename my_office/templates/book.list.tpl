@@ -60,7 +60,7 @@ var ids = '<?=$ids?>';
             <?php $class == 'td2' ? $class  = 'td2alt':$class  = 'td2';?>
             <tr class="<?=$class?> r">
                 <td><input type="checkbox" name=<?php echo $ids ?> value="<?php echo $book->book_id; ?>">
-                    <?php echo $book->book_id; ?></td>
+                     <a href="?go=book&do=detail&book_id=<?php echo $book->book_id; ?>"><?php echo $book->book_id; ?></a></td>
                 <td>&nbsp;<?php echo $book->create_date; ?> <?php echo $book->create_time; ?></td>
                 <td>&nbsp;<?php echo $items[$book->item]; ?></td>
                 <td>&nbsp;<?php echo $book->item_txt; ?></td>
