@@ -61,9 +61,9 @@ class related extends core {
 	 */
 	final static public function get($s_type,$s_id,$t_type=null,$t_id=null) {
 		$online = front::online();
-		$lists = self::selects(null, null, array('user_id'=>$online->user_id,'s_id'=>$s_id,'s_type'=>$s_type),array('ORDER BY related_id DESC'),array(null,'assoc'=>null));
+		$lists = self::selects(null, null, array('user_id'=>$online->user_id,'s_id'=>$s_id,'s_type'=>$s_type),array('ORDER BY related_id DESC'),array(null,'assoc|table=related'=>null));
 		
-		$lists2 = self::selects(null, null, array('user_id'=>$online->user_id,'t_id'=>$s_id,'t_type'=>$s_type),array('ORDER BY related_id DESC'),array(null,'assoc'=>null));
+		$lists2 = self::selects(null, null, array('user_id'=>$online->user_id,'t_id'=>$s_id,'t_type'=>$s_type),array('ORDER BY related_id DESC'),array(null,'assoc|table=related'=>null));
 		if($lists2){
 			foreach($lists2 as $k=>$v){
 				$lists[]=array(
@@ -110,23 +110,23 @@ class related extends core {
 	if($get['s_type']=='channel'){
 		$s_list = channel::get_channel_select(0,0,$get['s_id'],null,null);
 	}elseif($get['s_type']=='address'){
-		$s_lists = address::selects('address_id as id,name', null, array('user_id'=>$online->user_id),array('ORDER BY address_id DESC'),array('id','column'=>'name'));		
+		$s_lists = address::selects('address_id as id,name', null, array('user_id'=>$online->user_id),array('ORDER BY address_id DESC'),array('id','column|table=address'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);
 	}elseif($get['s_type']=='book'){
-		$s_lists = book::selects('book_id as id,concat_ws(\',\',create_date,item_txt,remark,ccy,amount,otype) as name', null, array('user_id'=>$online->user_id),array('ORDER BY create_date DESC,book_id DESC'),array('id','column'=>'name'));		
+		$s_lists = book::selects('book_id as id,concat_ws(\',\',create_date,item_txt,remark,ccy,amount,otype) as name', null, array('user_id'=>$online->user_id),array('ORDER BY create_date DESC,book_id DESC'),array('id','column|table=book'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);
 	}elseif($get['s_type']=='diary'){
-		$s_lists = diary::selects('diary_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY diary_id DESC'),array('id','column'=>'name'));		
+		$s_lists = diary::selects('diary_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY diary_id DESC'),array('id','column|table=diary'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);	
 		
 	}elseif($get['s_type']=='doc'){
-		$s_lists = doc::selects('doc_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY doc_id DESC'),array('id','column'=>'name'));		
+		$s_lists = doc::selects('doc_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY doc_id DESC'),array('id','column|table=doc'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);
 	}elseif($get['s_type']=='site'){
-		$s_lists = site::selects('site_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY site_id DESC'),array('id','column'=>'name'));		
+		$s_lists = site::selects('site_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY site_id DESC'),array('id','column|table=site'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);
 	}elseif($get['s_type']=='user'){
-		$s_lists = user::selects('user_id as id,username as name', null, array('user_id'=>$online->user_id),array('ORDER BY user_id DESC'),array('id','column'=>'name'));		
+		$s_lists = user::selects('user_id as id,username as name', null, array('user_id'=>$online->user_id),array('ORDER BY user_id DESC'),array('id','column|table=user'=>'name'));		
 		if($s_lists)$s_list = make_option($s_lists,$get['s_id']);
 	}else{		
 	}
@@ -136,23 +136,23 @@ class related extends core {
 	if($get['t_type']=='channel'){
 		$t_list = channel::get_channel_select(0,0,$get['t_id'],null,null);		
 	}elseif($get['t_type']=='address'){
-		$t_lists = address::selects('address_id as id,name', null, array('user_id'=>$online->user_id),array('ORDER BY address_id DESC'),array('id','column'=>'name'));		
+		$t_lists = address::selects('address_id as id,name', null, array('user_id'=>$online->user_id),array('ORDER BY address_id DESC'),array('id','column|table=address'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);
 	}elseif($get['t_type']=='book'){
-		$t_lists = book::selects('book_id as id,concat_ws(\',\',create_date,item_txt,remark,ccy,amount,otype) as name', null, array('user_id'=>$online->user_id),array('ORDER BY create_date DESC,book_id DESC'),array('id','column'=>'name'));		
+		$t_lists = book::selects('book_id as id,concat_ws(\',\',create_date,item_txt,remark,ccy,amount,otype) as name', null, array('user_id'=>$online->user_id),array('ORDER BY create_date DESC,book_id DESC'),array('id','column|table=book'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);
 	}elseif($get['t_type']=='diary'){
-		$t_lists = diary::selects('diary_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY diary_id DESC'),array('id','column'=>'name'));		
+		$t_lists = diary::selects('diary_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY diary_id DESC'),array('id','column|table=diary'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);	
 		
 	}elseif($get['t_type']=='doc'){
-		$t_lists = doc::selects('doc_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY doc_id DESC'),array('id','column'=>'name'));		
+		$t_lists = doc::selects('doc_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY doc_id DESC'),array('id','column|table=doc'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);
 	}elseif($get['t_type']=='site'){
-		$t_lists = site::selects('site_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY site_id DESC'),array('id','column'=>'name'));		
+		$t_lists = site::selects('site_id as id,title as name', null, array('user_id'=>$online->user_id),array('ORDER BY site_id DESC'),array('id','column|table=site'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);
 	}elseif($get['t_type']=='user'){
-		$t_lists = user::selects('user_id as id,username as name', null, array('user_id'=>$online->user_id),array('ORDER BY user_id DESC'),array('id','column'=>'name'));		
+		$t_lists = user::selects('user_id as id,username as name', null, array('user_id'=>$online->user_id),array('ORDER BY user_id DESC'),array('id','column|table=user'=>'name'));		
 		if($t_lists)$t_list = make_option($t_lists,$get['t_id']);
 	}else{		
 	}

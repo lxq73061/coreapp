@@ -19,6 +19,6 @@
 	<br>
 </fieldset>
 </form>
-
+ <?=related::get('site',$site->site_id)?>
 </body>
 </html>
