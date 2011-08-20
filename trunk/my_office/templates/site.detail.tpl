@@ -1,9 +1,11 @@
 <?php include('header.tpl')?>
 
 
-○<a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">网址列表</a>&nbsp;
-○<a href="?go=site&do=append">添加网址</a></ul>
-
+<div id="nav">
+	<div class="left"><?=channel::get_nav($site->typeid)?></div>
+	<div class="right"><a href="?go=site&do=modify&site_id=<?=$site->site_id?>&query=<?php echo urlencode($query) ?>">[编辑]</a> <a href="?go=site&do=append&query=<?php echo urlencode($query) ?>">[新建]</a></div>
+</div>
+<div class="doc_content_box">
 
 <form method="post">
 <fieldset>
@@ -20,5 +22,6 @@
 </fieldset>
 </form>
  <?=related::get('site',$site->site_id)?>
+ </div>
 </body>
 </html>

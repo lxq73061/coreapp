@@ -16,7 +16,19 @@ $tree .= "tree1.addnode(400000000, 0, \"联系人\",\"\",\"\",\"#\",\"\");\n";
 foreach($channels as $v){
 	$v['title'] = $v['name'];
 	$orderids[] = $v['channel_id'];
-    $v['parent_id']==0?$v['parent_id']=100000000:0;	
+    if($v['parent_id']==0){
+    	switch($v['component']){
+	        case 'doc': $v['parent_id']=100000000;break;
+            case 'diary': $v['parent_id']=200000000;break;
+            case 'site': $v['parent_id']=300000000;break;
+            case 'address': $v['parent_id']=400000000;break;
+            default:
+            $v['parent_id']=100000000;
+            
+        } 
+       
+        
+    }
     //$v[title] = str_replace('"','',$v[title]);
 	$tree .= "tree1.addnode($v[channel_id], $v[parent_id], \"$v[title]\",\"\",\"\",\"./?go=channel&do=detail&channel_id=$v[channel_id]\",\"frmView\");\n";
 };

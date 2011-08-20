@@ -10,7 +10,8 @@
 <script>
 if(top!=self)top.location = self.location;
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+--><script type="text/javascript" src="./includes/lib/jquery/jquery.min.js"></script>
 <!--<script type="text/javascript" src="js/function.js"></script>
 -->
 <META content="MSHTML 6.00.2900.3199" name=GENERATOR>

@@ -360,7 +360,9 @@ $strPageVar   分页变量名，在地址档中如abc.php?page=123，即是page�
 $bGetQueryString  是否读取Query String, 默认读取
 */
 function Pager ( $intTotal , $intShowNum ,  $intDistance = 5 , $strPageVar = 'page' ,  $bGetQueryString = true ) {
+	if(!$strPageVar)$strPageVar='page';   
     $aPageDatas = array() ;
+	$aPageDatas['strPageVar']=$strPageVar;
     ( $intThisPage = intval( $_REQUEST[$strPageVar] ) ) > 1 ? $aPageDatas[thispage] = $intThisPage : $aPageDatas['thispage'] = $intThisPage = 1 ;
     if ( $intTotal < 1 || $intShowNum < 1 ) {
         $intOffset   = 0 ;
@@ -412,9 +414,10 @@ function show_pagenav($aPageDatas) {
     $displaypg = $aPageDatas['show_num'] ;
     $lastpg = $aPageDatas['maxpage'];
     $page = $aPageDatas['thispage'];
-	 $pagebar = $aPageDatas['pagebar'];
+	$pagebar = $aPageDatas['pagebar'];
 
 	$maxpage = $aPageDatas['maxpage'];
+	$strPageVar = $aPageDatas['strPageVar'];
 //开始分页导航条代码：  
 //$total总数
 //$displaypg每 页显示条
@@ -425,7 +428,7 @@ function show_pagenav($aPageDatas) {
         return false;
     }
     // $url='';
-    $url.= '?'. $querystring . "&page";
+    $url.= '?'. $querystring . "&".$strPageVar;
     $url = str_replace('&&','&',$url);
     /*  if(strstr($querystring,'?')){
 	

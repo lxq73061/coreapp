@@ -68,7 +68,11 @@ class channel extends core {
 	final static public function detail() {
 		// 数据消毒
 		$get = array(
-			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
+			'page_doc'  => isset ($_GET ['page_doc']) ? $_GET ['page_doc'] : '',
+			'page_site'  => isset ($_GET ['page_site']) ? $_GET ['page_site'] : '',
+			'page_address'  => isset ($_GET ['page_address']) ? $_GET ['page_address'] : '',
+			'page_diary'  => isset ($_GET ['page_diary']) ? $_GET ['page_diary'] : '',
+			
 		);
 		if (get_magic_quotes_gpc()) {
 			$get = array_map ('stripslashes', $get);
@@ -90,22 +94,53 @@ class channel extends core {
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
 		}
-		$other = array('ORDER BY sort');
 		
-		$page = array('page'=>$get['page'],'size'=>100);
-		$other ['page'] = &$page;
-		//$channels = self::selects (null, null, $where, $other, __CLASS__);
 		$path = ','.str_pad($channel->channel_id,5,'0',STR_PAD_LEFT);
-		$tablepre = self::init('prefix_search');
-		$sql = "SELECT a.*,b.name  FROM {$tablepre}doc as a LEFT JOIN {$tablepre}channel as b  on a.typeid = b.channel_id  
-		WHERE a.user_id='$online->user_id' AND  b.channel_id IN(
-			SELECT channel_id FROM {$tablepre}channel WHERE path like'%$path%'
-		)";
 		
-		$docs = self::selects($sql,null,true,$other);
+
+		
+		$channels =  self::selects('channel_id',null,array('path like ?'=>'%'.$path.'%'),array(),array(null,'column|table=channel'=>'channel_id'));
+	 
+//		$tablepre = self::init('prefix_search');
+//		$sql = "SELECT a.*,b.name  FROM {$tablepre}doc as a LEFT JOIN {$tablepre}channel as b  on a.typeid = b.channel_id  
+//		WHERE a.user_id='$online->user_id' AND  b.channel_id IN(
+//			SELECT channel_id FROM {$tablepre}channel WHERE path like'%$path%'
+//		)";
+//		
+//		$docs = self::selects($sql,null,true,$other);
+
+		$page_doc = array('page'=>$get['page_doc'],'size'=>100);
+		$page_site = array('page'=>$get['page_site'],'size'=>100);
+		$page_address = array('page'=>$get['page_address'],'size'=>100);
+		$page_diary = array('page'=>$get['page_diary'],'size'=>100);
+		
+		$class_arr=self::get_channel();
+		//pecho($class_arr);
+		
+		$docs = self::selects('*',null,array('user_id'=>$online->user_id,'typeid'=>$channels),array('ORDER BY create_date DESC','page'=>&$page_doc),
+		array(null,'|table=doc'=>''));
+		
+		$sites = self::selects('*',null,array('user_id'=>$online->user_id,'typeid'=>$channels),array('ORDER BY create_date DESC','page'=>&$page_site),array(null,'|table=site'=>''));
+		$addresss = self::selects('*',null,array('user_id'=>$online->user_id,'typeid'=>$channels),array('ORDER BY create_date DESC','page'=>&$page_address),array(null,'|table=address'=>''));
+		$diarys = self::selects('*',null,array('user_id'=>$online->user_id,'typeid'=>$channels),array('ORDER BY create_date DESC','page'=>&$page_diary),array(null,'|table=diary'=>''));
+		
+		
+		foreach($docs as &$v)$v->name = $class_arr[$v->typeid]['name'];
+		foreach($sites as &$v)$v->name = $class_arr[$v->typeid]['name'];
+		foreach($addresss as &$v)$v->name = $class_arr[$v->typeid]['name'];
+		foreach($diarys as &$v)$v->name = $class_arr[$v->typeid]['name'];
+			
+		
+		
+
+		
+		
+		
 		$query = $_SERVER['QUERY_STRING'];
 		// 页面显示
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','channel','page','query'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','sites','addresss','diarys','channel',
+		'page_doc','page_site','page_address','page_diary',
+		'query'));
 	}
 	
 	/**
@@ -115,22 +150,26 @@ class channel extends core {
 		$error = array ();
 
 		$online = front::online();
-		// 数据消毒
-		$post = array(
-			'name' => isset ($_POST ['name']) ? $_POST ['name'] : '',
-			'parent_id' => isset ($_POST ['parent_id']) ? (int)$_POST ['parent_id'] : '0',
-			'component'  => isset ($_POST ['component']) ? $_POST ['component'] : '',
-			'sort' => isset ($_POST ['sort']) ? (int)$_POST ['sort'] : '0',			
-			'user_id' => $online->user_id,		
-		);
 
-
-		if (get_magic_quotes_gpc()) {
-			$post = array_map ('stripslashes', $post);
-		}
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
+		
+			// 数据消毒
+			$post = array(
+				'name' => isset ($_POST ['name']) ? $_POST ['name'] : '',
+				'parent_id' => isset ($_POST ['parent_id']) ? (int)$_POST ['parent_id'] : '0',
+				'component'  => isset ($_POST ['component']) ? $_POST ['component'] : '',
+				'sort' => isset ($_POST ['sort']) ? (int)$_POST ['sort'] : '0',			
+				'user_id' => $online->user_id,		
+			);
+	
+	
+			if (get_magic_quotes_gpc()) {
+				$post = array_map ('stripslashes', $post);
+			}		
+		
+		
 		
 			// 数据验证
 			$length = (strlen ($post ['name']) + mb_strlen ($post ['name'], 'UTF-8')) /2;
@@ -141,6 +180,13 @@ class channel extends core {
 				if ($count > 0) {
 					$error ['name'] = '分类名重复，请换一个分类名';
 				}
+				if($post ['parent_id']){
+					$component = self::selects('component', null, array('channel_id'=>$post ['parent_id']), null, array('column|table=channel'=>'component'));
+					$post['component'] = $component;
+				}else{
+					//顶级分类，可以任意指定
+				}
+		
 			}
 
 			if (! empty ($error)) {
@@ -207,9 +253,15 @@ class channel extends core {
 				}else{
 					$parent_path = self::selects('path',null,array('channel_id'=>$post['parent_id']),null,array('column'=>'path'));
 					if(strstr($parent_path,self::make_path($channel->channel_id))){
-						$error ['name'] = '不能指定为自己的下级';
-						
+						$error ['name'] = '不能指定为自己的下级';						
 					}
+					if($post ['parent_id']){
+						$component = self::selects('component', null, array('channel_id'=>$post ['parent_id']), null, array('column|table=channel'=>'component'));
+						$post['component'] = $component;
+					}else{
+						//顶级分类，可以任意指定
+					}
+		
 					
 				}
 			}
@@ -304,7 +356,7 @@ class channel extends core {
 function get_channel(){
 		$online = front::online();
 		$class_arr=array();
-		$channels = self::selects('channel_id,name,parent_id,sort,path', null, array('user_id'=>$online->user_id),array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
+		$channels = self::selects('channel_id,name,parent_id,sort,path,component', null, array('user_id'=>$online->user_id),array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
 		
 		return $channels;
 }
@@ -339,9 +391,9 @@ function get_channel_table($m,$id)
 	
 }
 /**
-*级别,当前父ID,父ID,分类ID
+*级别,当前父ID,父ID,分类ID,前缀,类型
 */
-function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option')
+function get_channel_select($m,$id,$p_id,$c_id=NULL,$c_type=NULL,$pLineType='',$type='option')
 {	
 	static $class_arr;
 	//global $class_arr;
@@ -349,21 +401,23 @@ function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option'
 	$name ='name';
 	$class_id='channel_id';
 	$sort='sort';
+	$type_name ='component';
 
 	if(!$class_arr)$class_arr=self::get_channel();
 
 	$c_path = self::make_path($c_id);
 	foreach($class_arr as $k=>$v){	
-		if($v[$parent_id]==$id){
+		if($v[$parent_id]==$id && ($c_type==NULL || $c_type==$v[$type_name])){
 			$childrenArray[]=$v;
 		}		
 	}
+
 	if($type=='check') return sizeof($childrenArray);//仅判断是否有下级时用.
 	
 	if($childrenArray_length = sizeof($childrenArray))
 	foreach($childrenArray as $k=>$v){
 			$pChildrenExists = $ChildrenExists;//上一个是否有下级
-			$ChildrenExists =self::get_channel_select(NULL,$v[$class_id],NULL,NULL,NULL,'check');
+			$ChildrenExists =self::get_channel_select(NULL,$v[$class_id],NULL,NULL,$c_type,NULL,'check');
 			//$ChildrenExists = NodeExists($childrenArray[$k][$class_id]);
 			if($ChildrenExists) {//有下级
 				if($k == $childrenArray_length - 1) {
@@ -407,15 +461,15 @@ function get_channel_select($m,$id,$p_id,$c_id=NULL,$pLineType='',$type='option'
 				$html .= "	</tr>\n";
 		
 			}
-			$ChildrenExists =self::get_channel_select($m+1,$v[$class_id],$p_id,$c_id,$pLineType.$LineType,$type);
+			$ChildrenExists =self::get_channel_select($m+1,$v[$class_id],$p_id,$c_id,$c_type,$pLineType.$LineType,$type);
 			$html .=$ChildrenExists;
 			
 	}
 	return $html;
 	
 }
-		//更新某个分类的path信息
-		function update_path($id){
+	//更新某个分类的path信息
+	function update_path($id){
 						
 		$id=intval($id);
 		
