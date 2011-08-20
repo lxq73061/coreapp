@@ -2,8 +2,10 @@
 <?php 
 $intTotal   = $page['count'];
 $intShowNum = $page['size'];
-$aPageDatas = Pager ( $intTotal , $intShowNum );
-        
+if(!$pagename)$pagename='page';
+$aPageDatas = Pager ( $intTotal , $intShowNum ,5,$pagename);
+
+    
 ?>
-<?=show_pagenav($aPageDatas)?>
+<?=show_pagenav($aPageDatas,$pagename)?>
 </div>

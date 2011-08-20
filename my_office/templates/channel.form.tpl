@@ -6,6 +6,14 @@
 <fieldset>
 <legend><?php echo isset ($_GET ['do']) && $_GET ['do'] === 'append' ? '添加分类' : '修改分类'; ?></legend>
 <label>分类名称：<input name="name" type="text" class="input" id="name" value="<?php echo $post['name'];?>" size="40" /></label><font color="red">*</font><?php if(isset($error['name'])): ?><font color="red"><?php echo $error['name']; ?></font><?php endif; ?><br>
+<label>分类类型：<select name="component" id="component">
+            <option value="doc">文章</option>
+            <option value="site">网址</option>
+            <option value="address">联系人</option>
+             <option value="diary">记事</option>            
+            </select></label>
+(仅在添加顶级分类时有效)<br>
+            
 <label>所属分类：<select name="parent_id" id="parent_id">
             <option value="0">-----顶级分类-----</option>
             <?=channel::get_channel_select(0,0,$post['parent_id'],$post['channel_id'])?>

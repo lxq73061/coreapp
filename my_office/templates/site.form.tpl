@@ -13,7 +13,7 @@
 <select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
             <?php
-            	channel::get_channel_select(0,0,$post['typeid']);
+            	echo channel::get_channel_select(0,0,$post['typeid'],0,'site');
 			?>
           </select>
 	<font color="red">*</font>
