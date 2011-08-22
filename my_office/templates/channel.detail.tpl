@@ -8,6 +8,7 @@
 </div>
 
 <div id="channel">
+
 <dl class="doc">
 		<dt><strong>文章列表</strong> </dt>
 		<?php 
@@ -15,8 +16,18 @@
 		 <dd><a title="" href="?go=doc&do=detail&doc_id=<?=$c->doc_id ?>"><?= $c->title ?>:<?= $c->hit ?></a><em>[<?= $c->name ?>] <?=$c->update_date?></em></dd>
 		 <?php  } ?>
 		 </dl>
- </div>
+
 <?php $page = $page_doc;$pagename='page_doc'?>
+<?php include('page.tpl')?>
+<dl class="diary">
+		<dt><strong>记事列表</strong> </dt>
+		<?php 
+		 foreach( $diarys as $c ) {?>
+		 <dd><a title="" href="?go=diary&do=detail&diary_id=<?=$c->diary_id ?>"><?= $c->title ?></a>  <em>[<?= $c->name ?>] <?=$c->update_date?></em></dd>
+		 <?php  } ?>
+		 </dl>
+
+<?php $page = $page_diary;$pagename='page_diary'?>
 <?php include('page.tpl')?>
 
 <dl class="site">
@@ -26,10 +37,24 @@
 		 <dd><a title="" href="?go=site&do=detail&site_id=<?=$c->site_id ?>"><?= $c->title ?></a> <a href="<?= $c->url ?>" target="_blank">Go&raquo;</a> <em>[<?= $c->name ?>] <?=$c->update_date?></em></dd>
 		 <?php  } ?>
 		 </dl>
+
+<?php $page = $page_site;$pagename='page_site'?>
+<?php include('page.tpl')?>
+
+
+<dl class="address">
+		<dt><strong>联系人列表</strong> </dt>
+		<?php 
+		 foreach( $addresss as $c ) {?>
+		 <dd><a title="" href="?go=address&do=detail&address_id=<?=$c->address_id ?>"><?= $c->title ?></a> <em>[<?= $c->name ?>] <?=$c->update_date?></em></dd>
+		 <?php  } ?>
+		 </dl>
+
+<?php $page = $page_address;$pagename='page_address'?>
+<?php include('page.tpl')?>
+
  </div>
-<!-- 共<?=$page_doc['count']?>条，共<?=$page_doc['total']?>页
-<?php if($page['page']<$page['total']): ?><a href="?<?php $_GET['page']=$page['page']+1;echo http_build_query($_GET); ?>">下一页</a>&nbsp;<?php endif; ?>
-<?php if($page['page']>1): ?><a href="?<?php $_GET['page']=$page['page']-1;echo http_build_query($_GET); ?>">上一页</a><?php endif; ?>-->
+ 
 
 
 

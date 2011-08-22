@@ -127,7 +127,11 @@ class channel extends core {
 		
 		foreach($docs as &$v)$v->name = $class_arr[$v->typeid]['name'];
 		foreach($sites as &$v)$v->name = $class_arr[$v->typeid]['name'];
-		foreach($addresss as &$v)$v->name = $class_arr[$v->typeid]['name'];
+		foreach($addresss as &$v){
+			$v->title =$v->name;
+			$v->name = $class_arr[$v->typeid]['name'];
+			
+		}
 		foreach($diarys as &$v)$v->name = $class_arr[$v->typeid]['name'];
 			
 		
@@ -366,7 +370,7 @@ function get_channel(){
 
 function get_channel_table($m,$id)
 {
-	return self::get_channel_select($m,$id,NULL,NULL,NULL,'table');
+	return self::get_channel_select($m,$id,NULL,NULL,NULL,NULL,'table');
 /*	$parent_id ='parent_id';
 	$name ='name';
 	$class_id='channel_id';
