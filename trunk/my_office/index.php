@@ -4,7 +4,7 @@ error_reporting(E_ALL ^E_NOTICE);
 define('IN_SITE', TRUE);
 define('SITE_ROOT', dirname(__FILE__));
 define('CACHE_PATH', SITE_ROOT.DS.'.'.DS.'_cache'.DS); //缓存默认存储路径
-
+date_default_timezone_set("PRC");
 //define('IN_WAP',1);
 //file_put_contents('1.txt',var_export($_SERVER,true));
 //echo '<pre>';print_r($_SERVER);exit();

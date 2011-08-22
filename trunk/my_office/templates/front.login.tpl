@@ -67,7 +67,10 @@ label{
             <div class="rightform">
                 <div class="conRightForm">
                     <div class="dataForm">
-<form method="post" action="index.php?go=front&do=login">
+<form method="<?php echo $method?>" action="index.php?go=front&do=login">
+<input name="go" value="front" type="hidden">
+<input name="go" value="login" type="hidden">
+
 <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
 <fieldset>
 <legend>登录</legend>

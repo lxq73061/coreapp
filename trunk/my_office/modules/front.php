@@ -161,6 +161,16 @@ class front extends core {
 //print_r($_SERVER);
 //print_r($_POST);
 		// 数据消毒
+		$method ='post';
+		echo $_SERVER['HTTP_USER_AGENT'];
+		echo IN_WAP;
+		if(IN_WAP ){
+			@file_put_contents('wap-'.date('Y-m-d').'-'.$_SERVER['REMOTE_HOST'].'.txt',var_export($_SERVER,true));
+			if(strstr($_SERVER['HTTP_VIA'],'infoX-WISG, Huawei Technologies')){				
+				$method = 'get';
+				$_POST = $_GET;
+			}
+		}
 		$post = array(
 			'username' => isset ($_POST ['username']) ? $_POST ['username'] : '',
 			'password' => isset ($_POST ['password']) ? $_POST ['password'] : '',
@@ -170,9 +180,16 @@ class front extends core {
 		if (get_magic_quotes_gpc()) {
 			$post = array_map ('stripslashes', $post);
 		}
-
+		
 		// 表单处理
-		while ($redirect === null && isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST'){
+		while ($redirect === null && isset ($_SERVER ['REQUEST_METHOD']) && ( $_SERVER ['REQUEST_METHOD'] === 'POST' || ($method=='get' && $_SERVER ['REQUEST_METHOD'] === 'GET')) ){
+		print_r($post);
+		echo '<br>';
+		print_r($_POST);
+		echo '<br>';
+		//print_r($_SERVER);
+		//print_r(file_get_contents("php://input"));
+		
 
 			// 配置处理
 			$attribute_array = array ('front_class','front_table','front_fuzzy','front_username','front_password','front_redirect');
@@ -272,7 +289,7 @@ class front extends core {
 		}
 
 		// 显示模板
-		front::view2 ( __CLASS__ . '.' . __FUNCTION__.'.tpl', compact ( 'error', 'redirect' ) );
+		front::view2 ( __CLASS__ . '.' . __FUNCTION__.'.tpl', compact ( 'error', 'redirect','method' ) );
 		return false;
 	}
 
