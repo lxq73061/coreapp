@@ -606,4 +606,13 @@ function make_option($t_lists,$t_id){
 			}
 			return $t_list;
 		}
+		
+//UBB表情解释
+function bbcode($str){
+	$text = str_replace(" ","&nbsp;",$text);
+	$text = preg_replace("/\[em:(.+?):]/is","<img src=\"/templates/images/face/$1.gif\" class=\"face\">",$str);
+	$text = nl2br($text);
+
+	return $text;
+}		
 ?>
