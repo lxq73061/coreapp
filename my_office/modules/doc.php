@@ -119,8 +119,12 @@ class doc extends core {
 		}
 		$doc->hit++;//访问次数
 		$doc->update ();
+		
+		$doc->remarks = doc_remark::get_list($doc->doc_id);
+	
 		// 页面显示
 		$query = $_SERVER['QUERY_STRING'];
+		
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query'));
 	}
 	

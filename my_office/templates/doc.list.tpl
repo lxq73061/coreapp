@@ -1,6 +1,4 @@
 <?php include('header.tpl')?>
-
-
 <?php if(IN_WAP):?>
 <a href="/">Home</a><br />
 <?php include('page.tpl')?>

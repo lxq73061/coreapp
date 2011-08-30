@@ -39,6 +39,11 @@ class welcome extends core {
 	final static public function middle() {
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
 	}
+	final static public function online() {
+		
+		echo  'online';
+		return;
+	}
 	
 }
 
