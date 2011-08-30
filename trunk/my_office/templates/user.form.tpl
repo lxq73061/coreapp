@@ -1,5 +1,7 @@
 <?php include('header.tpl')?>
-
+<?php if(IN_WAP):?>
+<a href="/">Home</a><br />
+<?php endif?>
 
 ○<a href="?go=user&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">用户列表</a>&nbsp;
 ○<a href="?go=user&do=append">添加用户</a><br>

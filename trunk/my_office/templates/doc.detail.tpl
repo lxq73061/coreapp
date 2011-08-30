@@ -1,9 +1,7 @@
 <?php include('header.tpl')?>
-
-
-<!--○<a href="?go=doc&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">文章列表</a>&nbsp;
-○<a href="?go=doc&do=append">添加文章</a>-->
-
+<?php if(IN_WAP):?>
+<a href="/">Home</a><br />
+<?php endif?>
 <div id="nav">
 	<div class="left"><?=channel::get_nav($doc->typeid)?></div>
 	<div class="right"><a href="?go=doc&do=modify&doc_id=<?=$doc->doc_id?>&query=<?php echo urlencode($query) ?>">[编辑]</a> <a href="?go=doc&do=append&query=<?php echo urlencode($query) ?>">[新建]</a></div>
@@ -22,6 +20,7 @@
     </div>
 </div>
 
- <?=related::get('doc',$doc->doc_id)?>
+<?php include('doc.detail.remark.tpl');?>
+<?=related::get('doc',$doc->doc_id)?>
 </body>
 </html>

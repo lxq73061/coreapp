@@ -329,3 +329,19 @@ a.disabled {
 	/*border-bottom:1px solid #ccc;*/
 	margin-bottom:15px;
 }
+#comment ,#submit_comment{
+	margin:auto;
+	width:90%
+}
+
+#comment ul li{
+
+	list-style:none;
+	border:none;
+	border-bottom: 1px solid #CCC
+}#comment ul,
+#face_menu ul{
+	padding:0;
+	margin:0;
+}
+    input.placeholder {color:#999}  

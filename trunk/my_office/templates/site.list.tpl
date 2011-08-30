@@ -1,5 +1,7 @@
 <?php include('header.tpl')?>
-
+<?php if(IN_WAP):?>
+<a href="/">Home</a><br />
+<?php endif?>
 ○<a href="?go=site&do=browse">网址列表</a>&nbsp;
 ○<a href="?go=site&do=append">添加网址</a><br>
 
