@@ -354,6 +354,17 @@ class channel extends core {
 //		self::deletes(null,null,array('channel_id'=>$_POST['channel_id']),null,__CLASS__);
 //		header ('Location: ?'.$_GET['query']);
 	}
+	
+	final static public function get_one($channel_id,$return=null) {
+		
+		$channels = self::selects('channel_id,name,parent_id,sort,path,component', null, array('channel_id'=>$channel_id),array(),array('assoc|table=channel'=>null));
+
+		if($return){
+			return $channels[$return];		
+		}
+		return $channels;
+	}
+	
 /**
 * 取分类数据
 */	
