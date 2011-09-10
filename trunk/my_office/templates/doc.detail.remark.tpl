@@ -8,7 +8,7 @@
 			
 			
 <p>  <?=$v['content']?>
-          <span style="float:right"><?=$v['create_date']?> <?=$v['create_time']?><?php if ($online->user_id ==$doc->user_id ):?>
+          <span style="float:right">(<?=$v['ip2']?>)<?=$v['create_date']?> <?=$v['create_time']?><?php if ($online->user_id ==$doc->user_id ):?>
             <a href="/?go=doc_remark&do=remove&doc_remark_id=<?=$v['doc_remark_id']?>&doc_id=<?=$doc->doc_id?>&query=<?php echo urlencode($query) ?>" title="删除">
             <font color="">[x]</font></a>&nbsp;<?php endif;?></span>
 </p>            

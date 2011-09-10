@@ -318,9 +318,8 @@ class address extends core {
 	 * 返回网址分类名称
 	 */
 	public function get_typeid() {
-		$array = channel::get_channel();
-		//pecho($array);
-		return $array [$this->typeid]['name'];
+	
+		return channel::get_one($this->typeid,'name');
 	}
 	
 }

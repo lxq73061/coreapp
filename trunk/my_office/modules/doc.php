@@ -77,7 +77,9 @@ class doc extends core {
 			case 'hit2':
 				$other = array('ORDER BY hit DESC');
 				break;
-				
+			case 'last_remark2':
+				$other = array('ORDER BY last_remark DESC');
+				break;	
 			default:
 				$get['order'] ='doc_id2';
 				$other = array('ORDER BY doc_id DESC');

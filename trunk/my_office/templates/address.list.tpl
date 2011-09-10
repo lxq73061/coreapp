@@ -30,8 +30,8 @@ if(!$contact) $contact =  $address->qq?'QQ:'.$address->qq:'';
 <input type="text" name="keyword" value="<?php echo $get['keyword']?>">&nbsp;
 分类：<select name="typeid" id="typeid">
             <option value="0">-----顶级分类-----</option>
-            <?php
-            	channel::get_channel_select(0,0,$post['typeid']);
+             <?php
+            echo channel::get_channel_select(0,0,$get['typeid'],0,'address');
 			?>
           </select>
 排序：<select name="order">
@@ -54,6 +54,7 @@ var ids = '<?=$ids?>';
             <tr>
                 <th>&nbsp;</th>
                 <th>名称</th>
+                <th>分组</th>
                 <th>手机</th>
                 <th>email</th>
                 <th>qq</th>
@@ -74,6 +75,7 @@ var ids = '<?=$ids?>';
                     <input type="checkbox" name="<?=$ids?>" value="<?php echo $address->address_id; ?>" />
                     <?php endif; ?></td>
                 <td>&nbsp;<?php echo $address->name; ?></td>
+                 <td>&nbsp;<?php echo $address->get_typeid(); ?></td>
                 <td>&nbsp;<?php echo $address->mobile; ?></td>
                 <td>&nbsp;<?php echo $address->email; ?></td>
                 <td>&nbsp;<?php echo $address->qq; ?></td>
@@ -102,13 +104,13 @@ var ids = '<?=$ids?>';
             <?php endforeach ?>
             <?php else: ?>
             <tr>
-                <td colspan="10">无</td>
+                <td colspan="11">无</td>
             </tr>
             <?php endif ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="10">&nbsp;
+                <td colspan="11">&nbsp;
                     <input type="button" value="全选" onclick="select_all(this)" />
                     <input type="button" value="反选" onclick="reverse_all(this);" />
                     <input type="button" value="删除" onclick="return remove_selected(this);" /></td>

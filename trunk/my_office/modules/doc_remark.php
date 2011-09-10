@@ -29,10 +29,13 @@ class doc_remark extends core {
 
 		$class_arr=array();
 		$doc_remarks = self::selects('*', null, array('doc_id'=>$doc_id),array('ORDER BY doc_remark_id ASC'),array('doc_remark_id','assoc|table=doc_remark'=>null));
-		
+		if($doc_remarks)
 		foreach($doc_remarks as &$v) {
            // $v['addtime'] = date("Y-m-d H:i:s",$v['create_date'].''.$v['create_time']);
-            $v['content'] = bbcode($v['content'] );           
+            $v['content'] = bbcode($v['content'] ); 
+			//$v['content'] = nl2br($v['content']);
+			$v['ip2'] = preg_replace('/(\d+)\.(\d+)\.(\d+)\.(\d+)/isU','\\1.\\2.*.\\4',$v['ip'] ); 
+			         
         }
         return $doc_remarks;
    
@@ -67,7 +70,13 @@ class doc_remark extends core {
             $doc_remark = new self;
 			$doc_remark->doc_remark_id=null;
             $doc_remark->struct ($post);
-            $doc_remark_id = $doc_remark->insert ('','doc_remark_id');
+            $doc_remark->insert ('','doc_remark_id');
+			if($doc_remark->doc_remark_id ){
+				 $doc = new doc;
+				 $doc->doc_id = $doc_remark->doc_id;
+				 $doc->last_remark =  date('Y-m-d H:i:s',$time);
+				 $doc->update();
+			}
 			//print_r ( $doc_remark);
 			header ('Location: ?'.$_GET['query']);
             return;

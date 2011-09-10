@@ -272,9 +272,10 @@ class diary extends core {
 	 * 返回日志分类名称
 	 */
 	public function get_typeid() {
-		$array = channel::get_channel();
+		return channel::get_one($this->typeid,'name');
+		//$array = channel::get_channel();
 		//pecho($array);
-		return $array [$this->typeid]['name'];
+		//return $array [$this->typeid]['name'];
 	}
 	
 }

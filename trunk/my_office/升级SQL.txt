@@ -11,3 +11,8 @@ CREATE TABLE IF NOT EXISTS `mdb_doc_remark` (
   `create_time` time NOT NULL,
   PRIMARY KEY (`doc_remark_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+#20:33 2011-9-10
+ALTER TABLE `mdb_doc` ADD `last_remark` INT( 11 ) NULL ;
+ALTER TABLE `mdb_doc` CHANGE `last_remark` `last_remark` DATETIME NULL DEFAULT NULL 
