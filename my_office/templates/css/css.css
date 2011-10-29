@@ -7,8 +7,13 @@ font-family:Verdana,"宋体";
 padding-top:10px;
 font-size:12px;
 }
-
-
+form table{
+    border-collapse: separate;
+    border-spacing: 0;
+}
+form table td{
+	padding:5px
+}
 body#welcome_top{
 	margin: 0;
 	padding:0;

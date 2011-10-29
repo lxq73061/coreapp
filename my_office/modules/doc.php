@@ -123,11 +123,11 @@ class doc extends core {
 		$doc->update ();
 		
 		$doc->remarks = doc_remark::get_list($doc->doc_id);
-	
+		$meta_title = $doc->title;
 		// 页面显示
 		$query = $_SERVER['QUERY_STRING'];
 		
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query','meta_title'));
 	}
 	
 	/**
@@ -288,10 +288,10 @@ class doc extends core {
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		
+		$meta_title = $doc->title;
 		$query = $_SERVER['QUERY_STRING'];
 			
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','query'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','query','meta_title'));
 	}
 	
 	/**
