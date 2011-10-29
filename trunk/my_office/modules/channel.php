@@ -137,14 +137,14 @@ class channel extends core {
 		
 		
 
-		
+		$meta_title = $channel->name;
 		
 		
 		$query = $_SERVER['QUERY_STRING'];
 		// 页面显示
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('docs','sites','addresss','diarys','channel',
 		'page_doc','page_site','page_address','page_diary',
-		'query'));
+		'query','meta_title'));
 	}
 	
 	/**
@@ -285,12 +285,12 @@ class channel extends core {
 			return;
 
 		}
-
+		$meta_title = $channel->name;
 		// 页面显示
 //		foreach (array('title','mobile','email','url','content') as $value) {
 //			$post [$value] = htmlspecialchars ($post [$value]);
 //		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','meta_title'));
 	}
 	
 	/**

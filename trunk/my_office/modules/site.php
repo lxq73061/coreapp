@@ -91,9 +91,9 @@ class site extends core {
 			return;
 		}
 		
-
+		$meta_title = $site->title;
 		// 页面显示
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('site'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('site','meta_title'));
 	}
 	
 	/**
@@ -237,12 +237,12 @@ class site extends core {
 			return;
 
 		}
-
+		$meta_title = $site->title;
 		// 页面显示
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','meta_title'));
 	}
 	
 	/**

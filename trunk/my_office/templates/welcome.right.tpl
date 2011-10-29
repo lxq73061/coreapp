@@ -1,9 +1,51 @@
+<?php include('header.tpl')?>
+<style>
+body{
+	margin:10px;
+	height:100%
+}
+html{height:100%
+}
 
+/*.ui-tabs-nav a span span.tabs-item-on,
+.ui-tabs-nav a span span.tabs-close {
+  background-position: -446px -30px;
+  top: 5px;
+}
+.ui-tabs-nav a span span.tabs-item-on, 
+.ui-tabs-nav a span span.tabs-close{
+background-image: url("./templates/images/bg.png");
+background-repeat: no-repeat;
+}
+.ui-tabs-nav a span span.tabs-close {
+	min-height:inherit;
+	min-width:!important;
+  height: 13px;
+  position: absolute;
+  right: 5px;
+  width: 13px;
+}*/
+
+.ui-tabs-nav li {
+	  position:  relative;
+}
+.tabs-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  cursor:pointer;
+}
+.tabs-close:hover{
+	background:#D5F0FD
+}
+
+</style>
 <script src="includes/lib/jquery/jquery.min.js" type="text/javascript"></script>
 <script src="includes/lib/jquery/jquery.cookie.js" type="text/javascript"></script>
 
 
-  <link href="templates/css/ui.tabs.css" rel="stylesheet" type="text/css" />
+<link href="templates/css/ui.tabs.css" rel="stylesheet" type="text/css" />
 <link href="templates/css/css.css" rel="stylesheet" type="text/css" />                                                                        
         <div id="tabs">
             <ul class="ui-tabs-nav">
@@ -22,7 +64,7 @@ var icon_doc = '<img width="16" height="17" border="0" align="absmiddle" src="te
 var icon_diary = '<img width="16" height="17" border="0" align="absmiddle" src="templates/images/tree/b.gif">';
 var icon_site = '<img width="16" height="17" border="0" align="absmiddle" src="templates/images/tree/e1.gif">';
 var icon_address = '<img width="16" height="17" border="0" align="absmiddle" src="templates/images/tree/usergroupicon.gif">';
-
+var close_img ='<img class="tabs-close" src="./templates/images/close1.png" ></img>';
 
   $(document).ready(function(){
 	  init();
@@ -42,12 +84,18 @@ function init(){
 	for(i in current_tabs){
 		addNewTab(current_tabs[i][1],current_tabs[i][0],null);
 	}
-	$('#tabs .ui-tabs-nav li a').live("click", function(){
+	$('#tabs .ui-tabs-nav li a').live("click", function(){		
 		swtichtab($(this));
+		return false;
 	});	 
-	  
+	
+	$('#tabs .ui-tabs-nav li a .tabs-close').live("click", function(){		
+		removetab($(this).parent().parent());
+		return false;
+	});	
 	$('#tabs .ui-tabs-nav li a').live("dblclick", function(){
 		removetab($(this));
+		return false;
 	});	 
 	  
 	
@@ -86,7 +134,6 @@ function removetab(obj){
 	});
 }
 function showiframe(obj){	
-	//obj.height( obj.contents().height() + 40); 
 	obj.height(document.body.clientHeight-(55+$('#tabs').height()));
 }
 
@@ -125,7 +172,7 @@ function addNewTab(url,title,type){
 	//var tabsid = $('#tabs ul li').size()+1;
 	 tabsid = ++current;
 	//alert(title.length);
-	var newTab = '<li><a href="#tabs-'+tabsid+'" id="nav-'+tabsid+'" title="'+title+'"><span>'+type+' '+(clen(title)>10?title.substring(0,10)+'...':title)+'</span></a></li>'; 
+	var newTab = '<li><a href="#tabs-'+tabsid+'" id="nav-'+tabsid+'" title="'+title+'"><span>'+type+' '+(clen(title)>10?title.substring(0,10)+'...':title)+''+close_img+'</span></a></li>'; 
 	var newTabs = '<div id="tabs-'+tabsid+'" class="ui-tabs-panel"><iframe src="'+url+'" width="100%" frameborder="0"></iframe></div>';
 	$('#tabs ul').append(newTab);
 	$('#contents').append(newTabs);
@@ -183,3 +230,22 @@ function clen(string){
 //}); 
 
 </script>
+
+<div id="smallchat" style="display:none"></div>
+<script src="./includes/lib/JWflvPlayer/swfobject.js"></script>
+<script language="JavaScript" type="text/javascript">
+//var rtmp_server = 'rtmp://182.173.77.19/vod';
+var rtmp_server = 'rtmp://mini-video.c.geoadmin.com:443/casino';
+var myname = "Guest"+(Math.ceil(Math.random()*10000));
+		var s1 = new SWFObject("./includes/lib/JWflvPlayer/smallchat.swf","ply","395","360","9","#FFFFFF");
+		s1.addParam("allowfullscreen","true");
+		s1.addParam("allowscriptaccess","always");
+		s1.addParam("flashvars",
+		"rtmpServer="+rtmp_server+"&myname="+myname);
+		s1.write("smallchat");		
+
+</script>
+
+
+<a href="#smallchat" rel="dimmer">SmallChat</a>
+<div id="dynamicContent" class="dimmerMessage"></div>

@@ -68,7 +68,7 @@ class address extends core {
 			);
 			
 		}
-		if (strlen($get['typeid'])>0){
+		if ($get['typeid']){
 			$where ['typeid'] = (int)$get['typeid'];
 		}
 		switch ($get['order']) {
@@ -113,9 +113,9 @@ class address extends core {
 			return;
 		}
 		
-
+		$meta_title = $address->name;
 		// 页面显示
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('address'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('address','meta_title'));
 	}
 	
 	/**
@@ -270,12 +270,12 @@ class address extends core {
 			return;
 
 		}
-
+		$meta_title = $address->name;
 		// 页面显示
 		foreach (array('name','mobile','email','typeid','qq','msn','office_phone','home_phone','remarks'/*'url','content'*/) as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','meta_title'));
 	}
 	
 	/**

@@ -92,9 +92,9 @@ class diary extends core {
 			return;
 		}
 		
-
+		$meta_title = $diary->title;
 		// 页面显示
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('diary'));
+		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('diary','meta_title'));
 	}
 	
 	/**
@@ -224,12 +224,12 @@ class diary extends core {
 			return;
 
 		}
-
+		$meta_title = $diary->title;
 		// 页面显示
 		foreach (array('title','mobile','email','url','content') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','meta_title'));
 	}
 	
 	/**

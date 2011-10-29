@@ -3,10 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo get_title($_GET); ?></title>
-<link rel="stylesheet" type="text/css" href="templates/css/css.css">
+<title><?php echo get_title($_GET); ?> - <?php echo $meta_title; ?></title>
+
 <script src="templates/js/js.js"></script>
 <script src="templates/js/datepicker/jquery-1.4.4.js"></script>
+
+<script type="text/javascript"src="./includes/lib/dimmer/dimmer.js"></script>
+<link rel="stylesheet" type="text/css" href="./includes/lib/dimmer/dimmer.css"/>
+
+<link rel="stylesheet" type="text/css" href="templates/css/css.css">
 <?php 
 //引入时间
 if(defined('GET_DATE')){
@@ -17,6 +22,7 @@ if(defined('GET_DATE')){
 <script src="templates/js/datepicker/ui/jquery.ui.widget.js"></script>
 <script src="templates/js/datepicker/ui/jquery.ui.datepicker.js"></script>
 <link rel="stylesheet" href="templates/js/datepicker/demos.css">
+
 <script>
 $(function($) {
 	
@@ -32,5 +38,6 @@ $(".datepicker_input").datepicker({
 
 </head>
 <body>
+<div id="dynamicContent" class="dimmerMessage"></div>
 <?php endif?>
 
