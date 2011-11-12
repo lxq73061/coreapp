@@ -1,6 +1,6 @@
 <?php include('header.tpl')?>
+<?php include('welcome.wap.head.tpl')?>
 <?php if(IN_WAP):?>
-<a href="/">Home</a><br />
 <?php include('page.tpl')?>
 <hr />
 <?php foreach($docs as $doc): ?>

@@ -1,5 +1,5 @@
 <?php include('header.tpl')?>
-
+<?php include('welcome.wap.head.tpl')?>
 
 ○<a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">联系人列表</a>&nbsp;
 ○<a href="?go=address&do=append">新建联系人</a>

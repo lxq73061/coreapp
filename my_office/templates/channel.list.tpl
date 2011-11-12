@@ -1,5 +1,5 @@
 <?php include('header.tpl')?>
-
+<?php include('welcome.wap.head.tpl')?>
 ○<a href="?go=channel&do=browse">分类列表</a>
 ○<a href="?go=channel&do=append">添加分类</a>	
 

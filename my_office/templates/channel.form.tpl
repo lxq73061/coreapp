@@ -1,7 +1,5 @@
 <?php include('header.tpl')?>
-<?php if(IN_WAP):?>
-<a href="/">Home</a><br />
-<?php endif?>
+<?php include('welcome.wap.head.tpl')?>
 <!--○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类列表</a>&nbsp;
 ○<a href="?go=channel&do=append">添加分类</a><br>-->
 

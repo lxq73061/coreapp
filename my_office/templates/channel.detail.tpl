@@ -1,7 +1,5 @@
 <?php include('header.tpl')?>
-<!--○<a href="?go=channel&<?php if(isset($_GET['query'])): ?><?=$_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">分类列表</a>&nbsp;
-○<a href="?go=channel&do=append">添加分类</a><br>
--->
+<?php include('welcome.wap.head.tpl')?>
 <div id="nav">
 	<div class="left"><?=channel::get_nav($channel->channel_id)?></div>
 	<div class="right"><a href="?go=channel&do=modify&channel_id=<?=$channel->channel_id?>&query=<?=urlencode($query)?>">[编辑]</a></div>

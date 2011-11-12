@@ -1,9 +1,7 @@
 <?php
 define('GET_DATE',true);
 include('header.tpl')?>
-<?php if(IN_WAP):?>
-<a href="/">Home</a><br />
-<?php endif?>
+<?php include('welcome.wap.head.tpl')?>
 ○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本列表</a>&nbsp;
 ○<a href="?go=book&do=append">添加帐本</a><br>
 
