@@ -1,5 +1,5 @@
 <?php include('header.tpl')?>
-
+<?php include('welcome.wap.head.tpl')?>
 <form method="get" action="?go=related&do=<?php echo $_GET['do']; ?>&s_type=<?php echo $_GET['s_type']; ?>&s_id=<?php echo $_GET['s_id']; ?>&t_type=<?php echo $_GET['t_type']; ?>&t_id=<?php echo $_GET['t_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
   <input type="hidden" name="go" value="related" />
   <input type="hidden" name="do" value="<?php echo $_GET['do']; ?>" />

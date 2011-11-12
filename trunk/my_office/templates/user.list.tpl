@@ -1,5 +1,5 @@
 <?php include('header.tpl')?>
-
+<?php include('welcome.wap.head.tpl')?>
 ○<a href="?go=user&do=browse">用户列表</a>&nbsp;
 ○<a href="?go=user&do=append">添加用户</a><br>
 

@@ -1,6 +1,5 @@
 <?php include('header.tpl')?>
-
-
+<?php include('welcome.wap.head.tpl')?>
 ○<a href="?<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本列表</a>&nbsp;
 ○<a href="?go=book&do=append">添加帐本</a></ul>
 

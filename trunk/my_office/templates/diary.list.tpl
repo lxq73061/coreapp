@@ -1,5 +1,5 @@
 <?php include('header.tpl')?>
-
+<?php include('welcome.wap.head.tpl')?>
 ○<a href="?go=diary&do=browse">日志列表</a>&nbsp;
 ○<a href="?go=diary&do=append">添加日志</a><br>
 

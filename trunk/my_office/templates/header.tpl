@@ -31,11 +31,16 @@ $(".datepicker_input").datepicker({
 			nextText:"",
 			dateFormat:"yy-mm-dd"});
 });
+
 </script>
 <?php 
 	}
 ?>
-
+<script>
+$(function($) {
+	change_a();
+});
+</script>	
 </head>
 <body>
 <div id="dynamicContent" class="dimmerMessage"></div>

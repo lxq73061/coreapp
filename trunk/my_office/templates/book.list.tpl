@@ -2,6 +2,8 @@
 define('GET_DATE',true);
 include('header.tpl')?>
 
+<?php include('welcome.wap.head.tpl')?>
+
 ○<a href="?go=book&do=browse">帐本</a>&nbsp;
 ○<a href="?go=book&do=append" rel="facebox">添加帐本<img src="templates/images/add.gif" border="0" width="16" height="16" /></a><br>
 <table cellspacing="0" cellpadding="0">
