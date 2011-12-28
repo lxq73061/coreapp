@@ -8,8 +8,9 @@
 <?php endforeach ?>
 
 <?php else:?>
-○<a href="?go=doc&do=browse">文章列表</a>&nbsp;
-○<a href="?go=doc&do=append">添加文章</a><br>
+<div class="division">
+<a href="?go=doc&do=browse" class="sysiconBtn list">文章列表</a>&nbsp;
+<a href="?go=doc&do=append" class="sysiconBtn addorder addproduct">添加文章</a><br>
 
 <form>
 <input type="hidden" name="go" value="doc">
@@ -26,7 +27,7 @@
 
 
 </select>
-<input type="submit" value="查询">
+<input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
 </form>
 <?php $ids = 'doc_id[]';?>
 <script language="javascript">
@@ -35,7 +36,7 @@ var ids = '<?=$ids?>';
 
 <?php include('page.tpl')?>
 <form method="post" action="?go=doc&do=group_remove&query=<?=urlencode($query) ?>">
-<table border="0" cellpadding="5" cellspacing="0">
+<table border="0" cellpadding="5" cellspacing="0" class="gridlist">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th><th>文章名</th>
 	<th>分类</th>
@@ -60,9 +61,13 @@ var ids = '<?=$ids?>';
 <?php endforeach ?>
 </tbody>
 <tfoot>
-	<tr><td colspan="8">&nbsp;<input type="button" value="全选" onClick="select_all(this)">
-	<input type="button" value="反选" onClick="reverse_all(this);">
-	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
+	<tr><td colspan="8"><b class="submitBtn">
+	  <button onclick="select_all(this)" type="button"><span class="iconbutton">全选</span></button>
+    </b> <b class="submitBtn">
+    <button onclick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button>
+    </b> <b class="submitBtn">
+    <button onclick="return remove_selected(this);" type="button"><span class="iconbutton deletebutton">删除</span></button>
+    </b></td></tr>
 </thead>
 </table>
 

@@ -1,7 +1,8 @@
 <?php include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
-○<a href="?go=site&do=browse">网址列表</a>&nbsp;
-○<a href="?go=site&do=append">添加网址</a><br>
+<div class="division">
+<a href="?go=site&do=browse" class="sysiconBtn list">网址列表</a>&nbsp;
+<a href="?go=site&do=append" class="sysiconBtn addorder addproduct">添加网址</a><br>
 
 <form>
 <input type="hidden" name="go" value="site">
@@ -18,7 +19,7 @@
 	<option value="site_id" <?php if($get['order'] === 'site_id') echo 'selected'; ?>>ID↑</option>
 	<option value="site_id2" <?php if($get['order'] === 'site_id2') echo 'selected'; ?>>ID↓</option>
 </select>
-<input type="submit" value="查询">
+<input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
 </form>
 <?php $ids = 'site_id[]';?>
 <script language="javascript">
@@ -26,7 +27,7 @@ var ids = '<?=$ids?>';
 </script>
 <?php include('page.tpl')?>
 <form method="post" action="?go=site&do=group_remove&query=<?php echo urlencode($query) ?>">
-<table border="0" cellpadding="5">
+<table border="0" cellpadding="5" class="gridlist">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th>
 	  <th>网站名</th>
@@ -56,12 +57,17 @@ var ids = '<?=$ids?>';
 	</tr><?php endif ?> 
 </tbody>
 <tfoot>
-	<tr><td colspan="7">&nbsp;<input type="button" value="全选" onClick="select_all(this)">
-	<input type="button" value="反选" onClick="reverse_all(this);">
-	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
-</thead>
+	<tr><td colspan="7"><b class="submitBtn">
+	  <button onclick="select_all(this)" type="button"><span class="iconbutton">全选</span></button>
+	</b> <b class="submitBtn">
+	<button onclick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button>
+	</b> <b class="submitBtn">
+	<button onclick="return remove_selected(this);" type="button"><span class="iconbutton deletebutton">删除</span></button>
+	</b></td></tr>
+</tfoot>
 </table>
 </form>
 <?php include('page.tpl')?>
+</div>
 </body>
 </html>

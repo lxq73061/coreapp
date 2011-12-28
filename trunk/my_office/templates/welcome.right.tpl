@@ -230,22 +230,4 @@ function clen(string){
 //}); 
 
 </script>
-
-<div id="smallchat" style="display:none"></div>
-<script src="./includes/lib/JWflvPlayer/swfobject.js"></script>
-<script language="JavaScript" type="text/javascript">
-//var rtmp_server = 'rtmp://182.173.77.19/vod';
-var rtmp_server = 'rtmp://mini-video.c.geoadmin.com:443/casino';
-var myname = "Guest"+(Math.ceil(Math.random()*10000));
-		var s1 = new SWFObject("./includes/lib/JWflvPlayer/smallchat.swf","ply","395","360","9","#FFFFFF");
-		s1.addParam("allowfullscreen","true");
-		s1.addParam("allowscriptaccess","always");
-		s1.addParam("flashvars",
-		"rtmpServer="+rtmp_server+"&myname="+myname);
-		s1.write("smallchat");		
-
-</script>
-
-
-<a href="#smallchat" rel="dimmer">SmallChat</a>
 <div id="dynamicContent" class="dimmerMessage"></div>

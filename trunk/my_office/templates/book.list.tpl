@@ -4,21 +4,23 @@ include('header.tpl')?>
 
 <?php include('welcome.wap.head.tpl')?>
 
-○<a href="?go=book&do=browse">帐本</a>&nbsp;
-○<a href="?go=book&do=append" rel="facebox">添加帐本<img src="templates/images/add.gif" border="0" width="16" height="16" /></a><br>
+<div class="division">
+<a href="?go=book&do=browse" class="sysiconBtn list">帐本列表</a>&nbsp;
+<a href="?go=book&do=append" class="sysiconBtn addorder addproduct" rel="facebox">添加帐本</a>
+<br>
 <table cellspacing="0" cellpadding="0">
     <tr>
-        <td> 账目总数：<?php echo $totals[total]; ?> 笔</td>
-        <td></td>
+        <th> 账目总数：</th>
+        <td><?php echo $totals[total]; ?> 笔</td>
     </tr>
     <tr>
-        <td>资金余额：<?php echo $totals['amount']; ?>
+        <th>资金余额：</th><td><?php echo $totals['amount']; ?>
             <?=$get['ccy']?></td>
     </tr>
 </table>
 <hr />
 
-<form id="form1" name="form1" method="get" action="">
+<div class="clearfix note" style="border:none;"><form id="form1" name="form1" method="get" action="">
     <input type="hidden" name="go" value="book">
     <input type="hidden" name="do" value="browse">
     <label for="from"></label>
@@ -31,8 +33,8 @@ include('header.tpl')?>
         <option value="CNY" <?=set_select($get['ccy'],'CNY')?>>CNY</option>
         <option value="USD" <?=set_select($get['ccy'],'USD')?>>USD</option>
     </select>
-    <input id="BtnOK" type="submit" value="查 询" name="BtnOK" />
-</form>
+   <input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
+</form></div>
 
 <?php $ids = 'doc_id[]';?>
 <script language="javascript">
@@ -40,7 +42,7 @@ var ids = '<?=$ids?>';
 </script>
 <?php include('page.tpl')?>
 <form method="post" action="?go=book&do=group_remove&query=<?php echo urlencode($query) ?>">
-    <table cellspacing="1" cellpadding="5" border="0" class="table0 width_box">
+    <table cellspacing="1" cellpadding="5" border="0" class=" width_box gridlist">
         <thead>
             <tr class="td0 c">
                 <th scope="col">ID</th>
@@ -97,28 +99,33 @@ var ids = '<?=$ids?>';
             <?php endif ?>
         </tbody>
         <tfoot>
-            <tr>
-                <td colspan="7">&nbsp;
-                    <input type="button" value="全选" onClick="select_all(this)">
-                    <input type="button" value="反选" onClick="reverse_all(this);">
-                    <input type="button" value="删除" onClick="return remove_selected(this);"></td>
+            <tr>                <td colspan="10">&nbsp;
+                
+<b class="submitBtn"><button onClick="select_all(this)" type="button"><span class="iconbutton">全选</span></button></b>
+<b class="submitBtn"><button onClick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button></b>
+<b class="submitBtn"><button onClick="return remove_selected(this);" type="button"><span class="iconbutton deletebutton">删除</span></button></b>
+</td>
             </tr>
                 </thead>
             
     </table>
     <table cellspacing="0" cellpadding="0">
         <tr>
-            <td> 支出交易笔数：<?php echo $totals['total_out']; ?></td>
-            <td>&nbsp; 收入交易笔数：<?php echo $totals['total_in']; ?></td>
-            <td></td>
+            <th> 支出交易笔数：</th>
+            <td><?php echo $totals['total_out']; ?></td>
+            <th>收入交易笔数：</th>
+            <td><?php echo $totals['total_in']; ?></td>
         </tr>
         <tr>
-            <td>支出金额合计：<?php echo $totals['out_amount']; ?></td>
-            <td>&nbsp; 收入金额合计：<?php echo $totals['in_amount']; ?></td>
+            <th>支出金额合计：</th>
+            <td><?php echo $totals['out_amount']; ?></td>
+            <th>收入金额合计：</th>
+            <td><?php echo $totals['in_amount']; ?></td>
         </tr>
     </table>
     <p>&nbsp;</p>
  
 </form>
-<?php include('page.tpl')?>
+<?php include('page.tpl')?></div>
+
 </body></html>
