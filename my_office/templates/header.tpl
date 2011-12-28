@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo get_title($_GET); ?> - <?php echo $meta_title; ?></title>
 
-<script src="templates/js/js.js"></script>
+<script src="templates/js/js.js?20111112"></script>
 <script src="templates/js/datepicker/jquery-1.4.4.js"></script>
 
 <script type="text/javascript"src="./includes/lib/dimmer/dimmer.js"></script>

@@ -1,17 +1,19 @@
 <?php include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
-○<a href="?go=channel&do=browse">分类列表</a>
-○<a href="?go=channel&do=append">添加分类</a>	
+<div class="division">
+<a href="?go=channel&do=browse" class="sysiconBtn list">分类列表</a>
+<a href="?go=channel&do=append" class="sysiconBtn addorder addproduct">添加分类</a>	
 
-<table class="table">
+   <table border="0" cellpadding="5" class="gridlist">
       <thead>
         <tr>
-          <td >分类名称</td>
-          <td width="60"><div align="center">排序</div></td>
-          <td width="80"><div align="center">操作</div></td>
+          <th >分类名称</th>
+          <th><div align="center">排序</div></th>
+          <th><div align="center">操作</div></th>
         </tr>
       </thead>
       <?php echo channel::get_channel_table(0,0);?>
     </table>
+    </div>
 </body>
 </html>

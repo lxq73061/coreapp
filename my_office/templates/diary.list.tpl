@@ -1,7 +1,8 @@
 <?php include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
-○<a href="?go=diary&do=browse">日志列表</a>&nbsp;
-○<a href="?go=diary&do=append">添加日志</a><br>
+<div class="division">
+<a href="?go=diary&do=browse" class="sysiconBtn list">日志列表</a>&nbsp;
+<a href="?go=diary&do=append" class="sysiconBtn addorder addproduct">添加日志</a><br>
 
 <form>
 <input type="hidden" name="go" value="diary">
@@ -19,7 +20,7 @@
     <option value="diary_id2" <?php if($get['order'] === 'diary_id2') echo 'selected'; ?>>日志ID↓</option>
     
 </select>
-<input type="submit" value="查询">
+<input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
 </form>
 <?php $ids = 'diary_id[]';?>
 <script language="javascript">
@@ -27,7 +28,7 @@ var ids = '<?=$ids?>';
 </script>
 <?php include('page.tpl')?>
 <form method="post" action="?go=diary&do=group_remove&query=<?php echo urlencode($query) ?>">
-<table border="0" cellpadding="5">
+<table border="0" cellpadding="5" class="gridlist">
 <thead>
 	<tr><th>&nbsp;</th><th>ID</th>
 	  <th>日期</th>
@@ -59,12 +60,17 @@ var ids = '<?=$ids?>';
 	</tr><?php endif ?> 
 </tbody>
 <tfoot>
-	<tr><td colspan="8">&nbsp;<input type="button" value="全选" onClick="select_all(this)">
-	<input type="button" value="反选" onClick="reverse_all(this);">
-	<input type="button" value="删除" onClick="return remove_selected(this);"></td></tr>
-</thead>
+	<tr><td colspan="8">&nbsp;<b class="submitBtn">
+	  <button onclick="select_all(this)" type="button"><span class="iconbutton">全选</span></button>
+	</b> <b class="submitBtn">
+	<button onclick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button>
+	</b> <b class="submitBtn">
+	<button onclick="return remove_selected(this);" type="button"><span class="iconbutton deletebutton">删除</span></button>
+	</b></td></tr>
+</tfoot>
 </table>
 </form>
 <?php include('page.tpl')?>
+</div>
 </body>
 </html>

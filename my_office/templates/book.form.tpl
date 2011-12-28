@@ -2,8 +2,9 @@
 define('GET_DATE',true);
 include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
-○<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>">帐本列表</a>&nbsp;
-○<a href="?go=book&do=append">添加帐本</a><br>
+
+<a href="?go=book&<?php if(isset($_GET['query'])): ?><?php echo $_GET['query']; ?><?php else: ?>do=browse<?php endif; ?>" class="sysiconBtn list">帐本列表</a>&nbsp;
+<br>
 
 <form method="post" action="?go=book&do=<?php echo $_GET['do']; ?>&book_id=<?php echo $_GET['book_id']; ?>&<?php if(isset($_GET['query'])): ?>&query=<?php echo urlencode($_GET['query']); ?><?php endif; ?>">
 <fieldset>

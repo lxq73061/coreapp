@@ -19,8 +19,9 @@ if(!$contact) $contact =  $address->qq?'QQ:'.$address->qq:'';
 <?php endforeach ?>
 
 <?php else:?>
-○<a href="?go=address&do=browse">联系人列表</a>&nbsp;
-○<a href="?go=address&do=append">新建联系人</a><br>
+<div class="division">
+<a href="?go=address&do=browse" class="sysiconBtn list">联系人列表</a>&nbsp;
+<a href="?go=address&do=append" class="sysiconBtn addorder addproduct">新建联系人</a><br>
 
 <form>
 <input type="hidden" name="go" value="address">
@@ -39,7 +40,7 @@ if(!$contact) $contact =  $address->qq?'QQ:'.$address->qq:'';
 	<option value="name" <?php if($get['order'] === 'name') echo 'selected'; ?>>通讯名↑</option>
 	<option value="name2" <?php if($get['order'] === 'name2') echo 'selected'; ?>>通讯名↓</option>
 </select>
-<input type="submit" value="查询">
+   <input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
 </form>
 <?php $ids = 'address_id[]';?>
 <script language="javascript">
@@ -47,8 +48,7 @@ var ids = '<?=$ids?>';
 </script>
 <?php include('page.tpl')?>
 <form method="post" action="?go=address&do=group_remove&query=<?php echo urlencode($query) ?>">
-    <table border="0" cellpadding="5">
-    <tbody><table border="0" cellpadding="5">
+   <table border="0" cellpadding="5" class="gridlist">
         <thead>
             <tr>
                 <th>&nbsp;</th>
@@ -73,7 +73,7 @@ var ids = '<?=$ids?>';
                     <? else: ?>
                     <input type="checkbox" name="<?=$ids?>" value="<?php echo $address->address_id; ?>" />
                     <?php endif; ?></td>
-                <td>&nbsp;<?php echo $address->name; ?></td>
+                <td>&nbsp;<a href="?go=address&do=detail&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>"><?php echo $address->name; ?></a></td>
                  <td>&nbsp;<?php echo $address->get_typeid(); ?></td>
                 <td>&nbsp;<?php echo $address->mobile; ?></td>
                 <td>&nbsp;<?php echo $address->email; ?></td>
@@ -84,20 +84,21 @@ var ids = '<?=$ids?>';
                 <td><?php echo $address->remarks; ?></td>
                 <!--<td>&nbsp;<?php echo $address->get_typeid(); ?></td>-->
                 <!--<td>&nbsp;<?php echo $address->url; ?></td>-->
-                <td>&nbsp;<a href="?go=address&do=detail&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>">详细</a> | 
-                    &nbsp;
-                    <?php if($address->address_id<0): ?>
-                    修改
+                <td nowrap="nowrap">&nbsp;
+               
+                  <?php if($address->address_id<0): ?>
+                     <img style="width:15px;height:16px;background-position:0 -133px;" class="imgbundle" src="templates/images/transparent.gif">
                     <? else: ?>
-                    <a href="?go=address&do=modify&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>">修改</a>
+                    <a href="?go=address&do=modify&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>"> <img style="width:15px;height:16px;background-position:0 -133px;" class="imgbundle" src="templates/images/transparent.gif"></a>
                     <?php endif; ?>
-                    |
-                    <!--&nbsp;<?php if($address->address_id<0): ?>删除<? else: ?><a href="javascript:if(confirm('您确定要删除该通讯名吗？'))location='?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>';void(0);">删除</a><?php endif; ?>-->
+
+
                     &nbsp;
+                    
                     <?php if($address->address_id<0): ?>
-                    删除
+                    <img src="templates/images/transparent.gif" alt="删除" class="imgbundle" style="width:15px;height:15px;background-position:0 -226px;">
                     <? else: ?>
-                    <a href="?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>" onclick="return  confirm('您确定要删除该日志吗？')">删除</a>
+                    <a href="?go=address&do=remove&address_id=<?php echo $address->address_id; ?>&query=<?php echo urlencode($query) ?>" onclick="return  confirm('您确定要删除该联系人吗？')"><img src="templates/images/transparent.gif" alt="删除" class="imgbundle" style="width:15px;height:15px;background-position:0 -226px;"></a>
                     <?php endif; ?></td>
             </tr>
             <?php endforeach ?>
@@ -109,18 +110,17 @@ var ids = '<?=$ids?>';
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="11">&nbsp;
-                    <input type="button" value="全选" onclick="select_all(this)" />
-                    <input type="button" value="反选" onclick="reverse_all(this);" />
-                    <input type="button" value="删除" onclick="return remove_selected(this);" /></td>
+                <td colspan="11">                     
+<b class="submitBtn"><button onClick="select_all(this)" type="button"><span class="iconbutton">全选</span></button></b>
+<b class="submitBtn"><button onClick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button></b>
+<b class="submitBtn"><button onClick="return remove_selected(this);" type="button"><span class="iconbutton deletebutton">删除</span></button></b>
+</td>
             </tr>
         </tfoot>
-    </table>
-    
-    </tbody>
     </table>
 </form>
 <?php endif?>
 <?php include('page.tpl')?>
+</div>
 </body>
 </html>
