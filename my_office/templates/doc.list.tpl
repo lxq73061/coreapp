@@ -38,12 +38,15 @@ var ids = '<?=$ids?>';
 <form method="post" action="?go=doc&do=group_remove&query=<?=urlencode($query) ?>">
 <table border="0" cellpadding="5" cellspacing="0" class="gridlist">
 <thead>
-	<tr><th>&nbsp;</th><th>ID</th><th>文章名</th>
-	<th>分类</th>
-	<th>访问</th>
-	<th>更新日期</th>
-	<th>回复日期</th>
-	<th>操作</th></tr>
+	<tr>
+    <th style="width:50px">&nbsp;</th>
+    <th style="width:50px">ID</th>
+    <th>文章名</th>
+	<th style="width:50px">分类</th>
+	<th style="width:50px">访问</th>
+	<th style="width:80px">更新日期</th>
+	<th style="width:80px">回复日期</th>
+	<th style="width:60px">操作</th></tr>
 </thead>
 <tbody>
 <?php foreach($docs as $doc): ?>
