@@ -2,6 +2,7 @@
 <head>
 <title>登录</title>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<?php if(!IN_WAP):?>
 <style>
 
 html,body{height:100%;font-family:"宋体", arial;background:url(./templates/images/install_backimg.jpg) top right no-repeat;min-height:600px;min-width:1000px;overflow:hidden;}
@@ -54,6 +55,7 @@ label{
 	line-height:25px
 }
 </style>
+<?php endif?>
 </head>
 <body>
 
