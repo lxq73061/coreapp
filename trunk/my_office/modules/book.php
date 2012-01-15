@@ -120,7 +120,7 @@ class book extends core {
 		$online = front::online();
 		//item_txts
 	     $channels = self::selects('channel_', null, array('user_id'=>$online->user_id), array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
-		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array(''), array(null,'column|table=book'=>'item_txt'));	
+		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));	
 		//$item_txts = self::selects('item_txt', null, null, null, array(null,'column'=>'item_txt'));	
 		
 		if(!$item_txts){
