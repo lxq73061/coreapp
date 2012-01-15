@@ -22,15 +22,18 @@ if(defined('GET_DATE')){
 <script src="templates/js/datepicker/ui/jquery.ui.widget.js"></script>
 <script src="templates/js/datepicker/ui/jquery.ui.datepicker.js"></script>
 <link rel="stylesheet" href="templates/js/datepicker/demos.css">
+<script type="text/javascript" src="includes/lib/facefiles/facebox.js"></script>
+<link REL="StyleSheet" type="text/css" href="includes/lib/facefiles/facebox.css" />
+
 
 <script>
 $(function($) {
-	
-$(".datepicker_input").datepicker({
-			prevText:"",
-			nextText:"",
-			dateFormat:"yy-mm-dd"});
-});
+	$('a[rel*=facebox]').facebox();
+	$(".datepicker_input").datepicker({
+				prevText:"",
+				nextText:"",
+				dateFormat:"yy-mm-dd"});
+	});
 
 </script>
 <?php 
