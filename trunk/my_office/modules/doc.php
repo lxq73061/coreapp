@@ -46,13 +46,34 @@ class doc extends core {
 		$where = array();
 		$online = front::online();
 		$where['user_id'] = $online->user_id;
+		$content_key = array('title','content','keyword','copyfrom');//可搜索的字段名
 		if (strlen($get['keyword'])>0){
-			$where []=array(
-			'title LIKE ?' => '%'.$get['keyword'].'%',
-			'content LIKE ?' => '%'.$get['keyword'].'%',
-			'keyword LIKE ?' => '%'.$get['keyword'].'%',
-			'copyfrom LIKE ?' => '%'.$get['keyword'].'%');
+			if (strstr($get['keyword'],' ')){
+				$key = explode(" ", $get['keyword']); //  以空格为边界点，将关键字分割为数组，实现多关键字拆分
+				$keyword = array(); // 定义一个查询条件字符串
+				$xkey = array(); 
+				foreach($content_key as $kc=>$ck){
+					foreach($key as $kk => $kv){                     
+						if($kv != ""){
+							$xkey[] = $kv;//准备加亮用
+							$keyword[$kc][] = " $ck LIKE '%$kv%'";
+						}
+					}
+					$keyword[$kc] = '('.implode(' AND ',$keyword[$kc]).')';
+				}
+				
+				
+				$where[]=$keyword;
+				
+			}else{
+				$where[]=array(
+				'title LIKE ?' => '%'.$get['keyword'].'%',
+				'content LIKE ?' => '%'.$get['keyword'].'%',
+				'keyword LIKE ?' => '%'.$get['keyword'].'%',
+				'copyfrom LIKE ?' => '%'.$get['keyword'].'%');
+			}
 		}
+		
 		if (strlen($get['typeid'])>0){
 			$where ['typeid'] = (int)$get['typeid'];
 		}
