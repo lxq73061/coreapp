@@ -391,8 +391,10 @@ function Pager ( $intTotal , $intShowNum ,  $intDistance = 5 , $strPageVar = 'pa
     if ( $bGetQueryString ) {
 
 
-        $tmp  = explode('?',$_SERVER['REQUEST_URI']);
-        $_SERVER["QUERY_STRING"] = $tmp[1] ;
+		if(isset($_SERVER['REQUEST_URI'])){
+		 $tmp  = explode('?',$_SERVER['REQUEST_URI']);
+		 $_SERVER["QUERY_STRING"] = $tmp[1] ;
+		}
 
 
         $strPagepattern = '/('.$strPageVar.'=\d{0,})/' ;

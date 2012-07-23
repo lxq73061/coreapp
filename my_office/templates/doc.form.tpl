@@ -55,9 +55,14 @@ function check(){
 <?php if(IN_WAP){?>
   <textarea name="content" ><?php echo $post['content']; ?></textarea>
 <?php }else{?>
-  <textarea name="content" style="DISPLAY: none"><?php echo $post['content']; ?></textarea>
-<iframe id=content___Frame src="./includes/lib/fckeditor/editor/fckeditor.html?InstanceName=content&Toolbar=Default" frameborder=0 width=95% scrolling=no height=500>	</iframe>
-<?php }?>
+  <textarea name="content" id="content" style="DISPLAY: none" class="ckeditor"><?php echo $post['content']; ?></textarea>
+     <script  src="./includes/lib/ckeditor/ckeditor.js"></script>
+     <script>
+	 
+	 CKEDITOR.replace('content');
+	 </script>
+<!--<iframe id=content___Frame src="./includes/lib/fckeditor/editor/fckeditor.html?InstanceName=content&Toolbar=Default" frameborder=0 width=95% scrolling=no height=500>	</iframe>
+--><?php }?>
       
   
   </label>

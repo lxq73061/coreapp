@@ -147,7 +147,7 @@ class doc extends core {
 		$meta_title = $doc->title;
 		// 页面显示
 		$query = $_SERVER['QUERY_STRING'];
-		
+
 		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl', compact ('doc','query','meta_title'));
 	}
 	
@@ -241,7 +241,8 @@ class doc extends core {
 	final static public function modify() {
 		$online = front::online();
 		$error = array ();
-
+		
+		$quick= isset($_GET['quick']) ? $_GET['quick'] : null;//快速编辑【仅保存content】
 		// 获取数据
 		$doc = new self;
 		$doc->doc_id = isset($_GET['doc_id']) ? $_GET['doc_id'] : null;
@@ -277,24 +278,31 @@ class doc extends core {
 			}
 
 			// 数据验证
-			$length = (strlen ($post ['title']) + mb_strlen ($post ['title'], 'UTF-8')) /2;
-			if ($length < 3 || $length > 200 //3-200个字符
-			) {
-				$error ['title'] = '文章名至少3个字符,最多200个字符';
+			if(!$quick){
+				$length = (strlen ($post ['title']) + mb_strlen ($post ['title'], 'UTF-8')) /2;
+				if ($length < 3 || $length > 200 //3-200个字符
+				) {
+					$error ['title'] = '文章名至少3个字符,最多200个字符';
+				}
+				if ($post ['typeid'] === 0 ) {
+					$error ['typeid'] = '请选择文章分类';
+				}
+	
+				if($post['keyword_auto']==1){
+					$post['keyword'] = self::get_keywords(strip_tags($post['title'].$post['content']));
+				}
+				unset($post ['keyword_auto']);
+			}else{
+				unset($post ['title']);
+				unset($post ['copyfrom']);
+				unset($post ['typeid']);
+				unset($post ['keyword']);
+				unset($post ['keyword_auto']);
 			}
-			if ($post ['typeid'] === 0 ) {
-				$error ['typeid'] = '请选择文章分类';
-			}
-
-			if($post['keyword_auto']==1){
-				$post['keyword'] = self::get_keywords(strip_tags($post['title'].$post['content']));
-			}
-			unset($post ['keyword_auto']);
-					
 			if (! empty ($error)) {
 				break;
 			}
-
+			//pecho($post);
 			// 数据入库
 
 			$doc->struct ($post);

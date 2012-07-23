@@ -1238,13 +1238,13 @@ class core {
 					$echo .= $extra['errno'] . ": " . $extra['error'] . PHP_EOL;
 				}
 			} else {
-				$echo = PHP_EOL . '<hr />' . PHP_EOL . '(' . $debug_provider . '): ' . htmlentities ( $debug_sql ) .PHP_EOL;
+				$echo = PHP_EOL . '<hr />' . PHP_EOL . '(' . $debug_provider . '): ' . htmlspecialchars ( $debug_sql ) .PHP_EOL;
 				if ( !empty($echo2) ) {
-					$echo .= str_replace ( PHP_EOL, '<br />'.PHP_EOL, htmlentities ($echo2) );
+					$echo .= str_replace ( PHP_EOL, '<br />'.PHP_EOL, htmlspecialchars ($echo2) );
 				}
 				$echo .= '<hr />' . PHP_EOL;
 				if ( !empty($extra['errno']) ) {
-					$echo .= $extra['errno'] . ": " . htmlentities ( $extra['error'] ) . '<br />' . PHP_EOL;
+					$echo .= $extra['errno'] . ": " . htmlspecialchars ( $extra['error'] ) . '<br />' . PHP_EOL;
 				}
 			}
 			if (empty($output)) {
