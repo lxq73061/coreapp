@@ -22,19 +22,26 @@ class book extends core {
 	 * 默认动作
 	 */
 	final static public function index() {
-		front::view2 (__CLASS__ . '.' . __FUNCTION__.'.tpl');
+		return self::browse();
 	}
 	
 	/**
 	 * 日志列表
 	 */
 	final static public function browse() {
+		
+
 
 		// 数据消毒
 		$get = array(
 			'from' => isset ($_GET ['from']) ? $_GET ['from'] : date('Y-m-d',strtotime('-1 month')),
 			'to' => isset ($_GET ['to']) ? $_GET ['to'] : date('Y-m-d',strtotime('-0 day')),
 			'ccy' => isset ($_GET ['ccy']) ? $_GET ['ccy'] : 'CNY',
+			
+			'item_txt' => isset ($_GET ['item_txt']) ? $_GET ['item_txt'] : null,
+			'opposite' => isset ($_GET ['opposite']) ? $_GET ['opposite'] : null,
+			'book_item_id' => isset ($_GET ['book_item_id']) ? $_GET ['book_item_id'] : null,
+			
 			'page' => isset ($_GET ['page']) ? $_GET ['page'] : '',
 		);
 		
@@ -43,14 +50,31 @@ class book extends core {
 		}
 		
 		$online = front::online();
-		//self::update_statement_net($online->user_id,0,$get['ccy']);
+		
+		$ccys = book::get_ccy();
+		$item_types = book_item::get_items();
+		$book_items = self::selects ('book_item_id,item,info', '#@__book_item', array('user_id' => $online->user_id), array('ORDER BY book_item_id ASC'), array('book_item_id','assoc'=>null));
+		$opposites = self::selects('opposite', null, array('user_id'=>$online->user_id), array('GROUP BY opposite'), array(null,'column|table=book'=>'opposite'));	
+		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));
+		
+		
+
+	
 		// 获取数据
 		$where = array();
 	
 		$where ['create_date >=?'] = $get['from'];
 		$where ['create_date <=?'] = $get['to'];
-		$where ['ccy'] = $get['ccy'];	
+		$where ['ccy'] = $get['ccy'];
 		
+		if(!empty($get['opposite']))
+		$where ['opposite'] = $get['opposite'];
+		
+		if(!empty($get['item_txt']))
+		$where ['item_txt'] = $get['item_txt'];
+		
+		if(!empty($get['book_item_id']))
+		$where ['book_item_id'] = $get['book_item_id'];
 
 		$where['user_id'] = $online->user_id;
 		$other=array('ORDER BY create_date ASC,create_time ASC,book_id ASC');
@@ -84,7 +108,9 @@ class book extends core {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		$query = $_SERVER['QUERY_STRING'];
-		front::view2 (__CLASS__ . '.list.tpl', compact ('books','get','page','query','total_items','totals'));//得到数组所有的变量值
+					
+		foreach($book_items as $k=>$v)$book_items[$k]=$item_types[$v['item']].'『'.$v['info'].'』';
+		front::view2 (__CLASS__ . '.list.tpl', compact ('books','get','page','query','total_items','totals','item_types','book_items','ccys','opposites','item_txts'));//得到数组所有的变量值
 	}
 	
 	/**
@@ -110,37 +136,27 @@ class book extends core {
 	 * 添加日志
 	 */
 	final static public function append() {
-	//pecho($_POST);
+	
+		$item_types = book_item::get_items();
+		$ccys = book::get_ccy();
 		$error = array ();
 
 		$online = front::online();
 		$time=time();
 		// 数据消毒
 	
-		$online = front::online();
-		//item_txts
-	     $channels = self::selects('channel_', null, array('user_id'=>$online->user_id), array('ORDER BY sort ASC,channel_id DESC'),array('channel_id','assoc|table=channel'=>null));
-		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));	
-		//$item_txts = self::selects('item_txt', null, null, null, array(null,'column'=>'item_txt'));	
 		
+		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));	
+		
+		$opposites = self::selects('opposite', null, array('user_id'=>$online->user_id), array('GROUP BY opposite'), array(null,'column|table=book'=>'opposite'));	
 		if(!$item_txts){
 			$item_txts=array();
-		}	
-		foreach($item_txts as $k=>$v){
-			
-			if(!empty($v)){
-				$item_txts[$k] = $v;
-			}else{
-				unset($item_txts[$k]);
-			}
 		}
-
 		
 		
-
-		if (get_magic_quotes_gpc()) {
-			$post = array_map ('stripslashes', $post);
-		}
+		$book_items = self::selects ('book_item_id,item,info', '#@__book_item', array('user_id' => $online->user_id), array('ORDER BY book_item_id ASC'), array('book_item_id','assoc'=>null));
+		
+	
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
@@ -149,6 +165,9 @@ class book extends core {
 				'item' => isset ($_POST ['item']) ? $_POST ['item'] : '',
 				'item_txt' => isset ($_POST ['item_txt']) ? $_POST ['item_txt'] : '',
 				'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
+				'opposite' => isset ($_POST ['opposite']) ? $_POST ['opposite'] : '',
+				'book_item_id' => isset ($_POST ['book_item_id']) ? $_POST ['book_item_id'] : '',
+				
 				'typeid'  => 0,		
 				'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
 				'net' => '0',
@@ -166,7 +185,17 @@ class book extends core {
 			if (!empty($_POST['item_txt2'])) {
 				$post['item_txt'] = $_POST['item_txt2'];
 			}
+			if (!empty($_POST['opposite2'])) {
+				$post['opposite'] = $_POST['opposite2'];
+			}
+			if($post['book_item_id']){
+				$post['item']  = $book_items[$post['book_item_id']]['item'];
+				
+			}
 			
+			if (get_magic_quotes_gpc()) {
+				$post = array_map ('stripslashes', $post);
+			}
 
 			$reg="/(\d{4})-(\d{1,2})-(\d{1,2})/";
 			if (!empty($post ['create_date'])) {
@@ -210,13 +239,13 @@ class book extends core {
 		}
 		if(!$post['create_date'])$post['create_date'] = date('Y-m-d');
 		if(!$post['create_time'])$post['create_time'] = '12:00:00';//date('H:i:s');
-		if(!$post['item'])$post['item'] = 3;
+		//if(!$post['item'])$post['item'] = 3;
 
 		// 页面显示
 		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','opposites','otype','item_types','book_items','ccys'));
 	}
 	/**
      * 更新某个会员某个时间后所有帐目的小计
@@ -245,7 +274,11 @@ class book extends core {
 	 * 修改账本
 	 */
 	final static public function modify() {
+		$item_types = book_item::get_items();
+		$ccys = book::get_ccy();
 		$error = array ();
+		
+	
 		// 获取数据
 		$book = new self;
 		$book->book_id = isset($_GET['book_id']) ? $_GET['book_id'] : null;
@@ -255,8 +288,12 @@ class book extends core {
 			return;
 		}
 		$post = get_object_vars ($book);
-	
+		
 		$online = front::online();
+		$book_items = self::selects ('book_item_id,item,info', '#@__book_item', array('user_id' => $online->user_id), array('ORDER BY book_item_id ASC'), array('book_item_id','assoc'=>null));
+		$opposites = self::selects('opposite', null, array('user_id'=>$online->user_id), array('GROUP BY opposite'), array(null,'column|table=book'=>'opposite'));	
+	
+		
 		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array(' GROUP BY item_txt'), array(NULL,'column|table=book'=>'item_txt'));	
 		if(!$item_txts){
 			$item_txts=array();
@@ -270,7 +307,9 @@ class book extends core {
 			'item' => isset ($_POST ['item']) ? $_POST ['item'] : '',
 			'item_txt' => isset ($_POST ['item_txt']) ? $_POST ['item_txt'] : '',
 			'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
-			
+				'opposite' => isset ($_POST ['opposite']) ? $_POST ['opposite'] : '',
+				'book_item_id' => isset ($_POST ['book_item_id']) ? $_POST ['book_item_id'] : '',
+				
 			'ccy' => isset ($_POST ['ccy']) ? $_POST ['ccy'] : '',
 			'net' => isset ($_POST ['net']) ? $_POST ['net'] : '0',
 			'otype' => isset ($_POST ['otype']) ? $_POST ['otype'] : '',
@@ -288,7 +327,13 @@ class book extends core {
 			if (!empty($_POST['item_txt2'])) {
 				$post['item_txt'] = $_POST['item_txt2'];
 			}
-
+			if (!empty($_POST['opposite2'])) {
+				$post['opposite'] = $_POST['opposite2'];
+			}
+			if($post['book_item_id']){
+				$post['item']  = $book_items[$post['book_item_id']]['item'];
+				
+			}
 			// 数据验证
 			if (empty($post ['item'])) {
 				$post ['item'] = substr($post ['item'],0,15);
@@ -329,7 +374,7 @@ class book extends core {
 		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount','create_date','create_time') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','item_txts','otype','item_types','book_items','opposites','ccys'));
 	}
 	
 	/**
@@ -376,7 +421,115 @@ class book extends core {
 		//pecho($array);
 		return $array [$this->typeid]['name'];
 	}
-	
+	public function get_ccy(){
+		$ccy = array(
+	  "CNY"=>'人民币(CNY)',
+	  "HKD"=>'港元(HKD)',
+	  "TWD"=>'新台币(TWD)',
+	  "USD"=>'美元(USD)',
+	  "EUR"=>'欧元(EUR)',
+	  "JPY"=>'日元(JPY)',
+	  "GBP"=>'英镑(GBP)',
+	  "CAD"=>'加拿大元(CAD)',
+	  "RUB"=>'俄国卢布(RUB)',
+	  "AUD"=>'澳大利亚元(AUD)',
+	  "KRW"=>'韩圆(KRW)',
+	  "MOP"=>'澳门元(MOP)',
+	  "UZS"=>'乌兹别克斯苏姆(UZS)',
+	  "INR"=>'印度卢比(INR)',
+	  "YER"=>'也门里亚尔(YER)',
+	  "KWD"=>'科威特第纳尔(KWD)',
+	  "KZT"=>'哈萨克斯坦坚戈(KZT)',
+	  "HUF"=>'匈牙利福林(HUF)',
+	  "SCR"=>'塞舌尔卢比(SCR)',
+	  "MUR"=>'毛里求斯卢比(MUR)',
+	  "BGN"=>'保加利亚新列弗(BGN)',
+	  "PYG"=>'巴拉圭瓜拉尼(PYG)',
+	  "COP"=>'哥伦比亚比索(COP)',
+	  "LKR"=>'斯里兰卡卢比(LKR)',
+	  "UYU"=>'乌拉圭比索(UYU)',
+	  "TTD"=>'特立尼达和多巴哥元(TTD)',
+	  "LVL"=>'拉脱维亚拉特(LVL)',
+	  "VND"=>'越南盾(VND)',
+	  "NGN"=>'尼日利亚奈拉(NGN)',
+	  "RSD"=>'塞尔维亚第纳尔(RSD)',
+	  "EGP"=>'埃及镑(EGP)',
+	  "CRC"=>'哥斯达黎加科朗(CRC)',
+	  "AED"=>'阿联酋迪拉姆(AED)',
+	  "UGX"=>'乌干达先令(UGX)',
+	  "EEK"=>'爱沙尼亚克朗(EEK)',
+	  "LAK"=>'老挝基普(LAK)',
+	  "MMK"=>'缅甸缅元(MMK)',
+	  "KHR"=>'柬埔寨瑞尔(KHR)',
+	  "BYR"=>'白俄罗斯卢布(BYR)',
+	  "BZD"=>'伯利兹元(BZD)',
+	  "ETB"=>'埃塞俄比亚比尔(ETB)',
+	  "GTQ"=>'危地马拉格查尔(GTQ)',
+	  "IQD"=>'伊拉克第纳尔(IQD)',
+	  "IRR"=>'伊朗里尔斯(IRR)',
+	  "MYR"=>'马来西亚林吉特(MYR)',
+	  "HRK"=>'克罗地亚库纳(HRK)',
+	  "BRL"=>'巴西雷亚尔(BRL)',
+	  "UAH"=>'乌克兰格里夫尼亚(UAH)',
+	  "THB"=>'泰铢(THB)',
+	  "ZAR"=>'南非兰特(ZAR)',
+	  "PGK"=>'巴布亚新几内亚基那(PGK)',
+	  "CLP"=>'智利比索(CLP)',
+	  "MAD"=>'摩洛哥迪拉姆(MAD)',
+	  "SVC"=>'萨尔瓦多科朗(SVC)',
+	  "PLN"=>'波兰兹罗提(PLN)',
+	  "SGD"=>'新加坡元(SGD)',
+	  "SYP"=>'叙利亚镑(SYP)',
+	  "LBP"=>'黎巴嫩镑(LBP)',
+	  "ANG"=>'荷兰安替兰盾(ANG)',
+	  "TND"=>'突尼斯第纳尔(TND)',
+	  "XOF"=>'非洲金融共同体法郎(XOF)',
+	  "JOD"=>'约旦第纳尔(JOD)',
+	  "IDR"=>'印度尼西亚盾(IDR)',
+	  "KES"=>'肯尼亚先令(KES)',
+	  "SEK"=>'瑞典克朗(SEK)',
+	  "MDL"=>'摩尔多瓦列伊(MDL)',
+	  "QAR"=>'卡塔尔里亚尔(QAR)',
+	  "PKR"=>'巴基斯坦卢比(PKR)',
+	  "RON"=>'罗马尼亚列伊(RON)',
+	  "SKK"=>'斯洛伐克克朗(SKK)',
+	  "HNL"=>'洪都拉斯拉伦皮拉(HNL)',
+	  "VEF"=>'委内瑞拉强势玻利瓦(VEF)',
+	  "BHD"=>'巴林第纳尔(BHD)',
+	  "NPR"=>'尼泊尔卢比(NPR)',
+	  "JMD"=>'牙买加元(JMD)',
+	  "ILS"=>'以色列新谢克尔(ILS)',
+	  "OMR"=>'阿曼里亚尔(OMR)',
+	  "NAD"=>'纳米比亚元(NAD)',
+	  "DZD"=>'阿尔及利亚第纳尔(DZD)',
+	  "ISK"=>'冰岛克朗(ISK)',
+	  "BDT"=>'孟加拉塔卡(BDT)',
+	  "BOB"=>'玻利维亚诺(BOB)',
+	  "BND"=>'文莱元(BND)',
+	  "DKK"=>'丹麦克朗(DKK)',
+	  "ARS"=>'阿根廷比索(ARS)',
+	  "NIO"=>'尼加拉瓜金科多巴(NIO)',
+	  "CZK"=>'捷克克郎(CZK)',
+	  "KYD"=>'开曼元(KYD)',
+	  "FJD"=>'斐济元(FJD)',
+	  "MVR"=>'马尔代夫拉菲亚(MVR)',
+	  "SAR"=>'沙特里亚尔(SAR)',
+	  "PHP"=>'菲律宾比索(PHP)',
+	  "CHF"=>'瑞士法郎(CHF)',
+	  "NOK"=>'挪威克朗(NOK)',
+	  "LTL"=>'立陶宛立特(LTL)',
+	  "TRY"=>'新土耳其里拉(TRY)',
+	  "SLL"=>'塞拉利昂利昂(SLL)',
+	  "MKD"=>'马其顿戴代纳尔(MKD)',
+	  "BWP"=>'博茨瓦纳普拉(BWP)',
+	  "MXN"=>'墨西哥比索(MXN)',
+	  "PEN"=>'秘鲁新索尔(PEN)',
+	  "DOP"=>'多米尼加比索(DOP)',
+	  "NZD"=>'新西兰元(NZD)',
+	  "TZS"=>'坦桑尼亚先令(TZS)',
+	  "ZMK"=>'赞比亚克瓦查(ZMK)');	
+	  return $ccy ;
+	}
 }
 
 /**
