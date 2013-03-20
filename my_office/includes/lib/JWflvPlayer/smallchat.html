@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh_cn" lang="zh_cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>录制与回放</title>
+</head>
+<body bgcolor="#ffffff">
+<!--影片中使用的 URL-->
+<!--影片中使用的文本-->
+<div id="swfplay" style="height:395px; background:#333"></div>
+<!-- saved from url=(0013)about:internet -->
+<script src="swfs/swfobject.js"></script>
+<script language="JavaScript" type="text/javascript">
+var rtmp_server = 'rtmp://localhost/smllchat';
+var myname = "Guest";
+		var s1 = new SWFObject("./swf/smallchat.swf","ply","395","360","9","#FFFFFF");
+		s1.addParam("allowfullscreen","true");
+		s1.addParam("allowscriptaccess","always");
+		s1.addParam("flashvars",
+		"serverURL="+rtmp_server+"&myname="+myname);
+		s1.write("swfplay");		
+
+</script>
+
+
+</body>
+</html>
