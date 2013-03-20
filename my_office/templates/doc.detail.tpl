@@ -1,17 +1,19 @@
 <?php include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
 <script>
-var status = false;
+var status = 0;
 var timer = null;
 function check(){
 	if($.trim($('#doc_edit_content').html())=='')return false;
-	if(status) return true;
+	if(status==1) return true;
+	
 	timer = setTimeout("alert('net connect error!')",15000);
 	$.get('/?go=welcome&do=online',function(d,s){
 		clearTimeout(timer);
 		if(d=='online'){
-			 status = true;	
+			 status = 1;	
 			 $('input[name="content"]').val($('#doc_edit_content').html());
+			
 			 $('#doc_form').submit();
 		}else{
 			alert("网络连接失败，请保存好你的数据!");

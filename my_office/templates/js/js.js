@@ -61,16 +61,20 @@ function remove_selected(t){
 function change_a(){
 	 $('a').each(function(){		
 		 // alert($(this).attr('href') + ' | ' + $(this).attr('href').indexOf('?'));
+
+		 
 		  if($(this).attr('href').indexOf('?')!=-1 || $(this).attr('href').indexOf('://')!=-1){
 			  if($(this).attr('href').indexOf('://')!=-1){
 					$(this).attr('target','_blank');
 			  }else{
+				  if($(this).attr('rel')!='facebox'){
 					$(this).click(function(){
 						var url=$(this).attr('href');
 						var title=$(this).text();
 						top.frmView.addNewTab(url,title,null)
 						return false;
 				  });
+				  }
 			  }
 		  }
 	  });
