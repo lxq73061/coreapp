@@ -5,7 +5,7 @@
 </head>
 
 <body>
-<div>欢迎:<?php echo $online->username?> <a href="?go=user&do=logout" target="_top">退出</a></div>         
+<div>欢迎:<?php echo $online->username?> <a href="?go=user&do=logout" target="_top">退出</a> | <a href="#">3G</a></div>         
 
  <a href="?go=user&do=browse">用户</a> 
  <a href="?go=doc&do=browse">文章</a> 

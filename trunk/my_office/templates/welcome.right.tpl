@@ -110,6 +110,12 @@ function swtichtab(obj){
 		showiframe($(target+" iframe"));
 		return false;	
 }
+function RefreshTab(obj){
+		var target =obj.attr('href');
+
+		$(target+" iframe").attr('src',$(target+" iframe").attr('src'));
+		return false;	
+}
 function removetab(obj){
 	
 	var target =obj.attr('href');	
@@ -166,6 +172,7 @@ function addNewTab(url,title,type){
 	current_sub = check_current(current_tabs,url,title);
 	if(current_sub && $('#tabs ul li a#nav-'+current_tabs[i][2]).size() > 0){
 			swtichtab($('#tabs ul li a#nav-'+current_tabs[i][2]));
+			RefreshTab($('#tabs ul li a#nav-'+current_tabs[i][2]));
 			return;			
 	}
 	//if(title.length>10)title = title.substring(0,10);
