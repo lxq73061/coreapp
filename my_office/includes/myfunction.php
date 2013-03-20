@@ -518,6 +518,7 @@ function check_wap()
 		$browser=='fetc' || //  fetchpage.cgi Perl script from www.wapcab.de
 		$browser=='ALAV' || //  yet another unknown UP based browser ?
 		$browser=='Wapa' || //  another unknown browser (Web based “Wapalyzer'?)
+		$browser=='MQQB' || 
 		$browser=='Oper') // Opera  
 		{
 		$br = 'WML';
