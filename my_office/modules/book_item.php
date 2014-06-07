@@ -92,9 +92,7 @@ class book_item extends core {
 	
 		$online = front::online();
 	
-		if (get_magic_quotes_gpc()) {
-			$post = array_map ('stripslashes', $post);
-		}
+		
 
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
@@ -105,7 +103,9 @@ class book_item extends core {
 			'user_id' => $online->user_id	
 			);
 			
-			
+			if (get_magic_quotes_gpc()) {
+				$post = array_map ('stripslashes', $post);
+			}
 
 
 			if (empty($post ['info'])) {//account=content

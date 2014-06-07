@@ -15,6 +15,48 @@ class_exists('core') or require_once 'core.php';
  * 定义(define)
  */
 class user extends core {
+		/**
+	* 数据定义 列表，编辑，添加时自动创建页面时用
+	*/
+	static public function get_table() {
+		$tableinfo =  get_table('user');
+		
+		$keys = array('username','password','name','addr','tel','mobile','member_lv_id','grade','disabled');
+		$FromName=array(
+			'username'=>'用户名',
+			'password'=>'密码',
+			'name'=>'姓名',
+			'grade'=>'管理级别',
+			//'disabled'=>'状态',
+			//'addr'=>'地址',
+			//'tel'=>'电话',
+			'mobile'=>'手机',
+			'email'=>'邮箱',
+			'remark'=>'备注',
+			
+			
+		
+		);
+		
+		//$FromType['member_lv_id']=array('select',self:: get_member_lv());
+		$FromType['grade']=array('select',self::get_grades());
+		//$FromType['disabled']=array('select',array('false'=>'启用','true'=>'停用'));
+		//$FromMsg['member_lv_id']='会员级别';
+		$FromMsg['username']='3-16个字符，英文字母、汉字、数字、下划线，不能全部是数字，且下划线不能作为起始和结尾字符';
+		$FromMsg['password']='4-16个字符，英文字母、数字、下划线、半角符号';
+		
+		
+		foreach($tableinfo as $k=>&$info){
+			$info['FromType'] = $FromType[$k];
+			$info['FromMsg'] = $FromMsg[$k];
+			$info['FromName'] = $FromName[$k]?$FromName[$k]:$k;
+			$info['FromView'] = in_array($k,$keys);
+			$info['size']=substr($invo['Type'],0,7)=='varchar';
+		}
+		
+		return $tableinfo;
+		
+	}
 	
 	/**
 	 * 默认动作
@@ -27,53 +69,79 @@ class user extends core {
 	 * 用户列表
 	 */
 	final static public function browse() {
-
+		$TI =  self::get_table();
+		$TI['password']['FromView']=0;
+		
+		
+		if(isset($_POST['filter'])){
+			unset($_POST['mprice']);
+			unset($_POST['filter']);
+			$url =	http_build_query($_POST);
+			$url = str_replace('&amp;','&',$url);
+			//header("Location: ?".$url);
+			echo "<script>window.location.href='?".$url."'</script>";
+			exit();
+		}
 		// 数据消毒
 		$get = array(
-			'username' => isset ($_GET ['username']) ? $_GET ['username'] : '',
-			'grade'  => isset ($_GET ['grade']) ? $_GET ['grade'] : '',
-			'order'  => isset ($_GET ['order']) ? $_GET ['order'] : '',
 			'page'  => isset ($_GET ['page']) ? $_GET ['page'] : '',
+			'orderby'  => isset ($_GET ['orderby']) ? $_GET ['orderby'] : '',
+			'ordertype'  => isset ($_GET ['ordertype']) && in_array($_GET ['ordertype'],array('ASC','DESC')) ? $_GET ['ordertype'] : 'DESC',
 		);
+		foreach($TI as $k=>$v){
+			$get[$k] = isset ($_GET [$k]) ? $_GET [$k] : '';
+		}
 		if (get_magic_quotes_gpc()) {
-			$get = array_map ('stripslashes', $get);
+			$get = stripslashes_deep($get);
 		}
 
 		// 获取数据
 		$where = array();
+		foreach($TI as $k=>$v){
+			if($get[$k])
+			if($k=='advance1'){
+				
+			}else
+			$where[$k .' LIKE ?']= '%'.trim($get[$k])	.'%';
+		}
+		
 		$online = front::online();
-		//pecho($online);
-		if (strlen($get['username'])>0){
-			$where ['username LIKE ?'] = '%'.$get['username'].'%';
-		}
-		if (strlen($get['grade'])>0){
-			$where ['grade'] = (int)$get['grade'];
-		}
-		switch ($get['order']) {
-			case 'user_id':
-				$other = array('ORDER BY user_id');
-				break;
-			case 'username':
-				$other = array('ORDER BY username');
-				break;
-			case 'username2':
-				$other = array('ORDER BY username DESC');
-				break;
-			default:
-				$other = array('ORDER BY user_id DESC');
-				break;
-		}
+		
+		 
 		$page = array('page'=>$get['page'],'size'=>10);
 		$other ['page'] = &$page;
-		$users = self::selects (null, null, $where, $other, __CLASS__);
-
+		if($TI[$get['orderby']])
+			$other [] = 'ORDER BY '.$get['orderby'].' '.$get['ordertype'];
+		else
+		$other [] = 'ORDER BY grade,user_id DESC';
+		
+		$dataArray = $users = self::selects (null, null, $where, $other, __CLASS__);
+		$grades = self::get_grades();
+		
 		// 页面显示
 		foreach (array('username') as $value) {
 			$get [$value] = htmlspecialchars ($get [$value]);
 		}
 		
 		$query = $_SERVER['QUERY_STRING'];
-		front::view2 (__CLASS__ . '.list.tpl', compact ('users','get','online','page','query'));
+		
+		$ACT= array(
+			'select'=>1,//快速选择
+			'delete'=>$online->grade<2,
+			'deletes'=>$online->grade<2,	
+			'modify'=>1,
+			'append'=>1,
+		);
+		if(isset($_GET['_filter'])){
+			$filterArray = array();
+			foreach($dataArray as $v){
+				if($v->grade=='')
+				$filterArray[$v->user_id]=$v->username;
+				
+			}
+		front::view2 ('common/table.filter.tpl', compact ('users','get','online','page','query','TI','filterArray'));
+		}else
+		front::view2 (__CLASS__ . '.list.tpl', compact ('ACT','users','get','online','page','query','TI','dataArray'));
 	}
 	
 	/**
@@ -101,24 +169,20 @@ class user extends core {
 		$error = array ();
 		$online = front::online();
 		
+		$TI =  self::get_table();
+		
 		// 数据消毒
-		$post = array(
-			'username' => isset ($_POST ['username']) ? $_POST ['username'] : '',
-			'password' => isset ($_POST ['password']) ? $_POST ['password'] : '',
-			'grade'  => isset ($_POST ['grade']) ? $_POST ['grade'] : '',
-			'name' => isset ($_POST ['name']) ? $_POST ['name'] : '',
-			'gender' => isset ($_POST ['gender']) ? $_POST ['gender'] : '',
-			'mobile' => isset ($_POST ['mobile']) ? $_POST ['mobile'] : '',
-			'email' => isset ($_POST ['email']) ? $_POST ['email'] : '',
-			'url' => isset ($_POST ['url']) ? $_POST ['url'] : '',
-			'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
-		);
+		$post = array();
+		foreach($TI as $k=>$info){
+			 if($info['Extra']=='auto_increment')continue;
+			if(isset($_POST[$info['Field']]))$post[$info['Field']]=$_POST[$info['Field']];
+		}
 		if (get_magic_quotes_gpc()) {
-			$post = array_map ('stripslashes', $post);
+			$post = stripslashes_deep($post);
 		}
 		if($online->grade>2 ){
 			$error = '无权限';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
 
@@ -191,7 +255,7 @@ class user extends core {
 		foreach (array('username','mobile','email','url','remark') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error'));
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('TI', 'keys', 'post', 'error','online','notice','FromType','FromMsg','FromName'));
 	}
 	
 	/**
@@ -200,23 +264,24 @@ class user extends core {
 	final static public function modify() {
 		$error = array ();
 		$online = front::online();
+		$TI =  self::get_table();
 		// 获取数据
 		$user = new self;
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
 		//级别:1超级管理员/2管理员/3普通用户
 		if($online->grade==3 && $user->user_id!=$online->user_id ){
 			$error = '无权限';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
-		if($online->grade==2 && $user->user_id!=$online->user_id &&  $user->grade!=3 ){
+		if($online->grade==2 && $user->grade!=3 ){
 			$error = '无权限';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
 		
@@ -225,26 +290,20 @@ class user extends core {
 		// 表单处理
 		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
 
-			// 数据消毒
-			$post = array(
-				'username' => isset ($_POST ['username']) ? $_POST ['username'] : '',
-				'password' => isset ($_POST ['password']) ? $_POST ['password'] : '',
-				'grade'  => isset ($_POST ['grade']) ? $_POST ['grade'] : '',
-				'name' => isset ($_POST ['name']) ? $_POST ['name'] : '',
-				'gender' => isset ($_POST ['gender']) ? $_POST ['gender'] : '',
-				'mobile' => isset ($_POST ['mobile']) ? $_POST ['mobile'] : '',
-				'email' => isset ($_POST ['email']) ? $_POST ['email'] : '',
-				'url' => isset ($_POST ['url']) ? $_POST ['url'] : '',
-				'remark' => isset ($_POST ['remark']) ? $_POST ['remark'] : '',
-			);
+			$post = array();
+			foreach($TI as $k=>$info){
+				 if($info['Extra']=='auto_increment')continue;
+				if(isset($_POST[$info['Field']]))$post[$info['Field']]=$_POST[$info['Field']];
+			}
 			if (get_magic_quotes_gpc()) {
-				$post = array_map ('stripslashes', $post);
+				$post = stripslashes_deep($post);
 			}
 
-			if($online->grade >  $post['grade'] || ($online->user_id == $user->user_id && $online->grade != $post['grade'] )){
+			if($online->grade > $post['grade'] || ($online->user_id == $user->user_id && $online->grade != $post['grade'] )){
 				$error['grade'] ='等级设置错误';
 
 			}
+
 			// 数据验证
 			$length = (strlen ($post ['username']) + mb_strlen ($post ['username'], 'UTF-8')) /2;
 			if ($length < 3 || $length > 16 //3-16个字符
@@ -277,7 +336,7 @@ class user extends core {
 				$error ['name'] = '请填写姓名';
 			}
 			if (preg_match ('/^[1-2]$/i',$post ['gender']) === 0 ) {
-				$error ['gender'] = '请选择性别';
+				//$error ['gender'] = '请选择性别';
 			}
 			if (strlen ($post ['mobile']) > 0 && preg_match ('/^1[0-9]{10}$/i',$post ['mobile']) === 0) {
 				$error ['mobile'] = '请正确填写手机号';
@@ -285,9 +344,7 @@ class user extends core {
 			if (strlen ($post ['email']) > 0 && ! filter_var ($post ['email'], FILTER_VALIDATE_EMAIL)) {
 				$error ['email'] = '请正确填写邮箱';
 			}
-			if (strlen ($post ['url']) > 0 && ! filter_var ($post ['url'], FILTER_VALIDATE_URL)) {
-				$error ['url'] = '请正确填写网址';
-			}
+			
 			$length = (strlen ($post ['remark']) + mb_strlen ($post ['remark'], 'UTF-8')) /2;
 			if ($length > 100) {
 				$error ['remark'] = '备注最多只能填写100个字符';
@@ -311,23 +368,29 @@ class user extends core {
 		foreach (array('username','mobile','email','url','remark') as $value) {
 			$post [$value] = htmlspecialchars ($post [$value]);
 		}
-		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('post', 'error','online'));
+		unset($post ['password']);
+		front::view2 (__CLASS__ . '.' . 'form.tpl', compact ('TI','post', 'error','online'));
 	}
 	
 	/**
 	 * 删除用户
 	 */
 	final static public function remove() {
-
+		if(!self::user_level(2,__CLASS__,__FUNCTION__))return;
+		$online = front::online();
 		// 获取数据
 		$user = new self;
 		$user->user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
 		if(! is_numeric($user->user_id) || ! $user->select()) {
 			$error = '该用户不存在';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
-
+		if($online->user_id==$user->user_id||$user->grade==1){
+			$error = '此用户不能删除';
+			front::view2 ( 'common/error.tpl', compact ('error'));
+			return;
+		}
 		// 删除数据
 		$user->delete ();
 		header ('Location: ?'.$_GET['query']);
@@ -337,29 +400,29 @@ class user extends core {
 	 * 群删用户
 	 */
 	final static public function group_remove() {
-
+		if(!self::user_level(2,__CLASS__,__FUNCTION__))return;
+		$online = front::online();
 		// 获取数据
 		if(! isset($_POST['user_id']) || !is_array($_POST['user_id'])){
 			$error = '该用户不存在';
-			front::view2 ( 'error.tpl', compact ('error'));
+			front::view2 ( 'common/error.tpl', compact ('error'));
 			return;
 		}
 
 		// 删除数据
-		self::deletes(null,null,array('user_id'=>$_POST['user_id']),null,__CLASS__);
+		self::deletes(null,null,array('user_id'=>$_POST['user_id'],'user_id!=?'=>$online->user_id),null,__CLASS__);
 		header ('Location: ?'.$_GET['query']);
 	}
 	
+	public function get_grades(){
+		return array('1'=>'高级管理员','2'=>'普通管理员',3=>'普通用户');	
+	}
 	/**
 	 * 返回等级名称
 	 */
-	public function get_grade() {
-		$array = array (
-			1 => '超级管理员',
-			2 => '管理员',
-			3 => '普通用户',
-		);
-		return $array [$this->grade];
+	public function get_grade($grade) {
+		$array = self::get_grades();
+		return $array [$grade];
 	}
 	
 	/**
@@ -372,7 +435,6 @@ class user extends core {
 		);
 		return $array [$this->gender];
 	}
-	
 }
 
 /**

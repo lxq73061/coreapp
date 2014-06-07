@@ -5,8 +5,11 @@ include('header.tpl')?>
 <?php include('welcome.wap.head.tpl')?>
 
 <div class="division">
+<a href="?go=book_item&do=browse" class="sysiconBtn list " >账户管理</a>
 <a href="?go=book&do=browse" class="sysiconBtn list">帐本列表</a>&nbsp;
-<a href="?go=book&do=append" class="sysiconBtn addorder addproduct" rel="facebox">添加帐本</a>
+<a href="?go=book&do=append" class="sysiconBtn addorder addproduct" rel="facebox">添加帐本</a>&nbsp;
+<a href="?go=book&do=import" class="sysiconBtn addorder addproduct" rel="facebox">网银导入</a>&nbsp;
+
 <br>
 <table cellspacing="0" cellpadding="0">
     <tr>
@@ -24,19 +27,48 @@ include('header.tpl')?>
     <input type="hidden" name="go" value="book">
     <input type="hidden" name="do" value="browse">
     <label for="from"></label>
-    起始日期：
+    日期：
     <input name="from" type="text" class="datepicker_input" id="datepickerFrom" size="10" value="<?=$get['from']?>" />
-    终止日期：
+   ~
     <input name="to" type="text" class="datepicker_input"  id="datepickerTo" size="10"  value="<?=$get['to']?>"/>
-    &nbsp;货币：
+账户：
+    <select name="book_item_id" id="book_item_id">
+                    <option value="" <?=set_select('',$get['item_txt'])?>>=不选=</option>
+	                <?php foreach( $book_items as $k=>$v ){?>
+	                <option value="<?=$k?>" <?=set_select($k,$get['book_item_id'])?>><?=$v?></option>
+	               <?php }?>
+            </select> 
+往来：
+                <select name="opposite" id="item_txt">
+                  <option value="" <?=set_select('',$get['opposite'])?>>=不选=</option>
+	                <?php foreach( $opposites as $k=>$v ){?>
+	                <option value="<?=$v?>" <?=set_select($v,$get['opposite'])?>><?=$v?></option>
+	               <?php }?>
+            </select>
+用途：
+    <select name="item_txt" id="item_txt">
+                    <option value="" <?=set_select('',$get['item_txt'])?>>=不选=</option>
+	                <?php foreach( $item_txts as $k=>$v ){?>
+	                <option value="<?=$v?>" <?=set_select($v,$get['item_txt'])?>><?=$v?></option>
+	               <?php }?>
+      </select>
+      
+货币：
     <select name="ccy" id="ccy">
-        <option value="CNY" <?=set_select($get['ccy'],'CNY')?>>CNY</option>
-        <option value="USD" <?=set_select($get['ccy'],'USD')?>>USD</option>
+  <?php foreach( $ccys as $k=>$v ){?>
+	   <option value="<?=$k?>" <?=set_select($get['ccy'],$k)?>><?=$v?></option>
+  <?php }?> 
     </select>
+               
+
+            
+            
+
+                
    <input id="BtnOK" class="sysiconBtnNoIcon" type="submit" value="查 询" name="BtnOK" />
 </form></div>
 
-<?php $ids = 'doc_id[]';?>
+<?php $ids = 'book_id[]';?>
 <script language="javascript">
 var ids = '<?=$ids?>';
 </script>
@@ -48,6 +80,7 @@ var ids = '<?=$ids?>';
                 <th scope="col">ID</th>
                 <th scope="col">日期</th>
                 <th scope="col">账户</th>
+                <th scope="col">往来</th>
                 <th scope="col">用途</th>
                 <th scope="col">备注</th>
                 <th scope="col">货币</th>
@@ -65,8 +98,9 @@ var ids = '<?=$ids?>';
             <tr class="<?=$class?> r">
                 <td><input type="checkbox" name=<?php echo $ids ?> value="<?php echo $book->book_id; ?>">
                      <a href="?go=book&do=detail&book_id=<?php echo $book->book_id; ?>"><?php echo $book->book_id; ?></a></td>
-                <td>&nbsp;<?php echo $book->create_date; ?> <?php echo $book->create_time; ?></td>
-                <td>&nbsp;<?php echo $items[$book->item]; ?></td>
+                <td>&nbsp;<?php echo date('H:i m/d/y',strtotime($book->create_date .' '. $book->create_time)); ?></td>
+                <td nowrap="nowrap">&nbsp;<?php echo $book_items[$book->book_item_id]; ?></td>
+                <td><?php echo $book->opposite; ?></td>
                 <td>&nbsp;<?php echo $book->item_txt; ?></td>
                 <td>&nbsp;<?php echo $book->remark; ?></td>
                 <td>&nbsp;<?php echo $book->ccy; ?></td>
@@ -80,7 +114,7 @@ var ids = '<?=$ids?>';
                     <?php if($book->book_id<0): ?>
                     修改
                     <? else: ?>
-                    <a href="?go=book&do=modify&book_id=<?php echo $book->book_id; ?>&query=<?php echo urlencode($query) ?>">修改</a>
+                    <a href="?go=book&do=modify&book_id=<?php echo $book->book_id; ?>&query=<?php echo urlencode($query) ?>" rel="facebox">修改</a>
                     <?php endif; ?>
                     | 
                     
@@ -94,12 +128,12 @@ var ids = '<?=$ids?>';
             <?php endforeach ?>
             <?php else: ?>
             <tr>
-                <td colspan="11">no data</td>
+                <td colspan="12">no data</td>
             </tr>
             <?php endif ?>
         </tbody>
         <tfoot>
-            <tr>                <td colspan="10">&nbsp;
+            <tr>                <td colspan="11">&nbsp;
                 
 <b class="submitBtn"><button onClick="select_all(this)" type="button"><span class="iconbutton">全选</span></button></b>
 <b class="submitBtn"><button onClick="reverse_all(this);" type="button"><span class="iconbutton">反选</span></button></b>
@@ -115,7 +149,7 @@ var ids = '<?=$ids?>';
             <td><?php echo $totals['total_out']; ?></td>
             <th>收入交易笔数：</th>
             <td><?php echo $totals['total_in']; ?></td>
-        </tr>
+      </tr>
         <tr>
             <th>支出金额合计：</th>
             <td><?php echo $totals['out_amount']; ?></td>
