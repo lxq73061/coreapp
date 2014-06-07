@@ -17,16 +17,49 @@ include('header.tpl')?>
   <input name="create_time" class="" type="text" size="12" value="<?=$post['create_time']?>" /></label>
 	<font color="red">*</font><?php if(isset($error['create_time'])): ?><font color="red"><?php echo $error['create_time']; ?></font><?php endif; ?><br>
     
-    
+<!-- 
 <label>账户： <select name="item" id="item">
-	                <option value="1" <?=set_select($post['item'],1)?>>银行</option>
-	                <option value="2" <?=set_select($post['item'],2)?>>支付宝</option>
-	                <option value="3" <?=set_select($post['item'],3)?>>现金</option>
-                    <option value="4" <?=set_select($post['item'],4)?>>信用卡</option>
-	                </select></label>
+<?php foreach($item_types as $k=>$v):?>
+	<option value="<?=$k?>" <?=set_select($post['item'],$k)?>><?=$v?></option>
+<?php endforeach;?>                    
+</select></label>-->
+<!-- <select name="item" id="item">
+<?php foreach($item_types as $k=>$v):?>
+	<option value="<?=$k?>" <?=set_select($post['item'],$k)?>><?=$v?></option>
+<?php endforeach;?>                    
+</select>-->
+<label>账户： <select name="book_item_id" id="book_item_id">
+<option>==选择==</option>
+<?php foreach($book_items as $k=>$v):?>
+	<option value="<?=$v['book_item_id']?>" <?=set_select($post['book_item_id'],$k)?>><?=$item_types[$v['item']]?> <?=$v['info']?> </option>
+<?php endforeach;?>                    
+</select></label>
+
+<?php if($post['item']&&!$post['book_item_id']):?>
+原大项：<?=$item_types[$post['item']]?>
+<?php endif?>
+
+
+
+
 	<font color="red">*</font><?php if(isset($error['item'])): ?><font color="red"><?php echo $error['item']; ?></font><?php endif; ?><br>
+    
+        
+往来： 选择
+                <select name="opposite" id="item_txt">
+                  <option value="" <?=set_select('',$post['opposite'])?>>=不选=</option>
+	                <?php foreach( $opposites as $k=>$v ){?>
+	                <option value="<?=$v?>" <?=set_select($v,$post['opposite'])?>><?=$v?></option>
+	               <?php }?>
+            </select>
+            或输入
+    <input name="opposite2" type="text" id="opposite2" value="" size="8" />
+	<?php if(isset($error['opposite'])): ?><?php echo $error['opposite']; ?><?php endif; ?><br>
+    
+    
+    
 用途： 选择
-                <select name="item_txt" id="item_txt">
+    <select name="item_txt" id="item_txt">
                     <option value="" <?=set_select('',$post['item_txt'])?>>=不选=</option>
 	                <?php foreach( $item_txts as $k=>$v ){?>
 	                <option value="<?=$v?>" <?=set_select($v,$post['item_txt'])?>><?=$v?></option>
@@ -37,12 +70,14 @@ include('header.tpl')?>
 	<?php if(isset($error['item_txt'])): ?><?php echo $error['item_txt']; ?><?php endif; ?><br>
     
     
-<label>备注： <input type="text" name="remark" value="<?php echo $post['remark']; ?>"></label>
+<label>备注： <input name="remark" type="text" value="<?php echo $post['remark']; ?>" size="40" maxlength="40"></label>
 <?php if(isset($error['remark'])): ?><?php echo $error['remark']; ?><?php endif; ?><br>
 <label>货币： 
   <select name="ccy" id="ccy">
-	                <option value="CNY" <?=set_select($post['ccy'],'CNY')?>>CNY</option>
-	                <option value="USD" <?=set_select($post['ccy'],'USD')?>>USD</option>
+  <?php foreach( $ccys as $k=>$v ){?>
+	   <option value="<?=$k?>" <?=set_select($post['ccy'],$k)?>><?=$v?></option>
+  <?php }?>                 
+                    
 	                </select></label>
 <?php if(isset($error['ccy'])): ?>
 <font color="red"><?php echo $error['ccy']; ?></font><?php endif; ?>

@@ -617,5 +617,195 @@ function bbcode($str){
 	$text = nl2br($text);
 
 	return $text;
-}		
-?>
+}
+
+/**
+* 表结构
+*/
+	function get_table($tablename,$type=null) {
+	
+        if (!$tablename)
+            return;
+            $sql = 'DESC `#@__' . $tablename . '`';
+		
+	
+            $table = core::selects($sql, null, true, array(), array('Field', 'assoc' => null));
+		if($type){
+			$tables = array();
+			foreach($table as $k=>$v)foreach($v as $kk=>$vv)if($kk==$type)$tables[]=$vv;
+			return $tables;
+		}
+					
+        return $table;
+    }	
+	function remote_addr(){
+		if(!isset($GLOBALS['_REMOTE_ADDR_'])){
+			if(isset($_SERVER['HTTP_CLIENT_IP'])){   
+			  $GLOBALS['_REMOTE_ADDR_'] = $_SERVER['HTTP_CLIENT_IP'];   
+			 //}elseif($_SERVER['HTTP_X_FORWARDED_FOR']){   
+			//   $onlineip=$_SERVER['HTTP_X_FORWARDED_FOR'];   
+			 }else{   
+			  $GLOBALS['_REMOTE_ADDR_'] = $_SERVER['REMOTE_ADDR'];   
+			} 
+		 
+ 
+			/*$addrs = array();
+	
+			if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+				foreach( array_reverse( explode( ',',  $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) as $x_f )
+				{
+					$x_f = trim($x_f);
+	
+					if ( preg_match( '/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $x_f ) )
+					{
+						$addrs[] = $x_f;
+					}
+				}
+			}
+	
+			$GLOBALS['_REMOTE_ADDR_'] = isset($addrs[0])?$addrs[0]:$_SERVER['REMOTE_ADDR'];*/
+		}
+		return $GLOBALS['_REMOTE_ADDR_'];
+	}
+/**
+* 依次寻找模板路径
+*/
+function find_tpl($type,$gid,$id=null){
+	$game_tpl_dir = 'game_'.str_pad($gid,2,'0',STR_PAD_LEFT);
+	$curr_tpl_dir = SUB_SITE_ROOT . '/' . core::init('template_path');
+	$defa_tpl_dir = SUB_SITE_ROOT . '/' . core::init('template_default_path');
+	$tpls = array();
+	if($id!==null)$tpls[]= $curr_tpl_dir.'/'.$game_tpl_dir.'/'.$type.'/'.$id.'.php';
+	$tpls[]= $curr_tpl_dir.'/'.$game_tpl_dir.'/'.$type.'/index.php';
+	if($id!==null)$tpls[]= $curr_tpl_dir.'/game_default/'.$type.'/'.$id.'.php';
+	$tpls[]= $curr_tpl_dir.'/game_default/'.$type.'/index.php';
+	
+	if($curr_tpl_dir!=$defa_tpl_dir){
+		if($id!==null)$tpls[]= $defa_tpl_dir.'/'.$game_tpl_dir.'/'.$type.'/'.$id.'.php';
+		$tpls[]= $defa_tpl_dir.'/'.$game_tpl_dir.'/'.$type.'/index.php';
+		if($id!==null)$tpls[]= $defa_tpl_dir.'/game_default/'.$type.'/'.$id.'.php';
+		$tpls[]= $defa_tpl_dir.'/game_default/'.$type.'/index.php';
+	}
+	
+	foreach($tpls  as $tpl){
+		if(file_exists($tpl)){
+			break;
+		}
+	}
+	if(!file_exists($tpl)){
+		showmsg("模板錯誤：".$type.','.$gid.','.$id,-1,'diemsg');
+	}
+	return $tpl;
+	
+}
+function vcode2($key,$width=50,$height=22) {
+	
+    $value = $_SESSION [$key] = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+	$fontY = 20;//顶边
+	$fontSize = 20;//文字大小
+	$size = 12;//文字（宽） $width/$len; 自动计算
+	$left = 15; //文字左边距
+	$y = $fontY;
+	$x= 20;
+	 
+	if(!$fontSize ){
+		$randsize = rand($size-$size/10, $size+$size/10);
+	}else{
+		$randsize =$fontSize;
+	}	
+	ob_end_clean();
+    // 生成验证碼图
+    header('Content-type: image/png');
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Cache -Control: no-store, no-cache , must-revalidate");
+    header("Cache -Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache ");
+	$fontFile = SITE_ROOT.'/skin/fonts/Candara.ttf';
+	$array = range(1,30);
+	
+	$bgpic  = SITE_ROOT.'/skin/fonts/code/'.$array[array_rand($array)].'.jpg';
+    //$im = imagecreate($width, $height);
+	$im        = imagecreatefromjpeg($bgpic);
+    $color = imagecolorallocate($im, 35, 40, 20);//背景颜色
+    imagefill($im, 0, 0, $color);
+    $color = imagecolorallocate($im, 215, 215, 151);//文字颜色
+
+	
+	imagettftext($im, $randsize, $fontAngle , $x,$y, $color, $fontFile, $value); 
+	//setnoise($im,$width, $height);
+    imagepng($im);
+    imagedestroy($im);
+}
+/**
+* 显示提示消息
+*
+* @param array $msgs 消息内容
+* @param int $time 页面跳转等待时间（秒） 
+* @param string $return 页面跳转目标URL 
+* @param string $title 提示信息标题 
+*
+* @return string 返回替换过后的字段
+* @author Steven <Steven@farmer100.com>
+*/
+function show_msg($msgs, $time='', $return='',$title='',$type='warning',$showtime=false)
+{
+	$header = '
+<script>
+function countDown(secs,surl){
+	document.getElementById(\'tiao\').innerHTML =secs;	
+	if(--secs>0){
+		setTimeout("countDown("+secs+",\'"+surl+"\')",1000); 
+	}else{
+		if (surl == \'back\'){
+			window.history.back();
+		}else{
+		location.href=surl;	
+		}		
+	}  
+}
+</script>';
+	if($title){
+	$title = " <h3> $title \n\t</h3>";
+	}
+	$msg = $header."<div id=\"msg_info\" class=\"alert alert-{$type}\">\n\t{$title}\n\t <div class=\"\">\n<ul>";
+
+	
+	while (list($k,$v)=each($msgs)){
+			$msg .= "<li>".$v."</li>";
+		}
+	if(!$return || $return == -1){
+		//$return = 'back';	
+		$returnurl = 'javascript:history.back();';	
+	}else{
+		$returnurl = $return;
+	}
+	if($time) {
+		$msg .= "<li class=\"\"><img src=./skin/images/wait2.gif /></li>";
+		if($showtime==false){//不显示时间进度
+			$tiaostyle ='style=\'display:none\'';
+		}
+		$msg .= "<li><span id='tiao' $tiaostyle >$time</span> <a href='$returnurl'>点击这里，如果您的浏览器没有自动跳转</a> <br /><script>countDown($time, '$returnurl');</script></li>";	
+	}
+	$msg .= "</ul></div>\n</div>";
+	
+	return $msg;
+}	
+//添加转义
+function addslashes_deep($value)
+{
+    if (empty($value))
+        return $value;
+    else
+        return is_array($value) ? array_map('addslashes_deep', $value) : addslashes($value); // 只处理了數組的值:)
+}
+
+//删除转义
+function stripslashes_deep($value)
+{
+    if (empty($value))
+        return $value;
+    else
+        return is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value); // 只处理了數組的值:)
+}?>

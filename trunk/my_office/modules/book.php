@@ -57,8 +57,7 @@ class book extends core {
 		$opposites = self::selects('opposite', null, array('user_id'=>$online->user_id), array('GROUP BY opposite'), array(null,'column|table=book'=>'opposite'));	
 		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));
 		
-		
-
+	
 	
 		// 获取数据
 		$where = array();
@@ -110,6 +109,8 @@ class book extends core {
 		$query = $_SERVER['QUERY_STRING'];
 					
 		foreach($book_items as $k=>$v)$book_items[$k]=$item_types[$v['item']].'『'.$v['info'].'』';
+		
+		
 		front::view2 (__CLASS__ . '.list.tpl', compact ('books','get','page','query','total_items','totals','item_types','book_items','ccys','opposites','item_txts'));//得到数组所有的变量值
 	}
 	
@@ -253,7 +254,173 @@ class book extends core {
      * @param INT $date
      * @param STRING $ccy 货币 
      */
+	final static public function import() {
+	
+		$item_types = book_item::get_items();
+		$ccys = book::get_ccy();
+		$banks = book::get_banks();
+		$error = array ();
 
+		$online = front::online();
+		$time=time();
+		// 数据消毒
+	
+		
+		$item_txts = self::selects('item_txt', null, array('user_id'=>$online->user_id), array('GROUP BY item_txt'), array(null,'column|table=book'=>'item_txt'));	
+		
+		$opposites = self::selects('opposite', null, array('user_id'=>$online->user_id), array('GROUP BY opposite'), array(null,'column|table=book'=>'opposite'));	
+		if(!$item_txts){
+			$item_txts=array();
+		}
+		
+		
+		$book_items = self::selects ('book_item_id,item,info', '#@__book_item', array('user_id' => $online->user_id), array('ORDER BY book_item_id ASC'), array('book_item_id','assoc'=>null));
+		
+		$import_status ='';
+
+		// 表单处理
+		while (isset ($_SERVER ['REQUEST_METHOD']) && $_SERVER ['REQUEST_METHOD'] === 'POST') {
+			
+			$post = array(
+				'bank' => isset ($_POST ['bank']) ? $_POST ['bank'] : '',
+				'book_item_id' => isset ($_POST ['book_item_id']) ? $_POST ['book_item_id'] : '',
+				
+			);
+			
+			
+			// 数据验证
+			if (get_magic_quotes_gpc()) {
+				$post = array_map ('stripslashes', $post);
+			}
+
+			if (empty($post ['book_item_id'])) {
+				$error ['book_item_id'] = '请指定绑定账户';
+			}
+			if (empty($post ['bank'])) {
+				$error ['bank'] = '请指定银行';
+			}
+			if (empty($_FILES['bankfile'])||empty($_FILES['bankfile']['name'])) {
+				$error ['bankfile'] = '请上传文件';
+			}else{
+				if($_FILES['bankfile']['error']){
+					$error ['bankfile'] = '文件上传错误：'.$_FILES['bankfile']['error'];
+				}else{
+					$content = file_get_contents($_FILES['bankfile']['tmp_name']);
+					$bank_data = self::get_bank_data($post['bank'],$content);
+					if(!$bank_data){
+						$error ['bankfile'] = '文件格式错误！';
+					}
+					cache_write('bank_import_'.$post['book_item_id'].'.php',$bank_data);
+				}
+				
+			}
+			
+			
+			if (! empty ($error)) {
+				break;
+			}
+			$ccy='CNY';
+			if($bank_data){// 数据入库
+				$import_count = 0;
+				foreach($bank_data['data'] as $d){
+					$p=$d;
+					$p['item']='';
+					$p['item_txt']='';
+					$p['opposite']='';
+					$p['book_item_id']=$post['book_item_id'];
+					$p['typeid']='0';
+					$p['ccy']=$ccy;
+					$p['net']='';
+					$p['user_id']=$online->user_id;
+					$p['update_date']=date('Y-m-d',$time);
+					$p['update_time']=date('Y-m-d',$time);
+
+					$book = new self;
+					$book ->book_id = null;
+					$book ->struct ($p);
+					$book_id = $book->insert ('','book_id');
+					if(!$book_id || $book_id<1){
+						$error ['bankfile'] = 'add fail';
+						break;
+					}
+					$import_count ++;
+					
+				}
+				if(!$error ) 
+				$import_status ='导入成功，共导入'.$import_count .'个/共'.count($bank_data['data']) .'个';
+				else
+				$import_status ='导入失败，共导入'.$import_count .'个/共'.count($bank_data['data']) .'个';
+				$import_status .='<br>'.$bank_data['date_min'].'~'.$bank_data['date_max'];
+				
+				self::update_statement_net($online->user_id,0,$ccy);
+				
+			}
+			break;
+			header ('Location: ?go=book&do=browse');
+			return;
+
+		}
+		if(!$post['create_date'])$post['create_date'] = date('Y-m-d');
+		if(!$post['create_time'])$post['create_time'] = '12:00:00';//date('H:i:s');
+		//if(!$post['item'])$post['item'] = 3;
+
+		// 页面显示
+		foreach (array('item','item_txt','typeid','remark','ccy','net','otype','amount') as $value) {
+			$post [$value] = htmlspecialchars ($post [$value]);
+		}
+		front::view2 (__CLASS__ . '.' . 'import.tpl', compact ('post','import_status','banks', 'error','item_txts','opposites','otype','item_types','book_items','ccys'));
+	}
+	final static public function get_bank_data($bank_type,$content) {
+		switch($bank_type){
+			case '中国工商银行':
+			$content=iconv('GBK','UTF-8',$content);
+			if(strpos($content,'卡号')===false)return false;
+			$content=str_replace(',','',$content);
+			$content=explode("\r\n",$content);
+			
+			$return_data=array('in'=>0,'out'=>0,'date_min'=>'','date_max'=>'','data'=>array());
+			$title=array();
+			foreach($content as $d){
+				if(strpos($d,'^')!==false){
+					$d=trim($d);
+					$ds=explode('^',trim($d,'^'));
+					$ds=array_map('trim',$ds);
+					if(!$title)	$title = $ds;
+					else{
+						if(strpos($d,'#')!==0){
+							$ds= array_combine($title,$ds);
+							$d2=array(
+								'remark' =>$ds ['摘要'].' '.$ds ['交易场所'],
+								'otype' => $ds ['记账金额(支出)']>0 ? 'OUT' : 'IN',
+								'amount' => floatval($ds ['记账金额(支出)']>0 ? $ds ['记账金额(支出)'] : $ds ['记账金额(收入)']),
+								'create_date'=>$ds['交易日期'],
+								'create_time'=>'',
+							);
+							if($d2['otype']=='IN') $return_data['in'] +=$d2['amount'];
+							if($d2['otype']=='OUT') $return_data['out'] +=$d2['amount'];
+							if(!$return_data['date_min']||$return_data['date_min']>$d2['create_date']) $return_data['date_min'] =$d2['create_date'];
+							if(!$return_data['date_max']||$return_data['date_max']<$d2['create_date']) $return_data['date_max'] =$d2['create_date'];
+							
+							$return_data['data'][]=$d2;
+						}
+						
+						
+					}
+					
+				}
+			}
+			
+			break;
+			default:
+			return false;
+		}
+		return $return_data;
+		
+	}
+	function  get_banks(){
+		return array('中国工商银行');	
+	}
+	
 	function update_statement_net($uid,$date=0,$ccy='CNY')
 	{
 
